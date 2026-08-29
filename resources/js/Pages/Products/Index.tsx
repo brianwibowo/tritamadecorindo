@@ -1,4 +1,5 @@
 import ProductCard from '@/Components/Storefront/ProductCard';
+import ScrollReveal from '@/Components/UI/ScrollReveal';
 import StorefrontLayout from '@/Layouts/StorefrontLayout';
 import { cn } from '@/lib/utils';
 import { Head, Link, router } from '@inertiajs/react';
@@ -30,7 +31,10 @@ export default function ProductsIndex({ products, categories, filters }: Product
 				...filters,
 				...newParams,
 			},
-			{ preserveState: true }
+			{
+				preserveState: true,
+				preserveScroll: true,
+			}
 		);
 	};
 
@@ -39,54 +43,56 @@ export default function ProductsIndex({ products, categories, filters }: Product
 		updateFilters({ search });
 	};
 
+	const resetFilters = () => {
+		setSearch('');
+		router.get(route('products.index'), {}, { preserveState: true });
+	};
+
 	const sortOptions = [
-		{ key: 'latest', label: 'Terbaru' },
-		{ key: 'price_asc', label: 'Harga: Rendah ke Tinggi' },
-		{ key: 'price_desc', label: 'Harga: Tinggi ke Rendah' },
-		{ key: 'name_asc', label: 'Nama: A–Z' },
+		{ label: 'Terbaru', value: 'latest' },
+		{ label: 'Harga Terendah', value: 'price_asc' },
+		{ label: 'Harga Tertinggi', value: 'price_desc' },
+		{ label: 'Nama A-Z', value: 'name_asc' },
 	];
 
 	const tagPills = [
-		{ key: 'all', label: 'Semua Produk', icon: null },
-		{ key: 'cat-kaca-film', label: 'Kaca Film', icon: ShieldCheck },
-		{ key: 'cat-sandblast-cutting', label: 'Sandblast & Stiker', icon: Layers },
-		{ key: 'cat-wallpaper', label: 'Wallpaper', icon: Sparkles },
-		{ key: 'cat-window-blinds', label: 'Roller & Vertical Blinds', icon: null },
+		{ key: 'all', label: 'Semua Produk' },
+		{ key: 'cat-kaca-film', label: 'Kaca Film' },
+		{ key: 'cat-sandblast-cutting', label: 'Sandblast' },
+		{ key: 'cat-wallpaper', label: 'Wallpaper 3D' },
+		{ key: 'cat-branding-signage', label: 'Signage & Akrilik' },
+		{ key: 'cat-window-blinds', label: 'Blinds' },
+		{ key: 'cat-gorden', label: 'Gorden' },
 	];
 
 	const priceRanges = [
-		{ key: '', label: 'Semua Harga' },
-		{ key: 'under_100k', label: '≤ Rp 100.000 (Per Meter Material)' },
-		{ key: '100k_500k', label: 'Rp 100.000 – Rp 500.000 (Roll / m²)' },
-		{ key: 'above_500k', label: '> Rp 500.000 (Paket Proyek)' },
+		{ key: 'under_50k', label: 'Di bawah Rp 50.000' },
+		{ key: '50k_100k', label: 'Rp 50.000 - Rp 100.000' },
+		{ key: '100k_200k', label: 'Rp 100.000 - Rp 200.000' },
+		{ key: 'above_200k', label: 'Di atas Rp 200.000' },
 	];
 
+	const activeCategory = categories.find((c) => c.id === filters.category);
 	const hasActiveFilters = Boolean(
-		filters.category || (filters.tag && filters.tag !== 'all') || filters.price_range || filters.search || (filters.sort && filters.sort !== 'latest')
+		filters.search || filters.category || filters.sort || filters.tag || filters.price_range
 	);
 
 	return (
 		<StorefrontLayout>
 			<Head>
-				<title>Katalog Produk & Harga Material — Tritama Decorindo Stiker</title>
+				<title>Katalog Produk & Estimasi Harga Kaca Film, Sandblast, Wallpaper & Blinds Bekasi — Tritama Decorindo</title>
 				<meta
 					name="description"
-					content="Daftar harga material dan jasa pasang Kaca Film Riben/Sparta/One Way, Sandblast Polos & Cutting Logo, Wallpaper Dinding, Roller Blinds, Huruf Timbul LED, dan Gorden."
+					content="Daftar produk material & estimasi biaya pemasangan Kaca Film Riben, Sparta, One Way, Sandblast Polos & Cutting Logo, Wallpaper 3D, Roller Blinds, Huruf Timbul LED, dan Gorden di Bekasi, Cikarang, Tambun & Jabodetabek oleh Tritama Decorindo Stiker."
 				/>
 				<meta
 					name="keywords"
-					content="harga kaca film riben, harga kaca film sparta, harga sandblast polos, harga sandblast cutting logo, harga wallpaper roll, harga roller blinds blackout, tritama decorindo stiker"
+					content="harga kaca film bekasi, harga kaca film per meter, biaya pasang sandblast bekasi, harga sandblast cutting logo kantor, wallpaper 3d dinding bekasi, harga roller blinds bekasi, biaya huruf timbul led bekasi, pasang gorden kantor bekasi, kaca film jabodetabek"
 				/>
-				<meta property="og:title" content="Katalog Produk & Harga — Tritama Decorindo Stiker" />
+				<meta property="og:title" content="Katalog Produk & Harga Kaca Film & Interior Bekasi — Tritama Decorindo" />
 				<meta
 					property="og:description"
-					content="Pilihan lengkap material dan jasa pasang dekorasi kaca, dinding, dan penutup jendela bergaransi di Jabodetabek."
-				/>
-				<meta property="og:image" content="/images/products/kaca-film-sparta.webp" />
-				<meta name="twitter:title" content="Katalog Produk — Tritama Decorindo Stiker" />
-				<meta
-					name="twitter:description"
-					content="Daftar produk dan harga material & pemasangan interior eksterior Tritama Decorindo Stiker."
+					content="Pilihan material berkualitas tinggi dan estimasi biaya transparan untuk kebutuhan rumah, ruko, gedung, dan kantor di area Bekasi & Jabodetabek."
 				/>
 				<meta name="twitter:image" content="/images/products/kaca-film-sparta.webp" />
 			</Head>
@@ -97,7 +103,7 @@ export default function ProductsIndex({ products, categories, filters }: Product
 					<h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
 						Katalog Produk & Estimasi Harga
 					</h1>
-					<p className="mt-2 text-sm text-muted-foreground max-w-2xl">
+					<p className="mt-2 text-sm text-slate-600 max-w-2xl">
 						Daftar harga material dan jasa pemasangan Kaca Film, Sandblast, Wallpaper, Blinds, Huruf Timbul, dan Gorden berkualitas oleh Tritama Decorindo Stiker.
 					</p>
 				</div>
@@ -108,7 +114,6 @@ export default function ProductsIndex({ products, categories, filters }: Product
 					<div className="flex flex-wrap items-center gap-2 overflow-x-auto pb-1">
 						{tagPills.map((pill) => {
 							const active = (filters.category || 'all') === pill.key || (filters.tag || 'all') === pill.key;
-							const Icon = pill.icon;
 							return (
 								<button
 									key={pill.key}
@@ -123,11 +128,10 @@ export default function ProductsIndex({ products, categories, filters }: Product
 									className={cn(
 										'inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition-all shadow-sm whitespace-nowrap',
 										active
-											? 'bg-[#0284C7] text-white shadow-md'
-											: 'bg-secondary text-foreground border border-border hover:bg-slate-200/60'
+											? 'bg-[#FFDE42] text-[#111FA2] shadow-md font-extrabold'
+											: 'bg-secondary text-foreground border border-border hover:bg-[#FFDE42]/10 hover:border-[#FFDE42]/30'
 									)}
 								>
-									{Icon && <Icon className="h-3.5 w-3.5" />}
 									<span>{pill.label}</span>
 								</button>
 							);
@@ -142,13 +146,13 @@ export default function ProductsIndex({ products, categories, filters }: Product
 								value={search}
 								onChange={(e) => setSearch(e.target.value)}
 								placeholder="Cari kaca film, sandblast, blinds..."
-								className="w-full h-10 rounded-full border border-border bg-white pl-9 pr-4 text-xs text-foreground placeholder:text-muted-foreground/70 focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+								className="w-full h-10 rounded-full border border-border bg-white pl-9 pr-4 text-xs text-foreground placeholder:text-slate-400 focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 							/>
 							<Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
 						</div>
 						<button
 							type="submit"
-							className="rounded-full bg-[#0F172A] px-5 py-2 text-xs font-bold text-white hover:bg-[#0284C7] transition-all shadow-sm"
+							className="rounded-full bg-[#FFDE42] px-5 py-2 text-xs font-extrabold text-[#111FA2] hover:bg-[#F2D02B] transition-all shadow-sm"
 						>
 							Cari
 						</button>
@@ -157,56 +161,63 @@ export default function ProductsIndex({ products, categories, filters }: Product
 
 				{/* 3. Horizontal Filter Bar */}
 				<div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border/80 pb-4">
-					<div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-foreground">
-						<SlidersHorizontal className="h-4 w-4 text-[#0284C7]" />
-						<span>Filter Produk</span>
-						{hasActiveFilters && (
-							<button
-								onClick={() => router.get(route('products.index'))}
-								className="ml-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#0284C7] hover:underline lowercase"
-							>
-								<RotateCcw className="h-3 w-3" />
-								reset filter
-							</button>
+					<div className="flex items-center gap-3">
+						<div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+							<SlidersHorizontal className="h-3.5 w-3.5" />
+							<span>Menampilkan:</span>
+						</div>
+						<span className="rounded-full bg-[#FFDE42]/15 px-3 py-1 text-xs font-bold text-[#111FA2] ring-1 ring-[#FFDE42]/30">
+							{products.total} Hasil Ditemukan
+						</span>
+						{activeCategory && (
+							<span className="rounded-full bg-blue-50 border border-blue-200 px-3 py-1 text-xs font-bold text-[#5478FF]">
+								Kategori: {activeCategory.name}
+							</span>
 						)}
 					</div>
 
-					{/* Sorting options */}
-					<div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs">
-						<span className="text-muted-foreground font-medium">Urutkan:</span>
-						{sortOptions.map((opt) => {
-							const isSelected = (filters.sort || 'latest') === opt.key;
-							return (
-								<button
-									key={opt.key}
-									type="button"
-									onClick={() => updateFilters({ sort: opt.key })}
-									className={cn(
-										'transition-colors',
-										isSelected
-											? 'font-bold text-[#0284C7] underline underline-offset-4'
-											: 'text-foreground/80 hover:text-foreground'
-									)}
-								>
-									{opt.label}
-								</button>
-							);
-						})}
+					{/* Sort Dropdown & Reset */}
+					<div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+						{hasActiveFilters && (
+							<button
+								type="button"
+								onClick={resetFilters}
+								className="inline-flex items-center gap-1 text-xs font-bold text-red-600 hover:underline"
+							>
+								<RotateCcw className="h-3 w-3" />
+								<span>Reset Filter</span>
+							</button>
+						)}
+
+						<div className="flex items-center gap-2">
+							<span className="text-xs text-slate-500 font-medium">Urutkan:</span>
+							<select
+								value={filters.sort || 'latest'}
+								onChange={(e) => updateFilters({ sort: e.target.value })}
+								className="h-9 rounded-xl border border-border bg-white px-3 text-xs font-bold text-foreground focus:border-[#5478FF] focus:outline-none"
+							>
+								{sortOptions.map((opt) => (
+									<option key={opt.value} value={opt.value}>
+										{opt.label}
+									</option>
+								))}
+							</select>
+						</div>
 					</div>
 				</div>
 
-				{/* 4. Two-Column Layout: Sidebar + Product Grid */}
-				<div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-					{/* Left Column: Filter Sidebar */}
+				{/* 4. Main Body: Sidebar + Grid */}
+				<div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+					{/* Left Sidebar Filter */}
 					<aside className="lg:col-span-3 space-y-6">
-						{/* Categories Accordion */}
+						{/* Category Box */}
 						<div className="rounded-2xl border border-border/80 bg-white p-5 shadow-sm">
 							<button
 								type="button"
 								onClick={() => setCategoriesOpen(!categoriesOpen)}
 								className="flex w-full items-center justify-between text-sm font-bold text-foreground"
 							>
-								<span>Kategori Produk</span>
+								<span>Semua Kategori</span>
 								{categoriesOpen ? (
 									<ChevronUp className="h-4 w-4 text-muted-foreground" />
 								) : (
@@ -222,8 +233,8 @@ export default function ProductsIndex({ products, categories, filters }: Product
 										className={cn(
 											'flex w-full items-center justify-between text-left transition-colors',
 											!filters.category
-												? 'font-bold text-[#0284C7]'
-												: 'text-foreground hover:text-[#0284C7]'
+												? 'font-bold text-[#5478FF]'
+												: 'text-foreground hover:text-[#5478FF]'
 										)}
 									>
 										<span>Semua Kategori</span>
@@ -242,8 +253,8 @@ export default function ProductsIndex({ products, categories, filters }: Product
 												className={cn(
 													'flex w-full items-center justify-between text-left transition-colors',
 													isSelected
-														? 'font-bold text-[#0284C7]'
-														: 'text-foreground hover:text-[#0284C7]'
+														? 'font-bold text-[#5478FF]'
+														: 'text-foreground hover:text-[#5478FF]'
 												)}
 											>
 												<span>{cat.name}</span>
@@ -284,12 +295,12 @@ export default function ProductsIndex({ products, categories, filters }: Product
 												className={cn(
 													'flex w-full items-center justify-between text-left transition-colors',
 													isSelected
-														? 'font-bold text-[#0284C7]'
-														: 'text-foreground hover:text-[#0284C7]'
+														? 'font-bold text-[#5478FF]'
+														: 'text-foreground hover:text-[#5478FF]'
 												)}
 											>
 												<span>{range.label}</span>
-												{isSelected && <span className="text-[#0284C7] font-bold">✓</span>}
+												{isSelected && <span className="text-[#5478FF] font-bold">✓</span>}
 											</button>
 										);
 									})}
@@ -298,16 +309,16 @@ export default function ProductsIndex({ products, categories, filters }: Product
 						</div>
 
 						{/* Direct WhatsApp Callout Banner */}
-						<div className="rounded-2xl bg-gradient-to-br from-[#0F172A] to-[#1E293B] text-white p-5 shadow-md">
-							<p className="text-xs font-bold uppercase tracking-wider text-[#38BDF8]">Butuh Custom Ukuran?</p>
-							<p className="mt-2 text-xs text-slate-300 leading-relaxed">
+						<div className="rounded-2xl bg-gradient-to-br from-[#111FA2] via-[#0D1780] to-[#080E4E] text-white p-5 shadow-md border border-[#5478FF]/20">
+							<p className="text-xs font-bold uppercase tracking-wider text-[#FFDE42]">Konsultasi Ukuran Khusus</p>
+							<p className="mt-2 text-xs text-slate-200 leading-relaxed">
 								Konsultasikan kebutuhan partisi kaca, bidang dinding, atau jendela gedung Anda dengan tim teknisi kami.
 							</p>
 							<a
-								href="https://wa.me/6281990909646?text=Halo%20Tritama%20Decorindo,%20saya%20ingin%20tanya%20custom%20ukuran%20dan%20harga%20pemasangan."
+								href="https://wa.me/6281990909646?text=Halo%20Tritama%20Decorindo,%20saya%20ingin%20tanya%20estimasi%20ukuran%20dan%20harga%20pemasangan."
 								target="_blank"
 								rel="noopener noreferrer"
-								className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-[#0284C7] py-2.5 text-xs font-bold text-white hover:bg-[#0369a1] transition-all shadow-sm"
+								className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-[#5478FF] hover:bg-[#4064EB] py-2.5 text-xs font-bold text-white transition-all shadow-sm active:scale-95"
 							>
 								Chat WhatsApp: 0819-9090-9646
 							</a>
@@ -325,7 +336,7 @@ export default function ProductsIndex({ products, categories, filters }: Product
 								</p>
 								<button
 									onClick={() => router.get(route('products.index'))}
-									className="mt-6 rounded-full bg-[#0284C7] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#0369a1]"
+									className="mt-6 rounded-full bg-[#FFDE42] hover:bg-[#F2D02B] px-6 py-2.5 text-xs font-extrabold text-[#111FA2] shadow-md transition-all"
 								>
 									Lihat Semua Produk
 								</button>
@@ -333,8 +344,10 @@ export default function ProductsIndex({ products, categories, filters }: Product
 						) : (
 							<>
 								<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-									{products.data.map((product) => (
-										<ProductCard key={product.id} product={product} />
+									{products.data.map((product, idx) => (
+										<ScrollReveal key={product.id} effect="fade-up" delay={idx * 60}>
+											<ProductCard product={product} />
+										</ScrollReveal>
 									))}
 								</div>
 
@@ -348,7 +361,7 @@ export default function ProductsIndex({ products, categories, filters }: Product
 												className={cn(
 													'flex h-9 min-w-[36px] items-center justify-center rounded-full px-3 text-xs font-bold transition-all',
 													link.active
-														? 'bg-[#0284C7] text-white shadow-sm'
+														? 'bg-[#FFDE42] text-[#111FA2] shadow-sm font-extrabold'
 														: link.url
 														? 'bg-secondary text-foreground hover:bg-slate-200'
 														: 'cursor-not-allowed text-muted-foreground opacity-50'

@@ -5,31 +5,41 @@
 :root {
 	--radius: 1rem;
 
-	/* Opsi A: Nano-Ceramic Cool Tech Palette (RGB channels) */
-	--background: 248 250 252;       /* #f8fafc (Clean Slate Light Canvas) */
-	--foreground: 15 23 42;          /* #0f172a (Deep Slate / Navy Charcoal) */
-	--card: 255 255 255;             /* #ffffff (Pure White Elevated Card) */
-	--card-foreground: 15 23 42;
+	/* Global 4-Color Brand System */
+	/* 1. #FFDE42 (Golden Highlight)  = 255 222 66  */
+	/* 2. #53CBF3 (Cyan Sky Glow)     = 83 203 243  */
+	/* 3. #5478FF (Electric Royal)    = 84 120 255  */
+	/* 4. #111FA2 (Midnight Navy)     = 17 31 162   */
+
+	--background: 248 250 252;       /* #f8fafc Clean Light Slate */
+	--foreground: 17 31 162;          /* #111FA2 Deep Midnight Navy */
+	--card: 255 255 255;             /* #ffffff Elevated Card */
+	--card-foreground: 17 31 162;
 	--popover: 255 255 255;
-	--popover-foreground: 15 23 42;
-	--primary: 15 23 42;             /* #0f172a (Deep Slate Carbon) */
+	--popover-foreground: 17 31 162;
+	--primary: 17 31 162;             /* #111FA2 Midnight Navy */
 	--primary-foreground: 255 255 255;
-	--secondary: 241 245 249;        /* #f1f5f9 (Soft Titanium Slate) */
-	--secondary-foreground: 15 23 42;
-	--muted: 241 245 249;            /* #f1f5f9 */
-	--muted-foreground: 100 116 139; /* #64748b (Slate Muted Description) */
-	--accent: 2 132 199;             /* #0284c7 (Electric Cool Blue / Heat Shield) */
+	--secondary: 241 245 249;        /* #f1f5f9 Soft Slate */
+	--secondary-foreground: 17 31 162;
+	--muted: 241 245 249;
+	--muted-foreground: 100 116 139; /* #64748b */
+	--accent: 84 120 255;            /* #5478FF Electric Royal Blue */
 	--accent-foreground: 255 255 255;
 	--destructive: 220 38 38;
-	--border: 226 232 240;           /* #e2e8f0 (Clean Crisp Border) */
+	--border: 226 232 240;           /* #e2e8f0 Crisp Border */
 	--input: 226 232 240;
-	--ring: 2 132 199;
+	--ring: 84 120 255;              /* #5478FF */
+
+	--brand-yellow: 255 222 66;      /* #FFDE42 */
+	--brand-cyan: 83 203 243;        /* #53CBF3 */
+	--brand-blue: 84 120 255;        /* #5478FF */
+	--brand-navy: 17 31 162;         /* #111FA2 */
 
 	--yns-cream: #f8fafc;
 	--yns-rose: 241 245 249;
-	--yns-cocoa: 15 23 42;
+	--yns-cocoa: 17 31 162;
 	--yns-clay: 30 41 59;
-	--yns-sun: 2 132 199;
+	--yns-sun: 84 120 255;
 	--yns-mist: 241 245 249;
 }
 
@@ -68,52 +78,6 @@
 	}
 }
 
-/* Hero gradient (warm cocoa room) */
-.yns-hero-gradient {
-	background:
-		radial-gradient(ellipse 80% 60% at 20% 100%, rgba(244, 210, 58, 0.18) 0%, transparent 60%),
-		radial-gradient(ellipse 60% 80% at 90% 20%, rgba(245, 230, 220, 0.6) 0%, transparent 55%),
-		linear-gradient(135deg, #3a2820 0%, #5c3a2a 45%, #8b5e3c 100%);
-}
-
-.yns-paper {
-	background-color: #f5e6dc;
-	background-image:
-		radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.5) 0%, transparent 50%),
-		radial-gradient(circle at 80% 70%, rgba(240, 214, 200, 0.6) 0%, transparent 50%);
-}
-
-.yns-sun-stripes {
-	background:
-		repeating-linear-gradient(
-			-45deg,
-			#f4d23a,
-			#f4d23a 14px,
-			#e8c428 14px,
-			#e8c428 28px
-		);
-}
-
-.yns-display {
-	font-family: 'Fraunces', Georgia, serif;
-	letter-spacing: -0.02em;
-}
-
-.yns-marquee {
-	animation: yns-marquee 40s linear infinite;
-}
-
-@keyframes yns-marquee {
-	from { transform: translateX(0); }
-	to { transform: translateX(-50%); }
-}
-
-/* Outline text used in oversized hero word */
-.yns-outline-text {
-	-webkit-text-stroke: 1.5px #f5e6dc;
-	color: transparent;
-}
-
 /* Modal Shake / Jiggle Effect (300ms) for Unsaved Changes Guard */
 @keyframes modal-shake {
 	0%, 100% {
@@ -129,4 +93,52 @@
 
 .animate-modal-shake {
 	animation: modal-shake 300ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Aesthetic Scroll Mouse Wheel Animation */
+@keyframes scroll-wheel {
+	0% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	50% {
+		opacity: 0.8;
+		transform: translateY(6px);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+}
+
+.animate-scroll-wheel {
+	animation: scroll-wheel 2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+/* Aesthetic Gentle Floating */
+@keyframes float-gentle {
+	0%, 100% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-6px);
+	}
+}
+
+.animate-float-gentle {
+	animation: float-gentle 4s ease-in-out infinite;
+}
+
+/* Aesthetic Pulse Glow */
+@keyframes pulse-glow {
+	0%, 100% {
+		box-shadow: 0 0 0 0 rgba(84, 120, 255, 0.4);
+	}
+	50% {
+		box-shadow: 0 0 25px 6px rgba(83, 203, 243, 0.35);
+	}
+}
+
+.animate-pulse-glow {
+	animation: pulse-glow 3s infinite ease-in-out;
 }

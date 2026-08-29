@@ -93,7 +93,7 @@ export default function Dashboard({ stats, latestProducts, latestGalleries, late
 						</a>
 						<Link
 							href="/admin/order-archives"
-							className="inline-flex items-center gap-2 rounded-full bg-[#0284C7] hover:bg-[#0369a1] px-5 py-2.5 text-xs font-bold text-white transition-all shadow-md active:scale-95"
+							className="inline-flex items-center gap-2 rounded-full bg-[#5478FF] hover:bg-[#4064EB] px-5 py-2.5 text-xs font-bold text-white transition-all shadow-md active:scale-95"
 						>
 							<Plus className="h-4 w-4" />
 							<span>Catat Arsip Proyek</span>
@@ -102,15 +102,50 @@ export default function Dashboard({ stats, latestProducts, latestGalleries, late
 				</div>
 			</div>
 
+			{/* Quick Actions Bar */}
+			<div className="flex items-center gap-2.5 overflow-x-auto pb-2 sm:pb-0 mb-6">
+				<span className="text-xs font-bold text-muted-foreground shrink-0 uppercase tracking-wider text-[10px] mr-1">
+					Aksi Cepat:
+				</span>
+				<Link
+					href="/admin/products"
+					className="inline-flex items-center gap-1.5 rounded-2xl bg-white hover:bg-slate-50 border border-border/80 px-3.5 py-2 text-xs font-bold text-foreground shadow-sm shrink-0 transition-all hover:border-[#5478FF]/40 active:scale-95"
+				>
+					<Plus className="h-3.5 w-3.5 text-[#5478FF]" />
+					<span>Produk Baru</span>
+				</Link>
+				<Link
+					href="/admin/categories"
+					className="inline-flex items-center gap-1.5 rounded-2xl bg-white hover:bg-slate-50 border border-border/80 px-3.5 py-2 text-xs font-bold text-foreground shadow-sm shrink-0 transition-all hover:border-purple-500/40 active:scale-95"
+				>
+					<Plus className="h-3.5 w-3.5 text-purple-600" />
+					<span>Kategori Baru</span>
+				</Link>
+				<Link
+					href="/admin/galleries"
+					className="inline-flex items-center gap-1.5 rounded-2xl bg-white hover:bg-slate-50 border border-border/80 px-3.5 py-2 text-xs font-bold text-foreground shadow-sm shrink-0 transition-all hover:border-emerald-500/40 active:scale-95"
+				>
+					<Plus className="h-3.5 w-3.5 text-emerald-600" />
+					<span>Upload Galeri</span>
+				</Link>
+				<Link
+					href="/admin/order-archives"
+					className="inline-flex items-center gap-1.5 rounded-2xl bg-white hover:bg-slate-50 border border-border/80 px-3.5 py-2 text-xs font-bold text-foreground shadow-sm shrink-0 transition-all hover:border-blue-500/40 active:scale-95"
+				>
+					<Plus className="h-3.5 w-3.5 text-[#5478FF]" />
+					<span>Catat Arsip Proyek</span>
+				</Link>
+			</div>
+
 			{/* Stats Grid */}
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
 				{/* 1. Total Produk */}
 				<Link
 					href="/admin/products"
-					className="group rounded-3xl border border-border/60 bg-white p-5 shadow-sm transition-all hover:shadow-md hover:border-[#0284C7]/40"
+					className="group rounded-3xl border border-border/60 bg-white p-5 shadow-sm transition-all hover:shadow-md hover:border-[#5478FF]/40"
 				>
 					<div className="flex items-center gap-3.5">
-						<div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-500/10 text-[#0284C7] ring-1 ring-cyan-500/20 group-hover:scale-105 transition-transform">
+						<div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-500/10 text-[#5478FF] ring-1 ring-cyan-500/20 group-hover:scale-105 transition-transform">
 							<Package className="h-5 w-5" />
 						</div>
 						<div>
@@ -170,7 +205,7 @@ export default function Dashboard({ stats, latestProducts, latestGalleries, late
 					className="group rounded-3xl border border-border/60 bg-white p-5 shadow-sm transition-all hover:shadow-md hover:border-blue-500/40"
 				>
 					<div className="flex items-center gap-3.5">
-						<div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-500/10 text-[#0284C7] ring-1 ring-blue-500/20 group-hover:scale-105 transition-transform">
+						<div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-500/10 text-[#5478FF] ring-1 ring-blue-500/20 group-hover:scale-105 transition-transform">
 							<ClipboardList className="h-5 w-5" />
 						</div>
 						<div>
@@ -233,7 +268,7 @@ export default function Dashboard({ stats, latestProducts, latestGalleries, late
 							{latestArchives.length === 0 ? (
 								<div className="p-8 text-center text-xs text-muted-foreground">
 									Belum ada arsip pemesanan yang dicatat.{' '}
-									<Link href="/admin/order-archives" className="text-[#0284C7] font-bold hover:underline">
+									<Link href="/admin/order-archives" className="text-[#5478FF] font-bold hover:underline">
 										Catat arsip sekarang
 									</Link>
 								</div>
@@ -261,7 +296,7 @@ export default function Dashboard({ stats, latestProducts, latestGalleries, late
 													<td className="px-5 py-3.5 text-muted-foreground">
 														{arc.project_type}
 													</td>
-													<td className="px-5 py-3.5 font-bold text-[#0284C7]">
+													<td className="px-5 py-3.5 font-bold text-[#5478FF]">
 														{arc.total_amount_formatted}
 													</td>
 													<td className="px-5 py-3.5 text-right text-muted-foreground">
@@ -319,7 +354,7 @@ export default function Dashboard({ stats, latestProducts, latestGalleries, late
 														<Link
 															href={`/product/${prod.slug}`}
 															target="_blank"
-															className="hover:text-[#0284C7] inline-flex items-center gap-1.5"
+															className="hover:text-[#5478FF] inline-flex items-center gap-1.5"
 														>
 															<span>{prod.name}</span>
 															<ExternalLink className="h-3 w-3 text-muted-foreground opacity-60" />
@@ -328,7 +363,7 @@ export default function Dashboard({ stats, latestProducts, latestGalleries, late
 													<td className="px-5 py-3.5 text-muted-foreground font-medium">
 														{prod.category_name}
 													</td>
-													<td className="px-5 py-3.5 font-bold text-[#0284C7]">
+													<td className="px-5 py-3.5 font-bold text-[#5478FF]">
 														{prod.price_formatted}
 													</td>
 													<td className="px-5 py-3.5 text-right text-muted-foreground">

@@ -46,14 +46,27 @@ export default {
                 border: 'rgb(var(--border) / <alpha-value>)',
                 input: 'rgb(var(--input) / <alpha-value>)',
                 ring: 'rgb(var(--ring) / <alpha-value>)',
+
+                // Global Brand Palette
+                brand: {
+                    yellow: '#FFDE42',
+                    cyan: '#53CBF3',
+                    blue: '#5478FF',
+                    navy: '#111FA2',
+                },
+                'brand-yellow': '#FFDE42',
+                'brand-cyan': '#53CBF3',
+                'brand-blue': '#5478FF',
+                'brand-navy': '#111FA2',
+
                 'yns-cream': '#f8fafc',
                 'yns-rose': 'rgb(var(--yns-rose) / <alpha-value>)',
                 'yns-cocoa': 'rgb(var(--yns-cocoa) / <alpha-value>)',
                 'yns-clay': 'rgb(var(--yns-clay) / <alpha-value>)',
-                'yns-sun': 'rgb(var(--yns-sun) / <alpha-value>)',
+                'yns-sun': '#FFDE42',
                 'yns-mist': 'rgb(var(--yns-mist) / <alpha-value>)',
                 'yns-bg': '#f8fafc',
-                'yns-fg': '#0f172a',
+                'yns-fg': '#111FA2',
                 'yns-border': '#e2e8f0',
             },
             fontFamily: {

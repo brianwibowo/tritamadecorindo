@@ -14,8 +14,8 @@ class GallerySeeder extends Seeder
     {
         $galleries = [
             [
-                'title' => 'Pemasangan Kaca Film Gedung Penolak Panas & Kaca Mobil',
-                'caption' => 'Aplikasi kaca film Riben & Sparta dengan penolakan sinar UV 99% dan peredam panas terik matahari pada jendela gedung perkantoran dan armada mobil.',
+                'title' => 'Pemasangan Kaca Film Gedung & Rumah Penolak Panas',
+                'caption' => 'Aplikasi kaca film Riben & Sparta dengan penolakan sinar UV 99% dan peredam panas terik matahari pada jendela gedung perkantoran, ruko, dan rumah tinggal.',
                 'category' => 'kaca_film',
                 'category_label' => 'Kaca Film',
                 'image' => '/images/products/kaca-film-riben.webp',
@@ -86,8 +86,8 @@ class GallerySeeder extends Seeder
                 'sort_order' => 8,
             ],
             [
-                'title' => 'Digital Sticker Printing & Car Branding Armada Toko',
-                'caption' => 'Cetak stiker vinyl resolusi tinggi dan laminasi pelindung untuk branding kaca ruko dan stiker mobil operasional usaha.',
+                'title' => 'Digital Sticker Printing & Branding Kaca Toko',
+                'caption' => 'Cetak stiker vinyl resolusi tinggi dan laminasi pelindung untuk branding kaca ruko, etalase toko, dan partisi kantor.',
                 'category' => 'signage',
                 'category_label' => 'Signage & Branding',
                 'image' => '/images/products/sticker-printing.webp',

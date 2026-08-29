@@ -272,4 +272,55 @@ class FullCrudTestSuiteTest extends TestCase
         $this->assertSame('+6281299998888', $this->admin->phone);
         $this->assertNotNull($this->admin->image);
     }
+
+    public function test_product_creation_and_update_with_multiple_uploaded_images(): void
+    {
+        Storage::fake('public');
+
+        $file1 = UploadedFile::fake()->image('kaca-film-1.webp');
+        $file2 = UploadedFile::fake()->image('kaca-film-2.webp');
+
+        // Create product with multiple uploaded files + an existing URL
+        $response = $this->actingAs($this->admin)->post(route('admin.products.store'), [
+            'name' => 'Kaca Film Multi Foto Test',
+            'slug' => 'kaca-film-multi-foto-test',
+            'category_id' => $this->category->id,
+            'summary' => 'Test ringkasan.',
+            'description' => 'Test deskripsi.',
+            'active' => true,
+            'show_price' => true,
+            'images' => ['/images/products/sample-default.webp'],
+            'image_files' => [$file1, $file2],
+            'variants' => [
+                ['name' => 'Varian 1', 'price' => 50000, 'stock' => 100],
+            ],
+        ]);
+
+        $response->assertRedirect(route('admin.products.index'));
+
+        $product = Product::where('slug', 'kaca-film-multi-foto-test')->first();
+        $this->assertNotNull($product);
+        $this->assertCount(3, $product->images); // 1 URL + 2 uploaded files
+        $this->assertStringContainsString('/storage/products/', $product->images[1]);
+        $this->assertStringContainsString('/storage/products/', $product->images[2]);
+
+        // Update product with another file
+        $file3 = UploadedFile::fake()->image('kaca-film-3.webp');
+        $updateResponse = $this->actingAs($this->admin)->put(route('admin.products.update', $product->id), [
+            'name' => 'Kaca Film Multi Foto Updated',
+            'slug' => 'kaca-film-multi-foto-updated',
+            'category_id' => $this->category->id,
+            'active' => true,
+            'show_price' => true,
+            'images' => [$product->images[0]], // keep first
+            'image_files' => [$file3],
+            'variants' => [
+                ['name' => 'Varian 1', 'price' => 60000, 'stock' => 150],
+            ],
+        ]);
+
+        $updateResponse->assertRedirect(route('admin.products.index'));
+        $product->refresh();
+        $this->assertCount(2, $product->images);
+    }
 }

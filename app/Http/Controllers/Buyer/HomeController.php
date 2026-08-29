@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Buyer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Gallery;
 use App\Models\Product;
 use App\Services\MoneyService;
 use Inertia\Inertia;
@@ -33,9 +34,16 @@ class HomeController extends Controller
                     : '-',
             ]);
 
+        $featuredGalleries = Gallery::where('active', true)
+            ->orderBy('sort_order')
+            ->latest('id')
+            ->take(6)
+            ->get();
+
         return Inertia::render('Home', [
             'categories' => $categories,
             'featuredProducts' => $featuredProducts,
+            'featuredGalleries' => $featuredGalleries,
         ]);
     }
 }

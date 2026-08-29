@@ -17,7 +17,7 @@ class CategorySeeder extends Seeder
                 'id' => 'cat-kaca-film',
                 'name' => 'Kaca Film',
                 'slug' => 'kaca-film',
-                'description' => 'Kaca film tolak panas matahari, anti-UV, privasi riben, sparta reflektif, dan one way untuk gedung, kantor, serta mobil.',
+                'description' => 'Kaca film tolak panas matahari, anti-UV, privasi riben, sparta reflektif, dan one way untuk gedung, kantor, ruko, serta rumah tinggal.',
                 'image' => '/images/products/kaca-film-riben.webp',
                 'active' => true,
             ],

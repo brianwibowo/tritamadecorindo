@@ -15,14 +15,14 @@ export default function ProductGrid({ products, limit = 8 }: ProductGridProps) {
 		<section className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 pt-16 sm:pt-24">
 			<div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
 				<div>
-					<p className="text-xs font-bold tracking-[0.2em] uppercase text-[#0284C7] mb-2">— Katalog Material & Jasa</p>
+					<p className="text-xs font-bold tracking-[0.2em] uppercase text-[#FFDE42] mb-2">— Katalog Material & Jasa</p>
 					<h2 className="text-3xl sm:text-4xl text-foreground font-bold tracking-tight">
 						Daftar Produk & Biaya
 					</h2>
 				</div>
 				<Link
 					href={route('products.index')}
-					className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#0284C7] hover:underline"
+					className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#FFDE42] hover:text-[#F2D02B] hover:underline"
 				>
 					<span>Lihat Semua Produk</span>
 					<ArrowUpRight className="h-4 w-4" />

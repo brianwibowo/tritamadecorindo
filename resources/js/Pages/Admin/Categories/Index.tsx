@@ -160,7 +160,7 @@ export default function CategoriesIndex({ categories }: Props) {
 							createForm.reset();
 							setCreateModalOpen(true);
 						}}
-						className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0284C7] px-6 py-2.5 text-xs font-bold text-white shadow-md hover:bg-[#0369a1] active:scale-95 transition-all"
+						className="inline-flex items-center justify-center gap-2 rounded-full bg-[#5478FF] px-6 py-2.5 text-xs font-bold text-white shadow-md hover:bg-[#4064EB] active:scale-95 transition-all"
 					>
 						<Plus className="h-4 w-4" />
 						<span>Tambah Kategori Baru</span>
@@ -184,8 +184,22 @@ export default function CategoriesIndex({ categories }: Props) {
 							<tbody className="divide-y divide-border/40">
 								{categories.data.length === 0 ? (
 									<tr>
-										<td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">
-											Belum ada kategori yang ditambahkan.
+										<td colSpan={6} className="px-6 py-16 text-center">
+											<div className="flex flex-col items-center gap-3">
+												<div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center">
+													<Tag className="h-8 w-8 text-slate-400" />
+												</div>
+												<p className="text-sm font-bold text-foreground">Belum ada kategori</p>
+												<p className="text-xs text-muted-foreground max-w-xs">Buat kategori pertama Anda untuk mengelompokkan produk material.</p>
+												<button
+													type="button"
+													onClick={() => { createForm.reset(); setCreateModalOpen(true); }}
+													className="inline-flex items-center gap-1.5 rounded-xl bg-[#5478FF] px-4 py-2 text-xs font-bold text-white hover:bg-[#4064EB] shadow-sm"
+												>
+													<Plus className="h-3.5 w-3.5" />
+													Tambah Kategori Pertama
+												</button>
+											</div>
 										</td>
 									</tr>
 								) : (
@@ -193,7 +207,7 @@ export default function CategoriesIndex({ categories }: Props) {
 										<tr key={cat.id} className="hover:bg-secondary/30 transition-colors">
 											<td className="px-6 py-4 font-bold text-foreground">
 												<div className="flex items-center gap-3">
-													<div className="h-8 w-8 rounded-xl bg-cyan-500/10 text-[#0284C7] flex items-center justify-center font-bold text-xs shrink-0">
+													<div className="h-8 w-8 rounded-xl bg-cyan-500/10 text-[#5478FF] flex items-center justify-center font-bold text-xs shrink-0">
 														<Tag className="h-4 w-4" />
 													</div>
 													<span>{cat.name}</span>
@@ -248,7 +262,7 @@ export default function CategoriesIndex({ categories }: Props) {
 													<button
 														type="button"
 														onClick={() => openEditModal(cat)}
-														className="rounded-lg p-2 text-[#0284C7] hover:bg-cyan-50"
+														className="rounded-lg p-2 text-[#5478FF] hover:bg-cyan-50"
 														title="Edit Kategori"
 													>
 														<Pencil className="h-4 w-4" />
@@ -284,7 +298,7 @@ export default function CategoriesIndex({ categories }: Props) {
 									className={cn(
 										'flex h-8 min-w-[32px] items-center justify-center rounded-lg px-2.5 text-xs font-semibold transition-colors',
 										link.active
-											? 'bg-[#0284C7] text-white shadow-sm'
+											? 'bg-[#5478FF] text-white shadow-sm'
 											: link.url
 											? 'bg-white text-foreground border border-border hover:bg-secondary'
 											: 'text-muted-foreground/40 cursor-not-allowed bg-transparent'
@@ -333,9 +347,10 @@ export default function CategoriesIndex({ categories }: Props) {
 									onChange={(e) => handleNameChange(e.target.value, false)}
 									required
 									placeholder="Contoh: Kaca Film Riben & Sparta"
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#5478FF] focus:ring-1 focus:ring-[#5478FF]"
 								/>
-								{createForm.errors.name && <p className="mt-1 text-xs text-red-600">{createForm.errors.name}</p>}
+								<p className="mt-1 text-[10px] text-muted-foreground">Nama kelompok material atau layanan dekorasi</p>
+								{createForm.errors.name && <p className="mt-0.5 text-xs text-red-600">{createForm.errors.name}</p>}
 							</div>
 
 							<div>
@@ -357,14 +372,21 @@ export default function CategoriesIndex({ categories }: Props) {
 							</div>
 
 							<div>
-								<label className="block text-xs font-bold uppercase tracking-wider mb-1">Deskripsi Kategori</label>
+								<div className="flex items-center justify-between mb-1">
+									<label className="block text-xs font-bold uppercase tracking-wider">Deskripsi Kategori</label>
+									<span className="text-[10px] text-muted-foreground">
+										{createForm.data.description.length}/200
+									</span>
+								</div>
 								<textarea
 									value={createForm.data.description}
 									onChange={(e) => createForm.setData('description', e.target.value)}
 									rows={3}
+									maxLength={200}
 									placeholder="Penjelasan ringkas tentang material dalam kategori ini..."
-									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7]"
+									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#5478FF] focus:ring-1 focus:ring-[#5478FF]"
 								/>
+								<p className="mt-1 text-[10px] text-muted-foreground">Deskripsi singkat fungsi dan kegunaan kategori material ini</p>
 							</div>
 
 							<div>
@@ -373,7 +395,7 @@ export default function CategoriesIndex({ categories }: Props) {
 										type="checkbox"
 										checked={createForm.data.active}
 										onChange={(e) => createForm.setData('active', e.target.checked)}
-										className="h-4 w-4 rounded text-[#0284C7] focus:ring-[#0284C7]"
+										className="h-4 w-4 rounded text-[#5478FF] focus:ring-[#5478FF]"
 									/>
 									<span className="text-xs font-semibold text-foreground">Aktifkan kategori ini di etalase publik</span>
 								</label>
@@ -390,7 +412,7 @@ export default function CategoriesIndex({ categories }: Props) {
 								<button
 									type="submit"
 									disabled={createForm.processing}
-									className="rounded-full bg-[#0284C7] px-6 py-2 text-xs font-bold text-white hover:bg-[#0369a1] disabled:opacity-60 shadow-md"
+									className="rounded-full bg-[#5478FF] px-6 py-2 text-xs font-bold text-white hover:bg-[#4064EB] disabled:opacity-60 shadow-md"
 								>
 									{createForm.processing ? 'Menyimpan...' : 'Simpan Kategori'}
 								</button>
@@ -435,7 +457,7 @@ export default function CategoriesIndex({ categories }: Props) {
 									value={editForm.data.name}
 									onChange={(e) => handleNameChange(e.target.value, true)}
 									required
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#5478FF] focus:ring-1 focus:ring-[#5478FF]"
 								/>
 								{editForm.errors.name && <p className="mt-1 text-xs text-red-600">{editForm.errors.name}</p>}
 							</div>
@@ -463,7 +485,7 @@ export default function CategoriesIndex({ categories }: Props) {
 									value={editForm.data.description}
 									onChange={(e) => editForm.setData('description', e.target.value)}
 									rows={3}
-									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7]"
+									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#5478FF] focus:ring-1 focus:ring-[#5478FF]"
 								/>
 							</div>
 
@@ -473,7 +495,7 @@ export default function CategoriesIndex({ categories }: Props) {
 										type="checkbox"
 										checked={editForm.data.active}
 										onChange={(e) => editForm.setData('active', e.target.checked)}
-										className="h-4 w-4 rounded text-[#0284C7] focus:ring-[#0284C7]"
+										className="h-4 w-4 rounded text-[#5478FF] focus:ring-[#5478FF]"
 									/>
 									<span className="text-xs font-semibold text-foreground">Aktifkan kategori ini di etalase publik</span>
 								</label>
@@ -490,7 +512,7 @@ export default function CategoriesIndex({ categories }: Props) {
 								<button
 									type="submit"
 									disabled={editForm.processing}
-									className="rounded-full bg-[#0284C7] px-6 py-2 text-xs font-bold text-white hover:bg-[#0369a1] disabled:opacity-60 shadow-md"
+									className="rounded-full bg-[#5478FF] px-6 py-2 text-xs font-bold text-white hover:bg-[#4064EB] disabled:opacity-60 shadow-md"
 								>
 									{editForm.processing ? 'Menyimpan...' : 'Simpan Perubahan'}
 								</button>
@@ -518,7 +540,7 @@ export default function CategoriesIndex({ categories }: Props) {
 						</button>
 
 						<div className="flex items-center gap-3 border-b border-border/60 pb-5">
-							<div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-500/10 text-[#0284C7]">
+							<div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-500/10 text-[#5478FF]">
 								<Tag className="h-6 w-6" />
 							</div>
 							<div>

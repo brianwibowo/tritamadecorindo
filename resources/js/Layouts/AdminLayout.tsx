@@ -1,6 +1,6 @@
 import useModalGuard from '@/hooks/useModalGuard';
 import { cn } from '@/lib/utils';
-import { Link, useForm, usePage } from '@inertiajs/react';
+import { Link, router, useForm, usePage } from '@inertiajs/react';
 import {
 	BarChart3,
 	Camera,
@@ -44,6 +44,7 @@ const navItems = [
 export default function AdminLayout({ header, children }: PropsWithChildren<AdminLayoutProps>) {
 	const { auth, flash } = usePage<PageProps>().props;
 	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const [isNavigating, setIsNavigating] = useState(false);
 	const [isCollapsed, setIsCollapsed] = useState<boolean>(() => {
 		try {
 			return localStorage.getItem('tritama_admin_collapsed') === 'true';
@@ -51,6 +52,16 @@ export default function AdminLayout({ header, children }: PropsWithChildren<Admi
 			return false;
 		}
 	});
+
+	// Inertia Navigation loading bar listeners
+	useEffect(() => {
+		const unregisterStart = router.on('start', () => setIsNavigating(true));
+		const unregisterFinish = router.on('finish', () => setIsNavigating(false));
+		return () => {
+			unregisterStart();
+			unregisterFinish();
+		};
+	}, []);
 
 	// Modals State
 	const [logoutModalOpen, setLogoutModalOpen] = useState(false);
@@ -153,6 +164,13 @@ export default function AdminLayout({ header, children }: PropsWithChildren<Admi
 
 	return (
 		<div className="min-h-screen bg-[#F8FAFC] font-sans antialiased text-foreground selection:bg-[#38BDF8]/30">
+			{/* Top Inertia Page Loading Progress Bar */}
+			{isNavigating && (
+				<div className="fixed top-0 left-0 right-0 z-[9999] h-1 bg-transparent overflow-hidden">
+					<div className="h-full bg-gradient-to-r from-[#FFDE42] via-[#53CBF3] to-[#5478FF] animate-pulse w-full shadow-[0_0_12px_#5478FF]" />
+				</div>
+			)}
+
 			{/* Mobile sidebar backdrop */}
 			{sidebarOpen && (
 				<div
@@ -178,7 +196,7 @@ export default function AdminLayout({ header, children }: PropsWithChildren<Admi
 						)}
 					>
 						<Link href="/admin" className="flex items-center gap-3 group">
-							<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#0284C7] text-white shadow-md ring-1 ring-white/20 transition-transform group-hover:scale-105">
+							<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#5478FF] text-white shadow-md ring-1 ring-white/20 transition-transform group-hover:scale-105">
 								<Layers className="h-5 w-5" />
 							</div>
 							{!isCollapsed && (
@@ -220,7 +238,7 @@ export default function AdminLayout({ header, children }: PropsWithChildren<Admi
 									className={cn(
 										'flex items-center gap-3.5 rounded-xl px-3.5 py-3 text-xs font-semibold transition-all group relative',
 										active
-											? 'bg-[#0284C7] text-white shadow-lg shadow-cyan-950/40'
+											? 'bg-[#5478FF] text-white shadow-lg shadow-cyan-950/40'
 											: 'text-white/70 hover:bg-white/10 hover:text-white',
 										isCollapsed && 'justify-center px-0'
 									)}
@@ -279,7 +297,7 @@ export default function AdminLayout({ header, children }: PropsWithChildren<Admi
 							rel="noopener noreferrer"
 							className="hidden sm:inline-flex items-center gap-2 rounded-full border border-border/80 bg-secondary/60 px-4 py-2 text-xs font-bold text-foreground hover:bg-secondary transition-all shadow-sm"
 						>
-							<Globe className="h-3.5 w-3.5 text-[#0284C7]" />
+							<Globe className="h-3.5 w-3.5 text-[#5478FF]" />
 							<span>Lihat Toko Publik ↗</span>
 						</a>
 
@@ -291,7 +309,7 @@ export default function AdminLayout({ header, children }: PropsWithChildren<Admi
 							title="Klik untuk Kelola Profil & Foto"
 						>
 							{/* Avatar Thumbnail */}
-							<div className="relative h-9 w-9 overflow-hidden rounded-full bg-[#0284C7] text-white flex items-center justify-center font-bold text-xs ring-2 ring-[#0284C7]/20">
+							<div className="relative h-9 w-9 overflow-hidden rounded-full bg-[#5478FF] text-white flex items-center justify-center font-bold text-xs ring-2 ring-[#5478FF]/20">
 								{avatarPreview ? (
 									<img src={avatarPreview} alt={auth.user.name} className="h-full w-full object-cover" />
 								) : (
@@ -301,7 +319,7 @@ export default function AdminLayout({ header, children }: PropsWithChildren<Admi
 
 							{/* Name & Email in Pill */}
 							<div className="text-left hidden md:block">
-								<p className="text-xs font-bold text-foreground group-hover:text-[#0284C7] transition-colors leading-tight">
+								<p className="text-xs font-bold text-foreground group-hover:text-[#5478FF] transition-colors leading-tight">
 									{auth.user.name}
 								</p>
 								<p className="text-[10px] text-muted-foreground leading-tight">
@@ -393,7 +411,7 @@ export default function AdminLayout({ header, children }: PropsWithChildren<Admi
 						</button>
 
 						<div className="flex items-center gap-3 border-b border-border/60 pb-5">
-							<div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/10 text-[#0284C7]">
+							<div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/10 text-[#5478FF]">
 								<Shield className="h-5 w-5" />
 							</div>
 							<div>
@@ -410,7 +428,7 @@ export default function AdminLayout({ header, children }: PropsWithChildren<Admi
 							{/* Avatar Upload Container */}
 							<div className="flex flex-col items-center justify-center gap-3">
 								<div className="relative group">
-									<div className="h-24 w-24 overflow-hidden rounded-full bg-[#0284C7] text-white flex items-center justify-center font-bold text-2xl shadow-md ring-4 ring-cyan-500/20">
+									<div className="h-24 w-24 overflow-hidden rounded-full bg-[#5478FF] text-white flex items-center justify-center font-bold text-2xl shadow-md ring-4 ring-cyan-500/20">
 										{avatarPreview ? (
 											<img src={avatarPreview} alt="Preview Avatar" className="h-full w-full object-cover" />
 										) : (
@@ -420,7 +438,7 @@ export default function AdminLayout({ header, children }: PropsWithChildren<Admi
 									<button
 										type="button"
 										onClick={() => fileInputRef.current?.click()}
-										className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-[#0284C7] text-white shadow-lg hover:bg-[#0369a1] transition-all"
+										className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-[#5478FF] text-white shadow-lg hover:bg-[#4064EB] transition-all"
 										title="Ganti Foto Avatar"
 									>
 										<Camera className="h-4 w-4" />
@@ -448,7 +466,7 @@ export default function AdminLayout({ header, children }: PropsWithChildren<Admi
 									value={profileData.name}
 									onChange={(e) => setProfileData('name', e.target.value)}
 									required
-									className="w-full h-11 rounded-xl border border-border bg-white px-4 text-xs font-medium text-foreground focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7]"
+									className="w-full h-11 rounded-xl border border-border bg-white px-4 text-xs font-medium text-foreground focus:border-[#5478FF] focus:ring-1 focus:ring-[#5478FF]"
 								/>
 								{profileErrors.name && <p className="mt-1 text-xs text-red-600">{profileErrors.name}</p>}
 							</div>
@@ -463,7 +481,7 @@ export default function AdminLayout({ header, children }: PropsWithChildren<Admi
 									value={profileData.email}
 									onChange={(e) => setProfileData('email', e.target.value)}
 									required
-									className="w-full h-11 rounded-xl border border-border bg-white px-4 text-xs font-medium text-foreground focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7]"
+									className="w-full h-11 rounded-xl border border-border bg-white px-4 text-xs font-medium text-foreground focus:border-[#5478FF] focus:ring-1 focus:ring-[#5478FF]"
 								/>
 								{profileErrors.email && <p className="mt-1 text-xs text-red-600">{profileErrors.email}</p>}
 							</div>
@@ -478,7 +496,7 @@ export default function AdminLayout({ header, children }: PropsWithChildren<Admi
 									value={profileData.phone}
 									onChange={(e) => setProfileData('phone', e.target.value)}
 									placeholder="+62 812-xxxx-xxxx"
-									className="w-full h-11 rounded-xl border border-border bg-white px-4 text-xs font-medium text-foreground focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7]"
+									className="w-full h-11 rounded-xl border border-border bg-white px-4 text-xs font-medium text-foreground focus:border-[#5478FF] focus:ring-1 focus:ring-[#5478FF]"
 								/>
 							</div>
 
@@ -494,7 +512,7 @@ export default function AdminLayout({ header, children }: PropsWithChildren<Admi
 								<button
 									type="submit"
 									disabled={profileProcessing}
-									className="rounded-full bg-[#0284C7] px-7 py-2.5 text-xs font-bold text-white hover:bg-[#0369a1] transition-all shadow-md active:scale-95 disabled:opacity-60"
+									className="rounded-full bg-[#5478FF] px-7 py-2.5 text-xs font-bold text-white hover:bg-[#4064EB] transition-all shadow-md active:scale-95 disabled:opacity-60"
 								>
 									{profileProcessing ? 'Menyimpan...' : 'Simpan Perubahan'}
 								</button>

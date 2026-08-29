@@ -34,10 +34,11 @@ class GalleryController extends Controller
         $galleries = $query->orderBy('sort_order')->latest('id')->paginate(10)->withQueryString();
 
         $categoryOptions = [
-            ['value' => 'fasilitas', 'label' => 'Fasilitas & QC'],
-            ['value' => 'laboratorium', 'label' => 'Uji Laboratorium'],
-            ['value' => 'perkebunan', 'label' => 'Sentra Perkebunan'],
-            ['value' => 'ekspor', 'label' => 'Logistik & Ekspor'],
+            ['value' => 'kaca_film', 'label' => 'Kaca Film'],
+            ['value' => 'sandblast', 'label' => 'Sandblast & Stiker'],
+            ['value' => 'wallpaper', 'label' => 'Wallpaper Dinding'],
+            ['value' => 'signage', 'label' => 'Signage & Huruf Timbul'],
+            ['value' => 'blinds', 'label' => 'Blinds & Gorden'],
         ];
 
         return Inertia::render('Admin/Galleries/Index', [

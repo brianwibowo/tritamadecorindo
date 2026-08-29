@@ -131,7 +131,21 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request): RedirectResponse
     {
-        $this->productService->createWithVariants($request->validated());
+        $validated = $request->validated();
+
+        $images = $validated['images'] ?? [];
+        if ($request->hasFile('image_files')) {
+            foreach ($request->file('image_files') as $file) {
+                if ($file && $file->isValid()) {
+                    $path = $file->store('products', 'public');
+                    $images[] = '/storage/'.$path;
+                }
+            }
+        }
+
+        $validated['images'] = array_values(array_filter($images));
+
+        $this->productService->createWithVariants($validated);
 
         return redirect()
             ->route('admin.products.index')
@@ -157,7 +171,21 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product): RedirectResponse
     {
-        $this->productService->updateWithVariants($product, $request->validated());
+        $validated = $request->validated();
+
+        $images = $validated['images'] ?? [];
+        if ($request->hasFile('image_files')) {
+            foreach ($request->file('image_files') as $file) {
+                if ($file && $file->isValid()) {
+                    $path = $file->store('products', 'public');
+                    $images[] = '/storage/'.$path;
+                }
+            }
+        }
+
+        $validated['images'] = array_values(array_filter($images));
+
+        $this->productService->updateWithVariants($product, $validated);
 
         return redirect()
             ->route('admin.products.index')

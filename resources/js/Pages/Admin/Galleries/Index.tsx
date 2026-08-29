@@ -202,18 +202,20 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 
 	const getCategoryBadge = (category: string) => {
 		const styles: Record<string, { bg: string; text: string; ring: string }> = {
-			fasilitas: { bg: 'bg-blue-500/10', text: 'text-blue-800', ring: 'ring-blue-500/20' },
-			laboratorium: { bg: 'bg-purple-500/10', text: 'text-purple-800', ring: 'ring-purple-500/20' },
-			perkebunan: { bg: 'bg-emerald-500/10', text: 'text-emerald-800', ring: 'ring-emerald-500/20' },
-			ekspor: { bg: 'bg-amber-500/10', text: 'text-amber-800', ring: 'ring-amber-500/20' },
+			kaca_film: { bg: 'bg-cyan-500/10', text: 'text-[#5478FF]', ring: 'ring-cyan-500/20' },
+			sandblast: { bg: 'bg-blue-500/10', text: 'text-blue-800', ring: 'ring-blue-500/20' },
+			wallpaper: { bg: 'bg-purple-500/10', text: 'text-purple-800', ring: 'ring-purple-500/20' },
+			signage: { bg: 'bg-amber-500/10', text: 'text-amber-800', ring: 'ring-amber-500/20' },
+			blinds: { bg: 'bg-emerald-500/10', text: 'text-emerald-800', ring: 'ring-emerald-500/20' },
 		};
 
 		const meta = styles[category] || { bg: 'bg-gray-100', text: 'text-gray-800', ring: 'ring-gray-200' };
 		const labels: Record<string, string> = {
-			fasilitas: 'Fasilitas & QC',
-			laboratorium: 'Uji Laboratorium',
-			perkebunan: 'Sentra Perkebunan',
-			ekspor: 'Logistik & Ekspor',
+			kaca_film: 'Kaca Film',
+			sandblast: 'Sandblast & Stiker',
+			wallpaper: 'Wallpaper Dinding',
+			signage: 'Signage & Huruf Timbul',
+			blinds: 'Blinds & Gorden',
 		};
 
 		return (
@@ -224,7 +226,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 	};
 
 	return (
-		<AdminLayout header="Galeri Fasilitas & Ekspor">
+		<AdminLayout header="Galeri & Portofolio Proyek">
 			<Head title="Manajemen Galeri — Panel Admin Tritama Decorindo" />
 
 			<div className="space-y-6">
@@ -238,7 +240,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 								value={search}
 								onChange={(e) => setSearch(e.target.value)}
 								placeholder="Cari judul, caption galeri..."
-								className="w-full h-10 rounded-xl border border-border bg-[#FDFBF9] pl-9 pr-3 text-xs text-foreground placeholder:text-muted-foreground/60 focus:border-[#80070A]"
+								className="w-full h-10 rounded-xl border border-border bg-[#FDFBF9] pl-9 pr-3 text-xs text-foreground placeholder:text-muted-foreground/60 focus:border-[#5478FF]"
 							/>
 							<Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
 						</form>
@@ -246,7 +248,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 						<select
 							value={filters.category || ''}
 							onChange={(e) => handleFilterChange({ category: e.target.value })}
-							className="h-10 rounded-xl border border-border bg-[#FDFBF9] px-3 text-xs font-semibold text-foreground focus:border-[#80070A]"
+							className="h-10 rounded-xl border border-border bg-[#FDFBF9] px-3 text-xs font-semibold text-foreground focus:border-[#5478FF]"
 						>
 							<option value="">Semua Kategori</option>
 							{categories.map((c) => (
@@ -259,7 +261,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 						{(filters.search || filters.category) && (
 							<button
 								onClick={() => router.get(route('admin.galleries.index'))}
-								className="inline-flex items-center gap-1 text-xs text-[#80070A] hover:underline"
+								className="inline-flex items-center gap-1 text-xs text-[#5478FF] hover:underline"
 							>
 								<RotateCcw className="h-3 w-3" />
 								Reset
@@ -271,10 +273,10 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 						type="button"
 						onClick={() => {
 							createForm.reset();
-							setImagePreview('/images/products/cengkeh-maluku.webp');
+							setImagePreview('/images/products/kaca-film-riben.webp');
 							setCreateModalOpen(true);
 						}}
-						className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#80070A] px-5 py-2.5 text-xs font-bold text-white hover:brightness-110 transition-all shadow-md active:scale-95 whitespace-nowrap"
+						className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#5478FF] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#4064EB] transition-all shadow-md active:scale-95 whitespace-nowrap"
 					>
 						<Plus className="h-4 w-4" />
 						<span>Tambah Foto Galeri</span>
@@ -297,8 +299,26 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 							<tbody className="divide-y divide-border/40">
 								{galleries.data.length === 0 ? (
 									<tr>
-										<td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">
-											Belum ada foto galeri yang ditambahkan.
+										<td colSpan={5} className="px-6 py-16 text-center">
+											<div className="flex flex-col items-center gap-3">
+												<div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center">
+													<ImageIcon className="h-8 w-8 text-slate-400" />
+												</div>
+												<p className="text-sm font-bold text-foreground">Belum ada foto galeri</p>
+												<p className="text-xs text-muted-foreground max-w-xs">Unggah dokumentasi foto hasil pengerjaan proyek pertama Anda.</p>
+												<button
+													type="button"
+													onClick={() => {
+														createForm.reset();
+														setImagePreview('/images/products/kaca-film-riben.webp');
+														setCreateModalOpen(true);
+													}}
+													className="inline-flex items-center gap-1.5 rounded-xl bg-[#5478FF] px-4 py-2 text-xs font-bold text-white hover:bg-[#4064EB] shadow-sm"
+												>
+													<Plus className="h-3.5 w-3.5" />
+													Tambah Foto Galeri Pertama
+												</button>
+											</div>
 										</td>
 									</tr>
 								) : (
@@ -345,7 +365,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 														onClick={() => handleToggleStatus(item)}
 														className={cn(
 															'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none shadow-inner',
-															item.active ? 'bg-[#80070A]' : 'bg-gray-300'
+															item.active ? 'bg-[#5478FF]' : 'bg-gray-300'
 														)}
 														title={item.active ? 'Klik untuk Sembunyikan' : 'Klik untuk Tampilkan'}
 													>
@@ -417,7 +437,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 									className={cn(
 										'rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all',
 										link.active
-											? 'bg-[#80070A] text-white shadow-sm'
+											? 'bg-[#5478FF] text-white shadow-sm'
 											: link.url
 											? 'bg-white text-foreground border border-border hover:bg-secondary'
 											: 'text-muted-foreground/40 cursor-not-allowed bg-transparent'
@@ -469,7 +489,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 									<button
 										type="button"
 										onClick={() => fileInputRef.current?.click()}
-										className="absolute bottom-3 right-3 rounded-full bg-[#0284C7] text-white p-2 shadow-lg hover:bg-[#0369a1] flex items-center gap-1.5 text-xs font-semibold px-3"
+										className="absolute bottom-3 right-3 rounded-full bg-[#5478FF] text-white p-2 shadow-lg hover:bg-[#4064EB] flex items-center gap-1.5 text-xs font-semibold px-3"
 									>
 										<Camera className="h-3.5 w-3.5" />
 										<span>Pilih Foto</span>
@@ -486,16 +506,19 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 							</div>
 
 							<div>
-								<label className="block text-xs font-bold uppercase tracking-wider mb-1">Judul Dokumentasi</label>
+								<label className="block text-xs font-bold uppercase tracking-wider mb-1">
+									Judul Dokumentasi <span className="text-red-500">*</span>
+								</label>
 								<input
 									type="text"
 									value={createForm.data.title}
 									onChange={(e) => createForm.setData('title', e.target.value)}
 									required
 									placeholder="Contoh: Pemasangan Sandblast Cutting Logo Kantor Jakarta Pusat"
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#5478FF]"
 								/>
-								{createForm.errors.title && <p className="mt-1 text-xs text-red-600">{createForm.errors.title}</p>}
+								<p className="mt-1 text-[10px] text-muted-foreground">Tuliskan nama proyek atau lokasi pengerjaan</p>
+								{createForm.errors.title && <p className="mt-0.5 text-xs text-red-600">{createForm.errors.title}</p>}
 							</div>
 
 							<div>
@@ -503,7 +526,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 								<select
 									value={createForm.data.category}
 									onChange={(e) => createForm.setData('category', e.target.value)}
-									className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#0284C7]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#5478FF]"
 								>
 									{categories.map((c) => (
 										<option key={c.value} value={c.value}>
@@ -514,14 +537,21 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 							</div>
 
 							<div>
-								<label className="block text-xs font-bold uppercase tracking-wider mb-1">Caption / Deskripsi Lengkap</label>
+								<div className="flex items-center justify-between mb-1">
+									<label className="block text-xs font-bold uppercase tracking-wider">Caption / Deskripsi Lengkap</label>
+									<span className="text-[10px] text-muted-foreground">
+										{createForm.data.caption.length}/300
+									</span>
+								</div>
 								<textarea
 									value={createForm.data.caption}
 									onChange={(e) => createForm.setData('caption', e.target.value)}
 									rows={3}
+									maxLength={300}
 									placeholder="Penjelasan detail hasil pengerjaan pemasangan..."
-									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#0284C7]"
+									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#5478FF]"
 								/>
+								<p className="mt-1 text-[10px] text-muted-foreground">Ceritakan detail material yang digunakan, tantangan, atau kepuasan klien</p>
 							</div>
 
 							<div>
@@ -530,7 +560,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 										type="checkbox"
 										checked={createForm.data.active}
 										onChange={(e) => createForm.setData('active', e.target.checked)}
-										className="h-4 w-4 rounded text-[#0284C7] focus:ring-[#0284C7]"
+										className="h-4 w-4 rounded text-[#5478FF] focus:ring-[#5478FF]"
 									/>
 									<span className="text-xs font-semibold text-foreground">Tampilkan foto ini di halaman galeri publik</span>
 								</label>
@@ -547,7 +577,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 								<button
 									type="submit"
 									disabled={createForm.processing}
-									className="rounded-full bg-[#0284C7] px-6 py-2 text-xs font-bold text-white hover:bg-[#0369a1] disabled:opacity-60 shadow-md"
+									className="rounded-full bg-[#5478FF] px-6 py-2 text-xs font-bold text-white hover:bg-[#4064EB] disabled:opacity-60 shadow-md"
 								>
 									{createForm.processing ? 'Menyimpan...' : 'Simpan Galeri'}
 								</button>
@@ -596,7 +626,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 									<button
 										type="button"
 										onClick={() => fileInputRef.current?.click()}
-										className="absolute bottom-3 right-3 rounded-full bg-[#0284C7] text-white p-2 shadow-lg hover:bg-[#0369a1] flex items-center gap-1.5 text-xs font-semibold px-3"
+										className="absolute bottom-3 right-3 rounded-full bg-[#5478FF] text-white p-2 shadow-lg hover:bg-[#4064EB] flex items-center gap-1.5 text-xs font-semibold px-3"
 									>
 										<Camera className="h-3.5 w-3.5" />
 										<span>Ganti Foto</span>
@@ -619,7 +649,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 									value={editForm.data.title}
 									onChange={(e) => editForm.setData('title', e.target.value)}
 									required
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#5478FF]"
 								/>
 								{editForm.errors.title && <p className="mt-1 text-xs text-red-600">{editForm.errors.title}</p>}
 							</div>
@@ -629,7 +659,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 								<select
 									value={editForm.data.category}
 									onChange={(e) => editForm.setData('category', e.target.value)}
-									className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#0284C7]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#5478FF]"
 								>
 									{categories.map((c) => (
 										<option key={c.value} value={c.value}>
@@ -645,7 +675,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 									value={editForm.data.caption}
 									onChange={(e) => editForm.setData('caption', e.target.value)}
 									rows={3}
-									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#0284C7]"
+									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#5478FF]"
 								/>
 							</div>
 
@@ -655,7 +685,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 										type="checkbox"
 										checked={editForm.data.active}
 										onChange={(e) => editForm.setData('active', e.target.checked)}
-										className="h-4 w-4 rounded text-[#0284C7] focus:ring-[#0284C7]"
+										className="h-4 w-4 rounded text-[#5478FF] focus:ring-[#5478FF]"
 									/>
 									<span className="text-xs font-semibold text-foreground">Tampilkan foto ini di halaman galeri publik</span>
 								</label>
@@ -672,7 +702,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 								<button
 									type="submit"
 									disabled={editForm.processing}
-									className="rounded-full bg-[#0284C7] px-6 py-2 text-xs font-bold text-white hover:bg-[#0369a1] disabled:opacity-60 shadow-md"
+									className="rounded-full bg-[#5478FF] px-6 py-2 text-xs font-bold text-white hover:bg-[#4064EB] disabled:opacity-60 shadow-md"
 								>
 									{editForm.processing ? 'Menyimpan...' : 'Simpan Perubahan'}
 								</button>

@@ -11,4 +11,4 @@ Disallow: /forgot-password
 Disallow: /reset-password
 Disallow: /dashboard
 
-Sitemap: https://lfmjayatama.com/sitemap.xml
+Sitemap: /sitemap.xml

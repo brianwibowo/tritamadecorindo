@@ -30,6 +30,12 @@ import {
 import { useState } from 'react';
 import type { PaginatedData } from '@/types';
 
+/** Helper: Format number to Rp string with dot separators */
+const formatRp = (value: number): string => {
+	if (!value && value !== 0) return '';
+	return 'Rp ' + value.toLocaleString('id-ID');
+};
+
 interface OrderArchiveItem {
 	id: string;
 	order_number: string;
@@ -77,7 +83,7 @@ const statusConfig: Record<
 	in_progress: {
 		label: 'Pengerjaan / Pasang',
 		badgeClass: 'bg-blue-50 text-blue-800 border-blue-200',
-		borderClass: 'border-l-[#0284C7]',
+		borderClass: 'border-l-[#5478FF]',
 		icon: Wrench,
 	},
 	completed: {
@@ -316,14 +322,14 @@ Catatan: ${selectedArchive.notes || '-'}`;
 					{/* 3. Pengerjaan / Pasang */}
 					<div className="rounded-3xl border border-border/60 bg-white p-5 shadow-sm transition-all hover:shadow-md">
 						<div className="flex items-center gap-3">
-							<div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-500/10 text-[#0284C7]">
+							<div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-500/10 text-[#5478FF]">
 								<Wrench className="h-5 w-5" />
 							</div>
 							<div>
 								<p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
 									Pengerjaan
 								</p>
-								<p className="text-xl font-extrabold text-[#0284C7] mt-0.5">
+								<p className="text-xl font-extrabold text-[#5478FF] mt-0.5">
 									{stats.totalInProgress}
 								</p>
 							</div>
@@ -351,13 +357,13 @@ Catatan: ${selectedArchive.notes || '-'}`;
 					<div className="rounded-3xl border border-border/60 bg-white p-5 shadow-sm transition-all hover:shadow-md sm:col-span-2 lg:col-span-1">
 						<div className="flex items-center gap-3">
 							<div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-800">
-								<Sparkles className="h-5 w-5 text-[#0284C7]" />
+								<Sparkles className="h-5 w-5 text-[#5478FF]" />
 							</div>
 							<div className="min-w-0">
 								<p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
 									Total Nilai
 								</p>
-								<p className="text-sm font-extrabold text-[#0284C7] mt-0.5 truncate" title={stats.totalProjectValueFormatted}>
+								<p className="text-sm font-extrabold text-[#5478FF] mt-0.5 truncate" title={stats.totalProjectValueFormatted}>
 									{stats.totalProjectValueFormatted}
 								</p>
 							</div>
@@ -379,7 +385,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 					<button
 						type="button"
 						onClick={() => setCreateModalOpen(true)}
-						className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0284C7] px-5 py-2.5 text-xs font-bold text-white shadow-md hover:bg-[#0369a1] active:scale-95 transition-all shrink-0"
+						className="inline-flex items-center justify-center gap-2 rounded-full bg-[#5478FF] px-5 py-2.5 text-xs font-bold text-white shadow-md hover:bg-[#4064EB] active:scale-95 transition-all shrink-0"
 					>
 						<Plus className="h-4 w-4" />
 						<span>Catat Arsip Baru</span>
@@ -397,7 +403,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 								value={search}
 								onChange={(e) => setSearch(e.target.value)}
 								placeholder="Cari nomor arsip, nama klien, telepon, atau rincian..."
-								className="h-10 w-full rounded-2xl border border-border bg-slate-50/50 pl-10 pr-4 text-xs text-foreground placeholder:text-muted-foreground focus:border-[#0284C7] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#0284C7] transition-all"
+								className="h-10 w-full rounded-2xl border border-border bg-slate-50/50 pl-10 pr-4 text-xs text-foreground placeholder:text-muted-foreground focus:border-[#5478FF] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#5478FF] transition-all"
 							/>
 						</div>
 
@@ -409,7 +415,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 									setSelectedStatus(e.target.value);
 									handleFilterChange({ status: e.target.value });
 								}}
-								className="h-10 w-full rounded-2xl border border-border bg-slate-50/50 px-3 text-xs text-foreground focus:border-[#0284C7] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#0284C7] transition-all"
+								className="h-10 w-full rounded-2xl border border-border bg-slate-50/50 px-3 text-xs text-foreground focus:border-[#5478FF] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#5478FF] transition-all"
 							>
 								<option value="">Semua Status Pengerjaan</option>
 								<option value="survey">Menunggu Survey</option>
@@ -427,7 +433,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 									setSelectedProjectType(e.target.value);
 									handleFilterChange({ project_type: e.target.value });
 								}}
-								className="h-10 w-full rounded-2xl border border-border bg-slate-50/50 px-3 text-xs text-foreground focus:border-[#0284C7] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#0284C7] transition-all"
+								className="h-10 w-full rounded-2xl border border-border bg-slate-50/50 px-3 text-xs text-foreground focus:border-[#5478FF] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#5478FF] transition-all"
 							>
 								<option value="">Semua Kategori Proyek</option>
 								{projectTypes.map((t) => (
@@ -524,7 +530,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 												</td>
 
 												{/* Total Amount */}
-												<td className="px-5 py-4 font-bold text-[#0284C7]">
+												<td className="px-5 py-4 font-bold text-[#5478FF]">
 													{item.total_amount_formatted}
 												</td>
 
@@ -611,7 +617,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 										className={cn(
 											'rounded-xl px-3 py-1.5 text-xs font-bold transition-colors',
 											link.active
-												? 'bg-[#0284C7] text-white'
+												? 'bg-[#5478FF] text-white'
 												: link.url
 													? 'bg-white border border-border text-foreground hover:bg-secondary'
 													: 'text-muted-foreground/40 cursor-not-allowed'
@@ -646,7 +652,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 						</button>
 
 						<div className="flex items-center gap-3 border-b border-border/60 pb-4">
-							<div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/10 text-[#0284C7]">
+							<div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-cyan-500/10 text-[#5478FF]">
 								<Plus className="h-5 w-5" />
 							</div>
 							<div>
@@ -672,7 +678,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 										value={createForm.data.customer_name}
 										onChange={(e) => createForm.setData('customer_name', e.target.value)}
 										placeholder="Misal: Bpk. Hendra / PT Maju Jaya"
-										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 									/>
 									{createForm.errors.customer_name && (
 										<p className="text-[11px] text-red-500">{createForm.errors.customer_name}</p>
@@ -690,7 +696,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 										value={createForm.data.customer_phone}
 										onChange={(e) => createForm.setData('customer_phone', e.target.value)}
 										placeholder="0819-9090-9646"
-										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 									/>
 									{createForm.errors.customer_phone && (
 										<p className="text-[11px] text-red-500">{createForm.errors.customer_phone}</p>
@@ -708,7 +714,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 									value={createForm.data.customer_address}
 									onChange={(e) => createForm.setData('customer_address', e.target.value)}
 									placeholder="Contoh: Gedung Menara Kuningan Lt. 12, Jl. HR Rasuna Said, Jakarta Selatan"
-									className="w-full rounded-xl border border-border p-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+									className="w-full rounded-xl border border-border p-3 text-xs focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 								/>
 							</div>
 
@@ -722,7 +728,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 										required
 										value={createForm.data.project_type}
 										onChange={(e) => createForm.setData('project_type', e.target.value)}
-										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 									>
 										{projectTypes.map((t) => (
 											<option key={t} value={t}>
@@ -737,15 +743,22 @@ Catatan: ${selectedArchive.notes || '-'}`;
 									<label className="text-xs font-bold text-foreground">
 										Total Nilai Proyek (Rp) <span className="text-red-500">*</span>
 									</label>
-									<input
-										type="number"
-										required
-										min={0}
-										step={1000}
-										value={createForm.data.total_amount}
-										onChange={(e) => createForm.setData('total_amount', Number(e.target.value))}
-										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
-									/>
+									<div className="relative">
+										<span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground pointer-events-none">Rp</span>
+										<input
+											type="number"
+											required
+											min={0}
+											step={1000}
+											value={createForm.data.total_amount || ''}
+											onChange={(e) => createForm.setData('total_amount', Number(e.target.value))}
+											placeholder="15000000"
+											className="h-10 w-full rounded-xl border border-border pl-9 pr-3 text-xs font-semibold focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
+										/>
+									</div>
+									{createForm.data.total_amount > 0 && (
+										<p className="text-[10px] text-[#5478FF] font-bold mt-0.5 pl-1">= {formatRp(createForm.data.total_amount)}</p>
+									)}
 								</div>
 							</div>
 
@@ -760,7 +773,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 									value={createForm.data.details}
 									onChange={(e) => createForm.setData('details', e.target.value)}
 									placeholder="Contoh: Kaca Film Riben 80% (25 m2) + Sandblast Cutting motif garis pintu ruang meeting"
-									className="w-full rounded-xl border border-border p-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+									className="w-full rounded-xl border border-border p-3 text-xs focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 								/>
 							</div>
 
@@ -774,7 +787,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 										required
 										value={createForm.data.status}
 										onChange={(e) => createForm.setData('status', e.target.value)}
-										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 									>
 										<option value="survey">Menunggu Survey</option>
 										<option value="in_progress">Pengerjaan / Pasang</option>
@@ -792,7 +805,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 										type="date"
 										value={createForm.data.installation_date}
 										onChange={(e) => createForm.setData('installation_date', e.target.value)}
-										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 									/>
 								</div>
 							</div>
@@ -807,7 +820,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 									value={createForm.data.notes}
 									onChange={(e) => createForm.setData('notes', e.target.value)}
 									placeholder="Contoh: Garansi pasang 1 tahun, teknisi Pak Joko & tim"
-									className="w-full rounded-xl border border-border p-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+									className="w-full rounded-xl border border-border p-3 text-xs focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 								/>
 							</div>
 
@@ -822,7 +835,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 								<button
 									type="submit"
 									disabled={createForm.processing}
-									className="rounded-full bg-[#0284C7] px-6 py-2 text-xs font-bold text-white shadow-md hover:bg-[#0369a1] disabled:opacity-50 transition-all"
+									className="rounded-full bg-[#5478FF] px-6 py-2 text-xs font-bold text-white shadow-md hover:bg-[#4064EB] disabled:opacity-50 transition-all"
 								>
 									{createForm.processing ? 'Menyimpan...' : 'Simpan Arsip'}
 								</button>
@@ -879,7 +892,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 										required
 										value={editForm.data.customer_name}
 										onChange={(e) => editForm.setData('customer_name', e.target.value)}
-										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 									/>
 								</div>
 
@@ -893,7 +906,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 										required
 										value={editForm.data.customer_phone}
 										onChange={(e) => editForm.setData('customer_phone', e.target.value)}
-										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 									/>
 								</div>
 							</div>
@@ -907,7 +920,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 									rows={2}
 									value={editForm.data.customer_address}
 									onChange={(e) => editForm.setData('customer_address', e.target.value)}
-									className="w-full rounded-xl border border-border p-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+									className="w-full rounded-xl border border-border p-3 text-xs focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 								/>
 							</div>
 
@@ -921,7 +934,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 										required
 										value={editForm.data.project_type}
 										onChange={(e) => editForm.setData('project_type', e.target.value)}
-										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 									>
 										{projectTypes.map((t) => (
 											<option key={t} value={t}>
@@ -936,15 +949,21 @@ Catatan: ${selectedArchive.notes || '-'}`;
 									<label className="text-xs font-bold text-foreground">
 										Total Nilai Proyek (Rp) <span className="text-red-500">*</span>
 									</label>
-									<input
-										type="number"
-										required
-										min={0}
-										step={1000}
-										value={editForm.data.total_amount}
-										onChange={(e) => editForm.setData('total_amount', Number(e.target.value))}
-										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
-									/>
+									<div className="relative">
+										<span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground pointer-events-none">Rp</span>
+										<input
+											type="number"
+											required
+											min={0}
+											step={1000}
+											value={editForm.data.total_amount || ''}
+											onChange={(e) => editForm.setData('total_amount', Number(e.target.value))}
+											className="h-10 w-full rounded-xl border border-border pl-9 pr-3 text-xs font-semibold focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
+										/>
+									</div>
+									{editForm.data.total_amount > 0 && (
+										<p className="text-[10px] text-[#5478FF] font-bold mt-0.5 pl-1">= {formatRp(editForm.data.total_amount)}</p>
+									)}
 								</div>
 							</div>
 
@@ -958,7 +977,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 									required
 									value={editForm.data.details}
 									onChange={(e) => editForm.setData('details', e.target.value)}
-									className="w-full rounded-xl border border-border p-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+									className="w-full rounded-xl border border-border p-3 text-xs focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 								/>
 							</div>
 
@@ -972,7 +991,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 										required
 										value={editForm.data.status}
 										onChange={(e) => editForm.setData('status', e.target.value)}
-										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 									>
 										<option value="survey">Menunggu Survey</option>
 										<option value="in_progress">Pengerjaan / Pasang</option>
@@ -990,7 +1009,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 										type="date"
 										value={editForm.data.installation_date}
 										onChange={(e) => editForm.setData('installation_date', e.target.value)}
-										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+										className="h-10 w-full rounded-xl border border-border px-3 text-xs focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 									/>
 								</div>
 							</div>
@@ -1004,7 +1023,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 									rows={2}
 									value={editForm.data.notes}
 									onChange={(e) => editForm.setData('notes', e.target.value)}
-									className="w-full rounded-xl border border-border p-3 text-xs focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
+									className="w-full rounded-xl border border-border p-3 text-xs focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 								/>
 							</div>
 
@@ -1019,7 +1038,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 								<button
 									type="submit"
 									disabled={editForm.processing}
-									className="rounded-full bg-[#0284C7] px-6 py-2 text-xs font-bold text-white shadow-md hover:bg-[#0369a1] disabled:opacity-50 transition-all"
+									className="rounded-full bg-[#5478FF] px-6 py-2 text-xs font-bold text-white shadow-md hover:bg-[#4064EB] disabled:opacity-50 transition-all"
 								>
 									{editForm.processing ? 'Menyimpan...' : 'Perbarui Arsip'}
 								</button>
@@ -1044,7 +1063,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 
 						<div className="border-b border-border/60 pb-4">
 							<div className="flex items-center justify-between">
-								<span className="font-mono text-xs font-bold text-[#0284C7] bg-cyan-500/10 px-2.5 py-0.5 rounded-full border border-cyan-500/20">
+								<span className="font-mono text-xs font-bold text-[#5478FF] bg-cyan-500/10 px-2.5 py-0.5 rounded-full border border-cyan-500/20">
 									{selectedArchive.order_number}
 								</span>
 								<span
@@ -1087,7 +1106,7 @@ Catatan: ${selectedArchive.notes || '-'}`;
 							</div>
 							<div className="flex justify-between py-1.5 border-b border-border/40">
 								<dt className="text-muted-foreground font-medium">Total Nilai Proyek</dt>
-								<dd className="font-extrabold text-[#0284C7] text-sm">
+								<dd className="font-extrabold text-[#5478FF] text-sm">
 									{selectedArchive.total_amount_formatted}
 								</dd>
 							</div>

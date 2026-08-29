@@ -326,7 +326,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 												{/* Avatar & Name */}
 												<td className="px-6 py-4">
 													<div className="flex items-center gap-3">
-														<div className="h-10 w-10 overflow-hidden rounded-full bg-[#0284C7] text-white flex items-center justify-center font-bold text-xs ring-1 ring-border">
+														<div className="h-10 w-10 overflow-hidden rounded-full bg-[#5478FF] text-white flex items-center justify-center font-bold text-xs ring-1 ring-border">
 															{user.image ? (
 																<img src={user.image} alt={user.name} className="h-full w-full object-cover" />
 															) : (
@@ -356,7 +356,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 															onClick={() => handleToggleStatus(user)}
 															className={cn(
 																'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none shadow-inner',
-																isActive ? 'bg-[#0284C7]' : 'bg-gray-300'
+																isActive ? 'bg-[#5478FF]' : 'bg-gray-300'
 															)}
 															title={isActive ? 'Klik untuk Nonaktifkan Akun' : 'Klik untuk Aktifkan Akun'}
 														>
@@ -485,7 +485,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 							{/* Avatar */}
 							<div className="flex flex-col items-center justify-center gap-2">
 								<div className="relative group">
-									<div className="h-20 w-20 overflow-hidden rounded-full bg-[#0284C7] text-white flex items-center justify-center font-bold text-xl ring-2 ring-border shadow-sm">
+									<div className="h-20 w-20 overflow-hidden rounded-full bg-[#5478FF] text-white flex items-center justify-center font-bold text-xl ring-2 ring-border shadow-sm">
 										{avatarPreview ? (
 											<img src={avatarPreview} alt="Preview" className="h-full w-full object-cover" />
 										) : (
@@ -495,7 +495,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									<button
 										type="button"
 										onClick={() => fileInputRef.current?.click()}
-										className="absolute bottom-0 right-0 rounded-full bg-[#0284C7] text-white p-1.5 shadow-md hover:bg-[#0369a1]"
+										className="absolute bottom-0 right-0 rounded-full bg-[#5478FF] text-white p-1.5 shadow-md hover:bg-[#4064EB]"
 									>
 										<Camera className="h-3.5 w-3.5" />
 									</button>
@@ -519,7 +519,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									onChange={(e) => createForm.setData('name', e.target.value)}
 									required
 									placeholder="Contoh: Budi Santoso"
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#5478FF]"
 								/>
 								{createForm.errors.name && <p className="mt-1 text-xs text-red-600">{createForm.errors.name}</p>}
 							</div>
@@ -533,7 +533,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									onChange={(e) => createForm.setData('email', e.target.value)}
 									required
 									placeholder="budi@example.com"
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#5478FF]"
 								/>
 								{createForm.errors.email && <p className="mt-1 text-xs text-red-600">{createForm.errors.email}</p>}
 							</div>
@@ -547,7 +547,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									onChange={(e) => createForm.setData('password', e.target.value)}
 									required
 									placeholder="Minimal 8 karakter"
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#5478FF]"
 								/>
 								{createForm.errors.password && <p className="mt-1 text-xs text-red-600">{createForm.errors.password}</p>}
 							</div>
@@ -559,7 +559,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									<select
 										value={createForm.data.role}
 										onChange={(e) => createForm.setData('role', e.target.value)}
-										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#0284C7]"
+										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#5478FF]"
 									>
 										<option value="buyer">Buyer / Klien</option>
 										<option value="admin">Administrator</option>
@@ -570,7 +570,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									<select
 										value={createForm.data.status}
 										onChange={(e) => createForm.setData('status', e.target.value)}
-										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#0284C7]"
+										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#5478FF]"
 									>
 										<option value="active">Aktif</option>
 										<option value="inactive">Nonaktif</option>
@@ -586,7 +586,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									value={createForm.data.phone}
 									onChange={(e) => createForm.setData('phone', e.target.value)}
 									placeholder="+62 812-xxxx-xxxx"
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#5478FF]"
 								/>
 							</div>
 
@@ -602,7 +602,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 								<button
 									type="submit"
 									disabled={createForm.processing}
-									className="rounded-full bg-[#0284C7] px-6 py-2 text-xs font-bold text-white hover:bg-[#0369a1] disabled:opacity-60 shadow-md"
+									className="rounded-full bg-[#5478FF] px-6 py-2 text-xs font-bold text-white hover:bg-[#4064EB] disabled:opacity-60 shadow-md"
 								>
 									{createForm.processing ? 'Menyimpan...' : 'Simpan Pengguna'}
 								</button>
@@ -641,7 +641,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 							{/* Avatar */}
 							<div className="flex flex-col items-center justify-center gap-2">
 								<div className="relative group">
-									<div className="h-20 w-20 overflow-hidden rounded-full bg-[#0284C7] text-white flex items-center justify-center font-bold text-xl ring-2 ring-border shadow-sm">
+									<div className="h-20 w-20 overflow-hidden rounded-full bg-[#5478FF] text-white flex items-center justify-center font-bold text-xl ring-2 ring-border shadow-sm">
 										{avatarPreview ? (
 											<img src={avatarPreview} alt="Preview" className="h-full w-full object-cover" />
 										) : (
@@ -651,7 +651,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									<button
 										type="button"
 										onClick={() => fileInputRef.current?.click()}
-										className="absolute bottom-0 right-0 rounded-full bg-[#0284C7] text-white p-1.5 shadow-md hover:bg-[#0369a1]"
+										className="absolute bottom-0 right-0 rounded-full bg-[#5478FF] text-white p-1.5 shadow-md hover:bg-[#4064EB]"
 									>
 										<Camera className="h-3.5 w-3.5" />
 									</button>
@@ -674,7 +674,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									value={editForm.data.name}
 									onChange={(e) => editForm.setData('name', e.target.value)}
 									required
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#5478FF]"
 								/>
 								{editForm.errors.name && <p className="mt-1 text-xs text-red-600">{editForm.errors.name}</p>}
 							</div>
@@ -687,7 +687,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									value={editForm.data.email}
 									onChange={(e) => editForm.setData('email', e.target.value)}
 									required
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#5478FF]"
 								/>
 								{editForm.errors.email && <p className="mt-1 text-xs text-red-600">{editForm.errors.email}</p>}
 							</div>
@@ -702,7 +702,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									value={editForm.data.password}
 									onChange={(e) => editForm.setData('password', e.target.value)}
 									placeholder="Biarkan kosong jika tidak diubah"
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#5478FF]"
 								/>
 								{editForm.errors.password && <p className="mt-1 text-xs text-red-600">{editForm.errors.password}</p>}
 							</div>
@@ -714,7 +714,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									<select
 										value={editForm.data.role}
 										onChange={(e) => editForm.setData('role', e.target.value)}
-										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#0284C7]"
+										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#5478FF]"
 									>
 										<option value="buyer">Buyer / Klien</option>
 										<option value="admin">Administrator</option>
@@ -725,7 +725,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									<select
 										value={editForm.data.status}
 										onChange={(e) => editForm.setData('status', e.target.value)}
-										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#0284C7]"
+										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#5478FF]"
 									>
 										<option value="active">Aktif</option>
 										<option value="inactive">Nonaktif</option>
@@ -741,7 +741,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									value={editForm.data.phone}
 									onChange={(e) => editForm.setData('phone', e.target.value)}
 									placeholder="+62 812-xxxx-xxxx"
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#5478FF]"
 								/>
 							</div>
 
@@ -757,7 +757,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 								<button
 									type="submit"
 									disabled={editForm.processing}
-									className="rounded-full bg-[#0284C7] px-6 py-2 text-xs font-bold text-white hover:bg-[#0369a1] disabled:opacity-60 shadow-md"
+									className="rounded-full bg-[#5478FF] px-6 py-2 text-xs font-bold text-white hover:bg-[#4064EB] disabled:opacity-60 shadow-md"
 								>
 									{editForm.processing ? 'Menyimpan...' : 'Simpan Perubahan'}
 								</button>
@@ -779,7 +779,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 						</button>
 
 						<div className="flex items-center gap-4 border-b border-border/60 pb-5">
-							<div className="h-16 w-16 overflow-hidden rounded-full bg-[#0284C7] text-white flex items-center justify-center font-bold text-xl ring-2 ring-border shadow-sm">
+							<div className="h-16 w-16 overflow-hidden rounded-full bg-[#5478FF] text-white flex items-center justify-center font-bold text-xl ring-2 ring-border shadow-sm">
 								{selectedUser.image ? (
 									<img src={selectedUser.image} alt={selectedUser.name} className="h-full w-full object-cover" />
 								) : (
