@@ -1,3 +1,4 @@
+import useModalGuard from '@/hooks/useModalGuard';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { cn } from '@/lib/utils';
 import { Head, Link, router, useForm } from '@inertiajs/react';
@@ -20,13 +21,12 @@ import {
 import { useRef, useState } from 'react';
 import type { PaginatedData, User } from '@/types';
 
-interface UserWithCount extends User {
-	orders_count?: number;
+interface UserItem extends User {
 	created_at: string;
 }
 
 interface UsersIndexProps {
-	users: PaginatedData<UserWithCount>;
+	users: PaginatedData<UserItem>;
 	filters: {
 		search?: string;
 		role?: string;
@@ -42,7 +42,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 	const [viewModalOpen, setViewModalOpen] = useState(false);
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-	const [selectedUser, setSelectedUser] = useState<UserWithCount | null>(null);
+	const [selectedUser, setSelectedUser] = useState<UserItem | null>(null);
 	const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -86,6 +86,27 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 		_method: 'PUT',
 	});
 
+	const isCreateDirty = Boolean(createForm.data.name.trim() || createForm.data.email.trim() || createForm.data.password.trim() || createForm.data.phone.trim() || createForm.data.image !== null);
+	const isEditDirty = editForm.isDirty;
+
+	const createGuard = useModalGuard({
+		isDirty: isCreateDirty,
+		onClose: () => {
+			setCreateModalOpen(false);
+			createForm.reset();
+			setAvatarPreview(null);
+		},
+	});
+
+	const editGuard = useModalGuard({
+		isDirty: isEditDirty,
+		onClose: () => {
+			setEditModalOpen(false);
+			editForm.reset();
+			setAvatarPreview(null);
+		},
+	});
+
 	const handleFilterChange = (params: Record<string, string>) => {
 		router.get(
 			route('admin.users.index'),
@@ -102,7 +123,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 		handleFilterChange({ search });
 	};
 
-	const handleToggleStatus = (user: UserWithCount) => {
+	const handleToggleStatus = (user: UserItem) => {
 		router.patch(
 			route('admin.users.toggle', user.id),
 			{},
@@ -111,7 +132,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 	};
 
 	// Open Edit Modal
-	const openEditModal = (user: UserWithCount) => {
+	const openEditModal = (user: UserItem) => {
 		setSelectedUser(user);
 		setAvatarPreview(user.image || null);
 		editForm.setData({
@@ -128,13 +149,13 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 	};
 
 	// Open View Modal
-	const openViewModal = (user: UserWithCount) => {
+	const openViewModal = (user: UserItem) => {
 		setSelectedUser(user);
 		setViewModalOpen(true);
 	};
 
 	// Open Delete Modal
-	const openDeleteModal = (user: UserWithCount) => {
+	const openDeleteModal = (user: UserItem) => {
 		setSelectedUser(user);
 		setDeleteModalOpen(true);
 	};
@@ -209,7 +230,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 
 	return (
 		<AdminLayout header="Manajemen Pengguna">
-			<Head title="Manajemen Pengguna — Panel Admin LFM" />
+			<Head title="Manajemen Pengguna — Panel Admin Tritama Decorindo" />
 
 			<div className="space-y-6">
 				{/* Top Controls Toolbar */}
@@ -286,7 +307,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									<th className="px-6 py-4">Kontak</th>
 									<th className="px-6 py-4">Peran</th>
 									<th className="px-6 py-4">Status & Slide Switch</th>
-									<th className="px-6 py-4">Pesanan</th>
+									<th className="px-6 py-4">Terdaftar Pada</th>
 									<th className="px-6 py-4 text-right">Aksi</th>
 								</tr>
 							</thead>
@@ -305,7 +326,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 												{/* Avatar & Name */}
 												<td className="px-6 py-4">
 													<div className="flex items-center gap-3">
-														<div className="h-10 w-10 overflow-hidden rounded-full bg-[#80070A] text-[#F8C300] flex items-center justify-center font-bold text-xs ring-1 ring-border">
+														<div className="h-10 w-10 overflow-hidden rounded-full bg-[#0284C7] text-white flex items-center justify-center font-bold text-xs ring-1 ring-border">
 															{user.image ? (
 																<img src={user.image} alt={user.name} className="h-full w-full object-cover" />
 															) : (
@@ -335,7 +356,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 															onClick={() => handleToggleStatus(user)}
 															className={cn(
 																'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none shadow-inner',
-																isActive ? 'bg-[#80070A]' : 'bg-gray-300'
+																isActive ? 'bg-[#0284C7]' : 'bg-gray-300'
 															)}
 															title={isActive ? 'Klik untuk Nonaktifkan Akun' : 'Klik untuk Aktifkan Akun'}
 														>
@@ -357,9 +378,13 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 													</div>
 												</td>
 
-												{/* Orders count */}
-												<td className="px-6 py-4 font-semibold text-foreground">
-													{user.orders_count ?? 0} Pesanan
+												{/* Registered Date */}
+												<td className="px-6 py-4 text-muted-foreground">
+													{new Date(user.created_at).toLocaleDateString('id-ID', {
+														day: 'numeric',
+														month: 'short',
+														year: 'numeric',
+													})}
 												</td>
 
 												{/* Action Buttons */}
@@ -431,19 +456,28 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 				</div>
 			</div>
 
-			{/* 1. Modal Tambah Pengguna */}
+			{/* 1. Modal Tambah Pengguna (With Shake Effect on Outside Click) */}
 			{createModalOpen && (
-				<div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto">
-					<div className="relative max-w-lg w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up my-8">
+				<div
+					className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto"
+					onClick={createGuard.handleBackdropClick}
+				>
+					<div
+						onClick={(e) => e.stopPropagation()}
+						className={cn(
+							'relative max-w-lg w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up my-8 transition-transform',
+							createGuard.isShaking && 'animate-modal-shake'
+						)}
+					>
 						<button
-							onClick={() => setCreateModalOpen(false)}
+							onClick={createGuard.handleClose}
 							className="absolute right-5 top-5 rounded-full p-1.5 text-muted-foreground hover:bg-secondary"
 						>
 							<X className="h-5 w-5" />
 						</button>
 
 						<div className="border-b border-border/60 pb-4">
-							<h3 className="font-display text-xl font-bold text-foreground">Tambah Pengguna Baru</h3>
+							<h3 className="text-xl font-bold text-foreground">Tambah Pengguna Baru</h3>
 							<p className="text-xs text-muted-foreground mt-0.5">Lengkapi formulir untuk membuat akun admin atau klien baru.</p>
 						</div>
 
@@ -451,7 +485,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 							{/* Avatar */}
 							<div className="flex flex-col items-center justify-center gap-2">
 								<div className="relative group">
-									<div className="h-20 w-20 overflow-hidden rounded-full bg-[#80070A] text-[#F8C300] flex items-center justify-center font-bold text-xl ring-2 ring-border shadow-sm">
+									<div className="h-20 w-20 overflow-hidden rounded-full bg-[#0284C7] text-white flex items-center justify-center font-bold text-xl ring-2 ring-border shadow-sm">
 										{avatarPreview ? (
 											<img src={avatarPreview} alt="Preview" className="h-full w-full object-cover" />
 										) : (
@@ -461,7 +495,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									<button
 										type="button"
 										onClick={() => fileInputRef.current?.click()}
-										className="absolute bottom-0 right-0 rounded-full bg-[#80070A] text-white p-1.5 shadow-md hover:brightness-110"
+										className="absolute bottom-0 right-0 rounded-full bg-[#0284C7] text-white p-1.5 shadow-md hover:bg-[#0369a1]"
 									>
 										<Camera className="h-3.5 w-3.5" />
 									</button>
@@ -485,7 +519,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									onChange={(e) => createForm.setData('name', e.target.value)}
 									required
 									placeholder="Contoh: Budi Santoso"
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#80070A]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
 								/>
 								{createForm.errors.name && <p className="mt-1 text-xs text-red-600">{createForm.errors.name}</p>}
 							</div>
@@ -499,7 +533,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									onChange={(e) => createForm.setData('email', e.target.value)}
 									required
 									placeholder="budi@example.com"
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#80070A]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
 								/>
 								{createForm.errors.email && <p className="mt-1 text-xs text-red-600">{createForm.errors.email}</p>}
 							</div>
@@ -513,7 +547,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									onChange={(e) => createForm.setData('password', e.target.value)}
 									required
 									placeholder="Minimal 8 karakter"
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#80070A]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
 								/>
 								{createForm.errors.password && <p className="mt-1 text-xs text-red-600">{createForm.errors.password}</p>}
 							</div>
@@ -525,7 +559,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									<select
 										value={createForm.data.role}
 										onChange={(e) => createForm.setData('role', e.target.value)}
-										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#80070A]"
+										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#0284C7]"
 									>
 										<option value="buyer">Buyer / Klien</option>
 										<option value="admin">Administrator</option>
@@ -536,7 +570,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									<select
 										value={createForm.data.status}
 										onChange={(e) => createForm.setData('status', e.target.value)}
-										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#80070A]"
+										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#0284C7]"
 									>
 										<option value="active">Aktif</option>
 										<option value="inactive">Nonaktif</option>
@@ -552,7 +586,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									value={createForm.data.phone}
 									onChange={(e) => createForm.setData('phone', e.target.value)}
 									placeholder="+62 812-xxxx-xxxx"
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#80070A]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
 								/>
 							</div>
 
@@ -560,7 +594,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 							<div className="flex items-center justify-end gap-3 pt-4 border-t border-border/60">
 								<button
 									type="button"
-									onClick={() => setCreateModalOpen(false)}
+									onClick={createGuard.handleClose}
 									className="rounded-full border border-border px-5 py-2 text-xs font-bold hover:bg-secondary"
 								>
 									Batal
@@ -568,7 +602,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 								<button
 									type="submit"
 									disabled={createForm.processing}
-									className="rounded-full bg-[#80070A] px-6 py-2 text-xs font-bold text-white hover:brightness-110 disabled:opacity-60 shadow-md"
+									className="rounded-full bg-[#0284C7] px-6 py-2 text-xs font-bold text-white hover:bg-[#0369a1] disabled:opacity-60 shadow-md"
 								>
 									{createForm.processing ? 'Menyimpan...' : 'Simpan Pengguna'}
 								</button>
@@ -578,19 +612,28 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 				</div>
 			)}
 
-			{/* 2. Modal Edit Pengguna */}
+			{/* 2. Modal Edit Pengguna (With Shake Effect on Outside Click) */}
 			{editModalOpen && selectedUser && (
-				<div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto">
-					<div className="relative max-w-lg w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up my-8">
+				<div
+					className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto"
+					onClick={editGuard.handleBackdropClick}
+				>
+					<div
+						onClick={(e) => e.stopPropagation()}
+						className={cn(
+							'relative max-w-lg w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up my-8 transition-transform',
+							editGuard.isShaking && 'animate-modal-shake'
+						)}
+					>
 						<button
-							onClick={() => setEditModalOpen(false)}
+							onClick={editGuard.handleClose}
 							className="absolute right-5 top-5 rounded-full p-1.5 text-muted-foreground hover:bg-secondary"
 						>
 							<X className="h-5 w-5" />
 						</button>
 
 						<div className="border-b border-border/60 pb-4">
-							<h3 className="font-display text-xl font-bold text-foreground">Edit Data Pengguna</h3>
+							<h3 className="text-xl font-bold text-foreground">Edit Data Pengguna</h3>
 							<p className="text-xs text-muted-foreground mt-0.5">Perbarui data profil, peran, status, atau password pengguna.</p>
 						</div>
 
@@ -598,7 +641,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 							{/* Avatar */}
 							<div className="flex flex-col items-center justify-center gap-2">
 								<div className="relative group">
-									<div className="h-20 w-20 overflow-hidden rounded-full bg-[#80070A] text-[#F8C300] flex items-center justify-center font-bold text-xl ring-2 ring-border shadow-sm">
+									<div className="h-20 w-20 overflow-hidden rounded-full bg-[#0284C7] text-white flex items-center justify-center font-bold text-xl ring-2 ring-border shadow-sm">
 										{avatarPreview ? (
 											<img src={avatarPreview} alt="Preview" className="h-full w-full object-cover" />
 										) : (
@@ -608,7 +651,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									<button
 										type="button"
 										onClick={() => fileInputRef.current?.click()}
-										className="absolute bottom-0 right-0 rounded-full bg-[#80070A] text-white p-1.5 shadow-md hover:brightness-110"
+										className="absolute bottom-0 right-0 rounded-full bg-[#0284C7] text-white p-1.5 shadow-md hover:bg-[#0369a1]"
 									>
 										<Camera className="h-3.5 w-3.5" />
 									</button>
@@ -631,7 +674,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									value={editForm.data.name}
 									onChange={(e) => editForm.setData('name', e.target.value)}
 									required
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#80070A]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
 								/>
 								{editForm.errors.name && <p className="mt-1 text-xs text-red-600">{editForm.errors.name}</p>}
 							</div>
@@ -644,7 +687,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									value={editForm.data.email}
 									onChange={(e) => editForm.setData('email', e.target.value)}
 									required
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#80070A]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
 								/>
 								{editForm.errors.email && <p className="mt-1 text-xs text-red-600">{editForm.errors.email}</p>}
 							</div>
@@ -659,7 +702,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									value={editForm.data.password}
 									onChange={(e) => editForm.setData('password', e.target.value)}
 									placeholder="Biarkan kosong jika tidak diubah"
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#80070A]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
 								/>
 								{editForm.errors.password && <p className="mt-1 text-xs text-red-600">{editForm.errors.password}</p>}
 							</div>
@@ -671,7 +714,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									<select
 										value={editForm.data.role}
 										onChange={(e) => editForm.setData('role', e.target.value)}
-										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#80070A]"
+										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#0284C7]"
 									>
 										<option value="buyer">Buyer / Klien</option>
 										<option value="admin">Administrator</option>
@@ -682,7 +725,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									<select
 										value={editForm.data.status}
 										onChange={(e) => editForm.setData('status', e.target.value)}
-										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#80070A]"
+										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#0284C7]"
 									>
 										<option value="active">Aktif</option>
 										<option value="inactive">Nonaktif</option>
@@ -698,7 +741,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									value={editForm.data.phone}
 									onChange={(e) => editForm.setData('phone', e.target.value)}
 									placeholder="+62 812-xxxx-xxxx"
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#80070A]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
 								/>
 							</div>
 
@@ -706,7 +749,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 							<div className="flex items-center justify-end gap-3 pt-4 border-t border-border/60">
 								<button
 									type="button"
-									onClick={() => setEditModalOpen(false)}
+									onClick={editGuard.handleClose}
 									className="rounded-full border border-border px-5 py-2 text-xs font-bold hover:bg-secondary"
 								>
 									Batal
@@ -714,7 +757,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 								<button
 									type="submit"
 									disabled={editForm.processing}
-									className="rounded-full bg-[#80070A] px-6 py-2 text-xs font-bold text-white hover:brightness-110 disabled:opacity-60 shadow-md"
+									className="rounded-full bg-[#0284C7] px-6 py-2 text-xs font-bold text-white hover:bg-[#0369a1] disabled:opacity-60 shadow-md"
 								>
 									{editForm.processing ? 'Menyimpan...' : 'Simpan Perubahan'}
 								</button>
@@ -736,7 +779,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 						</button>
 
 						<div className="flex items-center gap-4 border-b border-border/60 pb-5">
-							<div className="h-16 w-16 overflow-hidden rounded-full bg-[#80070A] text-[#F8C300] flex items-center justify-center font-bold text-xl ring-2 ring-border shadow-sm">
+							<div className="h-16 w-16 overflow-hidden rounded-full bg-[#0284C7] text-white flex items-center justify-center font-bold text-xl ring-2 ring-border shadow-sm">
 								{selectedUser.image ? (
 									<img src={selectedUser.image} alt={selectedUser.name} className="h-full w-full object-cover" />
 								) : (
@@ -744,7 +787,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 								)}
 							</div>
 							<div>
-								<h3 className="font-display text-xl font-bold text-foreground">{selectedUser.name}</h3>
+								<h3 className="text-xl font-bold text-foreground">{selectedUser.name}</h3>
 								<p className="text-xs text-muted-foreground">{selectedUser.email}</p>
 								<div className="mt-2 flex items-center gap-2">
 									{getRoleBadge(selectedUser.role)}
@@ -759,10 +802,6 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 							<div className="flex justify-between py-1 border-b border-border/40">
 								<dt className="text-muted-foreground">No. Telepon / WhatsApp</dt>
 								<dd className="font-bold text-foreground">{selectedUser.phone || 'Belum diisi'}</dd>
-							</div>
-							<div className="flex justify-between py-1 border-b border-border/40">
-								<dt className="text-muted-foreground">Total Pesanan</dt>
-								<dd className="font-bold text-foreground">{selectedUser.orders_count ?? 0} Pesanan</dd>
 							</div>
 							<div className="flex justify-between py-1">
 								<dt className="text-muted-foreground">Tanggal Bergabung</dt>

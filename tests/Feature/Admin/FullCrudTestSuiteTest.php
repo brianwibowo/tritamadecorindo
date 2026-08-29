@@ -5,7 +5,6 @@ namespace Tests\Feature\Admin;
 use App\Enums\UserRole;
 use App\Models\Category;
 use App\Models\Gallery;
-use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -246,39 +245,7 @@ class FullCrudTestSuiteTest extends TestCase
     }
 
     // ==========================================
-    // 5. ORDER MANAGEMENT TESTS
-    // ==========================================
-    public function test_order_management_flow(): void
-    {
-        $buyer = User::factory()->create(['role' => UserRole::Buyer]);
-        $order = Order::create([
-            'id' => 'ORD-TEST-001',
-            'buyer_id' => $buyer->id,
-            'total_amount' => 5000000,
-            'payment_status' => 'pending',
-            'shipping_name' => 'Klien Ekspor Singapura',
-            'shipping_address' => 'Jurong Port Road, Singapore',
-            'shipping_phone' => '+65 9123 4567',
-        ]);
-
-        // 1. Admin Index Orders
-        $indexResponse = $this->actingAs($this->admin)->get(route('admin.orders.index'));
-        $indexResponse->assertOk();
-
-        // 2. Admin Show Order
-        $showResponse = $this->actingAs($this->admin)->get(route('admin.orders.show', $order->id));
-        $showResponse->assertOk();
-
-        // 3. Admin Update Order Status
-        $updateResponse = $this->actingAs($this->admin)->put(route('admin.orders.update', $order->id), [
-            'payment_status' => 'paid',
-        ]);
-        $updateResponse->assertRedirect();
-        $this->assertSame('paid', $order->fresh()->payment_status);
-    }
-
-    // ==========================================
-    // 6. PROFILE MODAL UPDATE TESTS
+    // 5. PROFILE MODAL UPDATE TESTS
     // ==========================================
     public function test_profile_modal_update_with_avatar(): void
     {
@@ -289,8 +256,8 @@ class FullCrudTestSuiteTest extends TestCase
         $response = $this->actingAs($this->admin)
             ->from(route('admin.dashboard'))
             ->patch(route('profile.update'), [
-                'name' => 'Administrator LFM Updated',
-                'email' => 'admin.updated@lfmjayatama.com',
+                'name' => 'Administrator Tritama Updated',
+                'email' => 'admin.updated@tritamadecorindo.com',
                 'phone' => '+6281299998888',
                 'image' => $newAvatar,
             ]);
@@ -300,8 +267,8 @@ class FullCrudTestSuiteTest extends TestCase
         $response->assertSessionHas('success');
 
         $this->admin->refresh();
-        $this->assertSame('Administrator LFM Updated', $this->admin->name);
-        $this->assertSame('admin.updated@lfmjayatama.com', $this->admin->email);
+        $this->assertSame('Administrator Tritama Updated', $this->admin->name);
+        $this->assertSame('admin.updated@tritamadecorindo.com', $this->admin->email);
         $this->assertSame('+6281299998888', $this->admin->phone);
         $this->assertNotNull($this->admin->image);
     }

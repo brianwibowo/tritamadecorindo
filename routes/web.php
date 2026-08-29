@@ -15,11 +15,7 @@ Route::get('/products', [Buyer\ProductController::class, 'index'])->name('produc
 Route::get('/product/{slug}', [Buyer\ProductController::class, 'show'])->name('products.show');
 Route::get('/galeri', [Buyer\GalleryController::class, 'index'])->name('gallery.index');
 
-// Cart
-Route::get('/cart', [Buyer\CartController::class, 'index'])->name('cart.index');
-Route::post('/cart', [Buyer\CartController::class, 'store'])->name('cart.store');
-Route::patch('/cart/{item}', [Buyer\CartController::class, 'update'])->name('cart.update');
-Route::delete('/cart/{item}', [Buyer\CartController::class, 'destroy'])->name('cart.destroy');
+Route::get('/cart', fn () => redirect()->route('products.index'));
 
 // Auth Dashboard / Profile
 Route::get('/dashboard', function () {
@@ -48,7 +44,8 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::patch('categories/{category}/toggle', [Admin\CategoryController::class, 'toggleStatus'])->name('categories.toggle');
     Route::resource('categories', Admin\CategoryController::class);
 
-    Route::resource('orders', Admin\OrderController::class)->only(['index', 'show', 'update']);
+    Route::patch('order-archives/{order_archive}/status', [Admin\OrderArchiveController::class, 'updateStatus'])->name('order-archives.status');
+    Route::resource('order-archives', Admin\OrderArchiveController::class);
 
     Route::patch('users/{user}/toggle', [Admin\UserController::class, 'toggleStatus'])->name('users.toggle');
     Route::resource('users', Admin\UserController::class);

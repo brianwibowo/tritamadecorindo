@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function index(): Response
     {
-        $query = User::withCount('orders');
+        $query = User::query();
 
         if ($search = request('search')) {
             $query->where(function ($q) use ($search) {

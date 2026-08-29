@@ -1,7 +1,7 @@
 import StorefrontLayout from '@/Layouts/StorefrontLayout';
 import { cn } from '@/lib/utils';
 import { Head, Link, router } from '@inertiajs/react';
-import { Eye, X } from 'lucide-react';
+import { Eye, MapPin, Phone, X } from 'lucide-react';
 import { useState } from 'react';
 import type { PaginatedData } from '@/types';
 
@@ -11,7 +11,8 @@ interface GalleryItem {
 	category: string;
 	category_label: string;
 	image: string;
-	description: string;
+	caption?: string;
+	description?: string;
 }
 
 interface GalleryProps {
@@ -23,11 +24,12 @@ export default function Gallery({ galleryItems, currentCategory = 'all' }: Galle
 	const [previewItem, setPreviewItem] = useState<GalleryItem | null>(null);
 
 	const categories = [
-		{ key: 'all', label: 'Semua Dokumentasi' },
-		{ key: 'perkebunan', label: 'Sentra Perkebunan' },
-		{ key: 'fasilitas', label: 'Fasilitas & QC' },
-		{ key: 'laboratorium', label: 'Uji Laboratorium' },
-		{ key: 'ekspor', label: 'Logistik & Ekspor' },
+		{ key: 'all', label: 'Semua Proyek' },
+		{ key: 'kaca_film', label: 'Kaca Film' },
+		{ key: 'sandblast', label: 'Sandblast & Stiker' },
+		{ key: 'wallpaper', label: 'Wallpaper Dinding' },
+		{ key: 'signage', label: 'Signage & Huruf Timbul' },
+		{ key: 'blinds', label: 'Blinds & Gorden' },
 	];
 
 	const handleCategoryChange = (key: string) => {
@@ -41,40 +43,40 @@ export default function Gallery({ galleryItems, currentCategory = 'all' }: Galle
 	return (
 		<StorefrontLayout>
 			<Head>
-				<title>Galeri Dokumentasi & Fasilitas Ekspor — PT LFM Global Jayatama</title>
+				<title>Galeri Proyek & Dokumentasi Pemasangan — Tritama Decorindo Stiker</title>
 				<meta
 					name="description"
-					content="Dokumentasi visual perkebunan rempah Nusantara, fasilitas sortasi modern, uji laboratorium berkala, dan pengapalan kontainer ekspor PT LFM Global Jayatama."
+					content="Dokumentasi portofolio pengerjaan pemasangan Kaca Film Gedung & Mobil, Sandblast Cutting Logo Kantor, Wallpaper Dinding 3D, Signage Huruf Timbul, Roller Blinds, dan Gorden oleh teknisi Tritama Decorindo Stiker."
 				/>
 				<meta
 					name="keywords"
-					content="galeri fasilitas rempah, pabrik cengkeh, pengolahan biji pala, perkebunan kayu manis, pengujian laboratorium rempah, ekspor rempah indonesia, pt lfm global jayatama"
+					content="portofolio kaca film, hasil pasang sandblast kantor, dokumentasi wallpaper dinding, proyek huruf timbul akrilik, pasang blinds jabodetabek, tritama decorindo stiker"
 				/>
-				<meta property="og:title" content="Galeri Dokumentasi & Fasilitas Ekspor — PT LFM Global Jayatama" />
+				<meta property="og:title" content="Galeri Proyek — Tritama Decorindo Stiker" />
 				<meta
 					property="og:description"
-					content="Dokumentasi visual perkebunan rempah Nusantara, fasilitas sortasi modern, dan pengapalan ekspor PT LFM Global Jayatama."
+					content="Dokumentasi visual pengerjaan rapi dan presisi untuk perkantoran, perumahan, toko, ruko, dan gedung di Jabodetabek."
 				/>
-				<meta property="og:image" content="/images/products/cengkeh-maluku.webp" />
-				<meta name="twitter:title" content="Galeri Fasilitas Ekspor — PT LFM Global Jayatama" />
+				<meta property="og:image" content="/images/products/kaca-film-sparta.webp" />
+				<meta name="twitter:title" content="Galeri Proyek — Tritama Decorindo Stiker" />
 				<meta
 					name="twitter:description"
-					content="Dokumentasi visual perkebunan rempah Nusantara dan fasilitas ekspor PT LFM Global Jayatama."
+					content="Dokumentasi visual instalasi material interior dan eksterior Tritama Decorindo Stiker."
 				/>
-				<meta name="twitter:image" content="/images/products/cengkeh-maluku.webp" />
+				<meta name="twitter:image" content="/images/products/kaca-film-sparta.webp" />
 			</Head>
 
 			<div className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6 lg:px-10">
 				{/* Page Header */}
-				<div className="border-b border-border/60 pb-8">
-					<span className="text-xs font-bold uppercase tracking-widest text-[#80070A]">
-						Dokumentasi Visual
+				<div className="border-b border-border/80 pb-8">
+					<span className="text-xs font-bold uppercase tracking-widest text-[#0284C7]">
+						Portofolio & Dokumentasi
 					</span>
-					<h1 className="font-display text-3xl sm:text-5xl font-bold tracking-tight text-foreground mt-1">
-						Galeri Perkebunan & Fasilitas Ekspor
+					<h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mt-1">
+						Galeri Hasil Pengerjaan
 					</h1>
 					<p className="mt-2 text-sm text-muted-foreground max-w-2xl leading-relaxed">
-						Dokumentasi visual proses pemanenan di sentra perkebunan rempah nusantara, fasilitas sortasi mekanik, pengujian mutu laboratorium, hingga pengemasan kontainer ekspor PT LFM Global Jayatama.
+						Dokumentasi pengerjaan nyata pemasangan Kaca Film, Sandblast Cutting, Wallpaper Dinding, Signage Huruf Timbul, Blinds, dan Gorden oleh teknisi berpengalaman Tritama Decorindo Stiker.
 					</p>
 				</div>
 
@@ -88,8 +90,8 @@ export default function Gallery({ galleryItems, currentCategory = 'all' }: Galle
 							className={cn(
 								'rounded-full px-5 py-2 text-xs font-bold transition-all shadow-sm',
 								(currentCategory === cat.key || (!currentCategory && cat.key === 'all'))
-									? 'bg-[#80070A] text-white shadow-md'
-									: 'bg-secondary/50 text-foreground hover:bg-secondary border border-border/60'
+									? 'bg-[#0284C7] text-white shadow-md'
+									: 'bg-secondary text-foreground hover:bg-slate-200 border border-border'
 							)}
 						>
 							{cat.label}
@@ -97,94 +99,78 @@ export default function Gallery({ galleryItems, currentCategory = 'all' }: Galle
 					))}
 				</div>
 
-				{/* Clean Minimalist Photo Grid: Badge di atas gambar -> Judul h4 reguler di bawah */}
-				<div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
+				{/* Gallery Grid */}
+				<div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 					{galleryItems.data.map((item) => (
 						<div
 							key={item.id}
 							onClick={() => setPreviewItem(item)}
-							className="group cursor-pointer flex flex-col"
+							className="group cursor-pointer rounded-3xl bg-white border border-slate-200 p-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
 						>
-							{/* Image Container with Floating Category Badge */}
-							<div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-secondary shadow-sm">
-								{/* 1. Category Badge floating on top of the image */}
-								<div className="absolute top-3.5 left-3.5 z-10">
-									<span className="rounded-full bg-[#80070A]/90 text-white backdrop-blur-md px-3 py-1 text-[10px] font-bold tracking-wider uppercase shadow-md ring-1 ring-white/20">
-										{item.category_label}
-									</span>
-								</div>
-
-								{/* Photo */}
+							<div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100">
 								<img
 									src={item.image}
 									alt={item.title}
-									className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+									className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
 								/>
-
-								{/* Hover Zoom Overlay */}
-								<div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-									<span className="flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-xs font-bold text-[#1a0203] shadow-lg">
-										<Eye className="h-3.5 w-3.5" />
-										Perbesar Foto
+								<div className="absolute top-3 left-3">
+									<span className="rounded-full bg-[#0F172A]/85 backdrop-blur-md px-3 py-1 text-[11px] font-bold tracking-wider uppercase text-white shadow-sm">
+										{item.category_label || item.category}
+									</span>
+								</div>
+								<div className="absolute inset-0 bg-[#0F172A]/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+									<span className="h-11 w-11 rounded-full bg-white text-[#0F172A] flex items-center justify-center shadow-lg">
+										<Eye className="h-5 w-5" />
 									</span>
 								</div>
 							</div>
 
-							{/* Title h4 non-bold (regular/medium) */}
-							<div className="mt-3.5">
-								<h4 className="font-display text-sm sm:text-base font-medium text-foreground group-hover:text-[#80070A] transition-colors leading-snug">
+							<div className="mt-4 px-1">
+								<h3 className="text-base font-bold text-slate-900 group-hover:text-[#0284C7] transition-colors leading-snug line-clamp-2">
 									{item.title}
-								</h4>
+								</h3>
+								<p className="mt-1.5 text-xs text-slate-500 line-clamp-2 leading-relaxed">
+									{item.caption || item.description}
+								</p>
 							</div>
 						</div>
 					))}
 				</div>
 
 				{/* Pagination */}
-				{galleryItems.last_page > 1 && (
-					<div className="mt-14 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-border/60 pt-6">
-						<p className="text-xs text-muted-foreground">
-							Menampilkan {galleryItems.from}–{galleryItems.to} dari {galleryItems.total} dokumentasi foto
-						</p>
-						<div className="flex gap-1.5">
-							{galleryItems.links.map((link, idx) => (
-								<Link
-									key={idx}
-									href={link.url || '#'}
-									preserveScroll
-									className={cn(
-										'rounded-full px-4 py-1.5 text-xs font-semibold transition-all',
-										link.active
-											? 'bg-[#80070A] text-white shadow-sm'
-											: link.url
-											? 'bg-white text-foreground border border-border hover:bg-secondary'
-											: 'text-muted-foreground/40 cursor-not-allowed'
-									)}
-									dangerouslySetInnerHTML={{ __html: link.label }}
-								/>
-							))}
-						</div>
+				{galleryItems.links && galleryItems.links.length > 3 && (
+					<div className="mt-12 flex items-center justify-center gap-1.5">
+						{galleryItems.links.map((link, idx) => (
+							<Link
+								key={idx}
+								href={link.url || '#'}
+								className={cn(
+									'flex h-9 min-w-[36px] items-center justify-center rounded-full px-3 text-xs font-bold transition-all',
+									link.active
+										? 'bg-[#0284C7] text-white shadow-sm'
+										: link.url
+										? 'bg-secondary text-foreground hover:bg-slate-200'
+										: 'cursor-not-allowed text-muted-foreground opacity-50'
+								)}
+								dangerouslySetInnerHTML={{ __html: link.label }}
+							/>
+						))}
 					</div>
 				)}
 
-				{/* Lightbox Modal */}
+				{/* Lightbox / Preview Modal */}
 				{previewItem && (
-					<div
-						onClick={() => setPreviewItem(null)}
-						className="fixed inset-0 z-[110] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm animate-fade-in"
-					>
-						<div
-							onClick={(e) => e.stopPropagation()}
-							className="relative max-w-3xl w-full overflow-hidden rounded-3xl bg-white shadow-2xl animate-scale-up"
-						>
+					<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+						<div className="relative max-w-3xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl">
 							<button
+								type="button"
 								onClick={() => setPreviewItem(null)}
-								className="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black transition-colors"
+								className="absolute top-4 right-4 z-10 h-10 w-10 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black transition-colors"
 							>
 								<X className="h-5 w-5" />
 							</button>
 
-							<div className="aspect-[16/10] w-full bg-black">
+							<div className="relative aspect-[16/10] bg-slate-900">
 								<img
 									src={previewItem.image}
 									alt={previewItem.title}
@@ -192,16 +178,31 @@ export default function Gallery({ galleryItems, currentCategory = 'all' }: Galle
 								/>
 							</div>
 
-							<div className="p-6 sm:p-8 space-y-2">
-								<span className="rounded-full bg-[#80070A] px-3.5 py-1 text-xs font-bold text-white inline-block">
-									{previewItem.category_label}
+							<div className="p-6 sm:p-8">
+								<span className="inline-block rounded-full bg-cyan-100 text-[#0284C7] px-3 py-1 text-xs font-bold uppercase tracking-wider mb-2">
+									{previewItem.category_label || previewItem.category}
 								</span>
-								<h3 className="font-display text-2xl font-bold text-foreground">
+								<h2 className="text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
 									{previewItem.title}
-								</h3>
-								<p className="text-sm text-muted-foreground leading-relaxed">
-									{previewItem.description}
+								</h2>
+								<p className="mt-3 text-sm text-slate-600 leading-relaxed">
+									{previewItem.caption || previewItem.description}
 								</p>
+
+								<div className="mt-6 pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+									<div className="text-xs text-slate-500">
+										Ingin memasang seperti proyek ini? Hubungi kami untuk survey gratis.
+									</div>
+									<a
+										href={`https://wa.me/6281990909646?text=Halo%20Tritama%20Decorindo,%20saya%20tertarik%20dengan%20proyek%20di%20galeri:%20*${encodeURIComponent(previewItem.title)}*.%20Mohon%20info%20estimasi%20biaya.`}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="inline-flex items-center gap-2 rounded-full bg-[#0284C7] px-6 py-2.5 text-xs font-bold text-white uppercase tracking-wider hover:bg-[#0369a1] transition-colors"
+									>
+										<Phone className="h-4 w-4" />
+										<span>Tanya Biaya via WhatsApp</span>
+									</a>
+								</div>
 							</div>
 						</div>
 					</div>

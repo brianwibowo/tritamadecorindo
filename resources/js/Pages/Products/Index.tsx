@@ -2,7 +2,7 @@ import ProductCard from '@/Components/Storefront/ProductCard';
 import StorefrontLayout from '@/Layouts/StorefrontLayout';
 import { cn } from '@/lib/utils';
 import { Head, Link, router } from '@inertiajs/react';
-import { Award, ChevronDown, ChevronUp, Flame, Leaf, PackageSearch, RotateCcw, Search, SlidersHorizontal, Sparkles } from 'lucide-react';
+import { ChevronDown, ChevronUp, Layers, PackageSearch, RotateCcw, Search, ShieldCheck, SlidersHorizontal, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import type { Category, PaginatedData, Product } from '@/types';
 
@@ -47,17 +47,18 @@ export default function ProductsIndex({ products, categories, filters }: Product
 	];
 
 	const tagPills = [
-		{ key: 'all', label: 'Semua Komoditas', icon: null },
-		{ key: 'ekspor', label: 'Grade Ekspor', icon: Flame },
-		{ key: 'terbaru', label: 'Rempah Pilihan', icon: Sparkles },
-		{ key: 'organik', label: 'Organik & Simplisia', icon: Leaf },
+		{ key: 'all', label: 'Semua Produk', icon: null },
+		{ key: 'cat-kaca-film', label: 'Kaca Film', icon: ShieldCheck },
+		{ key: 'cat-sandblast-cutting', label: 'Sandblast & Stiker', icon: Layers },
+		{ key: 'cat-wallpaper', label: 'Wallpaper', icon: Sparkles },
+		{ key: 'cat-window-blinds', label: 'Roller & Vertical Blinds', icon: null },
 	];
 
 	const priceRanges = [
 		{ key: '', label: 'Semua Harga' },
-		{ key: 'under_100k', label: '≤ Rp 100.000 (Sampel)' },
-		{ key: '100k_500k', label: 'Rp 100.000 – Rp 500.000' },
-		{ key: 'above_500k', label: '> Rp 500.000 (Kemasan Bulk)' },
+		{ key: 'under_100k', label: '≤ Rp 100.000 (Per Meter Material)' },
+		{ key: '100k_500k', label: 'Rp 100.000 – Rp 500.000 (Roll / m²)' },
+		{ key: 'above_500k', label: '> Rp 500.000 (Paket Proyek)' },
 	];
 
 	const hasActiveFilters = Boolean(
@@ -67,57 +68,63 @@ export default function ProductsIndex({ products, categories, filters }: Product
 	return (
 		<StorefrontLayout>
 			<Head>
-				<title>Katalog Produk Komoditas Rempah — PT LFM Global Jayatama</title>
+				<title>Katalog Produk & Harga Material — Tritama Decorindo Stiker</title>
 				<meta
 					name="description"
-					content="Katalog lengkap komoditas rempah asli Indonesia kualitas ekspor: Cengkeh Maluku, Biji Pala Banda, Kayu Manis Kerinci, Vanilla Beans Planifolia, Lada Hitam Lampung. Dapatkan penawaran FOB/CIF."
+					content="Daftar harga material dan jasa pasang Kaca Film Riben/Sparta/One Way, Sandblast Polos & Cutting Logo, Wallpaper Dinding, Roller Blinds, Huruf Timbul LED, dan Gorden."
 				/>
 				<meta
 					name="keywords"
-					content="katalog rempah ekspor, jual cengkeh ab6, jual biji pala banda abcd, supplier kayu manis kerinci, distributor vanilla beans planifolia, harga lada hitam lampung, pt lfm global jayatama"
+					content="harga kaca film riben, harga kaca film sparta, harga sandblast polos, harga sandblast cutting logo, harga wallpaper roll, harga roller blinds blackout, tritama decorindo stiker"
 				/>
-				<meta property="og:title" content="Katalog Produk Komoditas Rempah — PT LFM Global Jayatama" />
+				<meta property="og:title" content="Katalog Produk & Harga — Tritama Decorindo Stiker" />
 				<meta
 					property="og:description"
-					content="Katalog lengkap komoditas rempah asli Indonesia kualitas ekspor standar internasional."
+					content="Pilihan lengkap material dan jasa pasang dekorasi kaca, dinding, dan penutup jendela bergaransi di Jabodetabek."
 				/>
-				<meta property="og:image" content="/images/products/cengkeh-maluku.webp" />
-				<meta name="twitter:title" content="Katalog Produk Komoditas Rempah — PT LFM Global Jayatama" />
+				<meta property="og:image" content="/images/products/kaca-film-sparta.webp" />
+				<meta name="twitter:title" content="Katalog Produk — Tritama Decorindo Stiker" />
 				<meta
 					name="twitter:description"
-					content="Katalog lengkap komoditas rempah asli Indonesia kualitas ekspor standar internasional."
+					content="Daftar produk dan harga material & pemasangan interior eksterior Tritama Decorindo Stiker."
 				/>
-				<meta name="twitter:image" content="/images/products/cengkeh-maluku.webp" />
+				<meta name="twitter:image" content="/images/products/kaca-film-sparta.webp" />
 			</Head>
 
 			<div className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6 lg:px-10">
 				{/* 1. Header Area */}
-				<div className="border-b border-border/60 pb-6">
-					<h1 className="font-display text-3xl sm:text-5xl font-bold tracking-tight text-foreground">
-						Katalog Produk
+				<div className="border-b border-border/80 pb-6">
+					<h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+						Katalog Produk & Estimasi Harga
 					</h1>
 					<p className="mt-2 text-sm text-muted-foreground max-w-2xl">
-						Jelajahi komoditas rempah premium pilihan PT LFM Global Jayatama untuk kebutuhan industri bumbu, farmasi, kosmetik, dan ekspor global.
+						Daftar harga material dan jasa pemasangan Kaca Film, Sandblast, Wallpaper, Blinds, Huruf Timbul, dan Gorden berkualitas oleh Tritama Decorindo Stiker.
 					</p>
 				</div>
 
 				{/* 2. Top Quick Pills & Search */}
 				<div className="mt-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
-					{/* Tag Pills with SVG Icons */}
+					{/* Tag Pills */}
 					<div className="flex flex-wrap items-center gap-2 overflow-x-auto pb-1">
 						{tagPills.map((pill) => {
-							const active = (filters.tag || 'all') === pill.key;
+							const active = (filters.category || 'all') === pill.key || (filters.tag || 'all') === pill.key;
 							const Icon = pill.icon;
 							return (
 								<button
 									key={pill.key}
 									type="button"
-									onClick={() => updateFilters({ tag: pill.key === 'all' ? '' : pill.key })}
+									onClick={() => {
+										if (pill.key === 'all') {
+											updateFilters({ category: '', tag: '' });
+										} else {
+											updateFilters({ category: pill.key, tag: '' });
+										}
+									}}
 									className={cn(
-										'inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-xs font-bold transition-all shadow-sm whitespace-nowrap',
+										'inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold transition-all shadow-sm whitespace-nowrap',
 										active
-											? 'bg-[#80070A] text-white shadow-md'
-											: 'bg-secondary/50 text-foreground border border-border/60 hover:bg-secondary'
+											? 'bg-[#0284C7] text-white shadow-md'
+											: 'bg-secondary text-foreground border border-border hover:bg-slate-200/60'
 									)}
 								>
 									{Icon && <Icon className="h-3.5 w-3.5" />}
@@ -129,34 +136,34 @@ export default function ProductsIndex({ products, categories, filters }: Product
 
 					{/* Search input */}
 					<form onSubmit={handleSearch} className="flex gap-2">
-						<div className="relative flex-1 sm:w-64">
+						<div className="relative flex-1 sm:w-72">
 							<input
 								type="text"
 								value={search}
 								onChange={(e) => setSearch(e.target.value)}
-								placeholder="Cari cengkeh, pala, kayu manis..."
-								className="w-full h-10 rounded-full border border-border bg-white pl-9 pr-4 text-xs text-foreground placeholder:text-muted-foreground/60 focus:border-[#80070A] focus:outline-none focus:ring-1 focus:ring-[#80070A]"
+								placeholder="Cari kaca film, sandblast, blinds..."
+								className="w-full h-10 rounded-full border border-border bg-white pl-9 pr-4 text-xs text-foreground placeholder:text-muted-foreground/70 focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
 							/>
 							<Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
 						</div>
 						<button
 							type="submit"
-							className="rounded-full bg-[#80070A] px-5 py-2 text-xs font-bold text-white hover:brightness-110 transition-all shadow-sm"
+							className="rounded-full bg-[#0F172A] px-5 py-2 text-xs font-bold text-white hover:bg-[#0284C7] transition-all shadow-sm"
 						>
 							Cari
 						</button>
 					</form>
 				</div>
 
-				{/* 3. Horizontal Bar: Filters title on Left, Sort links on Right */}
-				<div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border/60 pb-4">
+				{/* 3. Horizontal Filter Bar */}
+				<div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border/80 pb-4">
 					<div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-foreground">
-						<SlidersHorizontal className="h-4 w-4 text-[#80070A]" />
-						<span>Filters</span>
+						<SlidersHorizontal className="h-4 w-4 text-[#0284C7]" />
+						<span>Filter Produk</span>
 						{hasActiveFilters && (
 							<button
 								onClick={() => router.get(route('products.index'))}
-								className="ml-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#80070A] hover:underline lowercase"
+								className="ml-2 inline-flex items-center gap-1 text-[11px] font-semibold text-[#0284C7] hover:underline lowercase"
 							>
 								<RotateCcw className="h-3 w-3" />
 								reset filter
@@ -177,7 +184,7 @@ export default function ProductsIndex({ products, categories, filters }: Product
 									className={cn(
 										'transition-colors',
 										isSelected
-											? 'font-bold text-[#80070A] underline underline-offset-4'
+											? 'font-bold text-[#0284C7] underline underline-offset-4'
 											: 'text-foreground/80 hover:text-foreground'
 									)}
 								>
@@ -188,18 +195,18 @@ export default function ProductsIndex({ products, categories, filters }: Product
 					</div>
 				</div>
 
-				{/* 4. Two-Column Layout: Filter Library Sidebar + Product Grid */}
+				{/* 4. Two-Column Layout: Sidebar + Product Grid */}
 				<div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-					{/* Left Column: Filter Library Sidebar */}
+					{/* Left Column: Filter Sidebar */}
 					<aside className="lg:col-span-3 space-y-6">
 						{/* Categories Accordion */}
-						<div className="rounded-2xl border border-border/60 bg-white/70 backdrop-blur-sm p-5 shadow-sm">
+						<div className="rounded-2xl border border-border/80 bg-white p-5 shadow-sm">
 							<button
 								type="button"
 								onClick={() => setCategoriesOpen(!categoriesOpen)}
-								className="flex w-full items-center justify-between font-display text-sm font-bold text-foreground"
+								className="flex w-full items-center justify-between text-sm font-bold text-foreground"
 							>
-								<span>Categories</span>
+								<span>Kategori Produk</span>
 								{categoriesOpen ? (
 									<ChevronUp className="h-4 w-4 text-muted-foreground" />
 								) : (
@@ -208,18 +215,18 @@ export default function ProductsIndex({ products, categories, filters }: Product
 							</button>
 
 							{categoriesOpen && (
-								<div className="mt-4 space-y-2.5 pt-2 border-t border-border/40 text-xs">
+								<div className="mt-4 space-y-2.5 pt-2 border-t border-border/60 text-xs">
 									<button
 										type="button"
 										onClick={() => updateFilters({ category: '' })}
 										className={cn(
 											'flex w-full items-center justify-between text-left transition-colors',
 											!filters.category
-												? 'font-bold text-[#80070A]'
-												: 'text-foreground hover:text-[#80070A]'
+												? 'font-bold text-[#0284C7]'
+												: 'text-foreground hover:text-[#0284C7]'
 										)}
 									>
-										<span>Semua Komoditas</span>
+										<span>Semua Kategori</span>
 										<span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] text-muted-foreground">
 											{products.total}
 										</span>
@@ -235,8 +242,8 @@ export default function ProductsIndex({ products, categories, filters }: Product
 												className={cn(
 													'flex w-full items-center justify-between text-left transition-colors',
 													isSelected
-														? 'font-bold text-[#80070A]'
-														: 'text-foreground hover:text-[#80070A]'
+														? 'font-bold text-[#0284C7]'
+														: 'text-foreground hover:text-[#0284C7]'
 												)}
 											>
 												<span>{cat.name}</span>
@@ -250,12 +257,12 @@ export default function ProductsIndex({ products, categories, filters }: Product
 							)}
 						</div>
 
-						{/* Price Accordion */}
-						<div className="rounded-2xl border border-border/60 bg-white/70 backdrop-blur-sm p-5 shadow-sm">
+						{/* Price Filter Box */}
+						<div className="rounded-2xl border border-border/80 bg-white p-5 shadow-sm">
 							<button
 								type="button"
 								onClick={() => setPriceOpen(!priceOpen)}
-								className="flex w-full items-center justify-between font-display text-sm font-bold text-foreground"
+								className="flex w-full items-center justify-between text-sm font-bold text-foreground"
 							>
 								<span>Rentang Harga</span>
 								{priceOpen ? (
@@ -266,98 +273,94 @@ export default function ProductsIndex({ products, categories, filters }: Product
 							</button>
 
 							{priceOpen && (
-								<div className="mt-4 space-y-2 pt-2 border-t border-border/40 text-xs">
+								<div className="mt-4 space-y-2.5 pt-2 border-t border-border/60 text-xs">
 									{priceRanges.map((range) => {
 										const isSelected = (filters.price_range || '') === range.key;
 										return (
-											<label
+											<button
 												key={range.key}
-												className="flex items-center gap-2.5 cursor-pointer text-foreground hover:text-[#80070A] transition-colors py-1"
+												type="button"
+												onClick={() => updateFilters({ price_range: isSelected ? '' : range.key })}
+												className={cn(
+													'flex w-full items-center justify-between text-left transition-colors',
+													isSelected
+														? 'font-bold text-[#0284C7]'
+														: 'text-foreground hover:text-[#0284C7]'
+												)}
 											>
-												<input
-													type="radio"
-													name="price_range"
-													checked={isSelected}
-													onChange={() => updateFilters({ price_range: range.key })}
-													className="h-3.5 w-3.5 text-[#80070A] focus:ring-[#80070A]"
-												/>
-												<span className={cn(isSelected ? 'font-bold text-[#80070A]' : '')}>
-													{range.label}
-												</span>
-											</label>
+												<span>{range.label}</span>
+												{isSelected && <span className="text-[#0284C7] font-bold">✓</span>}
+											</button>
 										);
 									})}
 								</div>
 							)}
 						</div>
 
-						{/* Export Standards Trust Card */}
-						<div className="rounded-2xl border border-[#80070A]/20 bg-[#80070A]/5 p-5 text-xs space-y-2">
-							<div className="flex items-center gap-2 text-[#80070A]">
-								<Award className="h-4 w-4" />
-								<h4 className="font-bold uppercase tracking-wider text-[11px]">
-									Standar Mutu Ekspor
-								</h4>
-							</div>
-							<p className="text-muted-foreground leading-relaxed">
-								Seluruh komoditas rempah diuji laboratorium dan bersertifikat Phytosanitary, Bebas Aflatoksin, dan ISO 22000.
+						{/* Direct WhatsApp Callout Banner */}
+						<div className="rounded-2xl bg-gradient-to-br from-[#0F172A] to-[#1E293B] text-white p-5 shadow-md">
+							<p className="text-xs font-bold uppercase tracking-wider text-[#38BDF8]">Butuh Custom Ukuran?</p>
+							<p className="mt-2 text-xs text-slate-300 leading-relaxed">
+								Konsultasikan kebutuhan partisi kaca, bidang dinding, atau jendela gedung Anda dengan tim teknisi kami.
 							</p>
+							<a
+								href="https://wa.me/6281990909646?text=Halo%20Tritama%20Decorindo,%20saya%20ingin%20tanya%20custom%20ukuran%20dan%20harga%20pemasangan."
+								target="_blank"
+								rel="noopener noreferrer"
+								className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-[#0284C7] py-2.5 text-xs font-bold text-white hover:bg-[#0369a1] transition-all shadow-sm"
+							>
+								Chat WhatsApp: 0819-9090-9646
+							</a>
 						</div>
 					</aside>
 
 					{/* Right Column: Product Cards Grid */}
-					<main className="lg:col-span-9">
+					<div className="lg:col-span-9">
 						{products.data.length === 0 ? (
-							<div className="rounded-3xl border border-dashed border-border bg-white/50 p-16 text-center">
-								<PackageSearch className="h-12 w-12 text-muted-foreground mx-auto" />
-								<h3 className="font-display text-xl font-bold text-foreground mt-4">
-									Komoditas tidak ditemukan
-								</h3>
-								<p className="mt-1.5 text-xs text-muted-foreground max-w-sm mx-auto">
-									Coba ubah kata kunci pencarian, rentang harga, atau reset filter kategori.
+							<div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-border py-16 text-center">
+								<PackageSearch className="h-12 w-12 text-muted-foreground" />
+								<h3 className="mt-4 text-base font-bold text-foreground">Tidak ada produk yang cocok</h3>
+								<p className="mt-1 text-xs text-muted-foreground max-w-sm">
+									Coba ubah kata kunci pencarian atau reset filter untuk melihat katalog lainnya.
 								</p>
 								<button
 									onClick={() => router.get(route('products.index'))}
-									className="mt-6 rounded-full bg-[#80070A] px-6 py-2.5 text-xs font-bold text-white shadow-md hover:brightness-110"
+									className="mt-6 rounded-full bg-[#0284C7] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#0369a1]"
 								>
-									Reset Semua Filter
+									Lihat Semua Produk
 								</button>
 							</div>
 						) : (
-							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-								{products.data.map((product) => (
-									<ProductCard key={product.id} product={product} />
-								))}
-							</div>
-						)}
-
-						{/* Pagination */}
-						{products.last_page > 1 && (
-							<div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-border/60 pt-6">
-								<p className="text-xs text-muted-foreground">
-									Menampilkan {products.from}–{products.to} dari {products.total} komoditas rempah
-								</p>
-								<div className="flex gap-1.5">
-									{products.links.map((link, idx) => (
-										<Link
-											key={idx}
-											href={link.url || '#'}
-											preserveScroll
-											className={cn(
-												'rounded-full px-4 py-1.5 text-xs font-semibold transition-all',
-												link.active
-													? 'bg-[#80070A] text-white shadow-sm'
-													: link.url
-													? 'bg-white text-foreground border border-border hover:bg-secondary'
-													: 'text-muted-foreground/40 cursor-not-allowed'
-											)}
-											dangerouslySetInnerHTML={{ __html: link.label }}
-										/>
+							<>
+								<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+									{products.data.map((product) => (
+										<ProductCard key={product.id} product={product} />
 									))}
 								</div>
-							</div>
+
+								{/* Pagination */}
+								{products.links && products.links.length > 3 && (
+									<div className="mt-12 flex items-center justify-center gap-1.5">
+										{products.links.map((link, idx) => (
+											<Link
+												key={idx}
+												href={link.url || '#'}
+												className={cn(
+													'flex h-9 min-w-[36px] items-center justify-center rounded-full px-3 text-xs font-bold transition-all',
+													link.active
+														? 'bg-[#0284C7] text-white shadow-sm'
+														: link.url
+														? 'bg-secondary text-foreground hover:bg-slate-200'
+														: 'cursor-not-allowed text-muted-foreground opacity-50'
+												)}
+												dangerouslySetInnerHTML={{ __html: link.label }}
+											/>
+										))}
+									</div>
+								)}
+							</>
 						)}
-					</main>
+					</div>
 				</div>
 			</div>
 		</StorefrontLayout>

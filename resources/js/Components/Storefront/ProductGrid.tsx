@@ -12,24 +12,24 @@ export default function ProductGrid({ products, limit = 8 }: ProductGridProps) {
 	const displayProducts = products.slice(0, limit);
 
 	return (
-		<section className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 pt-20 sm:pt-28">
+		<section className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 pt-16 sm:pt-24">
 			<div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
 				<div>
-					<p className="text-xs tracking-[0.22em] uppercase text-muted-foreground mb-3">— Koleksi Kami</p>
-					<h2 className="yns-display text-4xl sm:text-5xl text-foreground leading-[1.02]">
-						Pilihan Terkini
+					<p className="text-xs font-bold tracking-[0.2em] uppercase text-[#0284C7] mb-2">— Katalog Material & Jasa</p>
+					<h2 className="text-3xl sm:text-4xl text-foreground font-bold tracking-tight">
+						Daftar Produk & Biaya
 					</h2>
 				</div>
 				<Link
 					href={route('products.index')}
-					className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:opacity-70 transition-opacity"
+					className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#0284C7] hover:underline"
 				>
-					Lihat semua produk
+					<span>Lihat Semua Produk</span>
 					<ArrowUpRight className="h-4 w-4" />
 				</Link>
 			</div>
 
-			<div className="grid grid-cols-2 lg:grid-cols-4 gap-x-5 gap-y-10">
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 				{displayProducts.map((product) => (
 					<ProductCard key={product.id} product={product} />
 				))}

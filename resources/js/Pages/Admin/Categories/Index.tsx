@@ -1,3 +1,4 @@
+import useModalGuard from '@/hooks/useModalGuard';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { cn, slugify } from '@/lib/utils';
 import { Head, Link, router, useForm } from '@inertiajs/react';
@@ -47,6 +48,25 @@ export default function CategoriesIndex({ categories }: Props) {
 		image: '',
 		active: true,
 		_method: 'PUT',
+	});
+
+	const isCreateDirty = Boolean(createForm.data.name.trim() || createForm.data.description.trim());
+	const isEditDirty = editForm.isDirty;
+
+	const createGuard = useModalGuard({
+		isDirty: isCreateDirty,
+		onClose: () => {
+			setCreateModalOpen(false);
+			createForm.reset();
+		},
+	});
+
+	const editGuard = useModalGuard({
+		isDirty: isEditDirty,
+		onClose: () => {
+			setEditModalOpen(false);
+			editForm.reset();
+		},
 	});
 
 	// Auto generate slug from name
@@ -123,15 +143,15 @@ export default function CategoriesIndex({ categories }: Props) {
 	};
 
 	return (
-		<AdminLayout header="Kategori Komoditas">
-			<Head title="Kategori Komoditas — Panel Admin LFM" />
+		<AdminLayout header="Kategori Produk">
+			<Head title="Kategori Produk — Panel Admin Tritama Decorindo" />
 
 			<div className="space-y-6">
-				{/* Top Controls Toolbar */}
+				{/* Top Actions Card */}
 				<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white p-5 rounded-3xl border border-border/60 shadow-sm">
 					<div>
-						<h2 className="font-display text-lg font-bold text-foreground">Daftar Kategori Rempah</h2>
-						<p className="text-xs text-muted-foreground">Kelola kategori dan klasifikasi komoditas ekspor.</p>
+						<h2 className="text-lg font-bold text-foreground">Daftar Kategori Produk</h2>
+						<p className="text-xs text-muted-foreground">Kelola klasifikasi kategori material dan jasa dekorasi.</p>
 					</div>
 
 					<button
@@ -140,107 +160,103 @@ export default function CategoriesIndex({ categories }: Props) {
 							createForm.reset();
 							setCreateModalOpen(true);
 						}}
-						className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#80070A] px-5 py-2.5 text-xs font-bold text-white hover:brightness-110 transition-all shadow-md active:scale-95 whitespace-nowrap"
+						className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0284C7] px-6 py-2.5 text-xs font-bold text-white shadow-md hover:bg-[#0369a1] active:scale-95 transition-all"
 					>
 						<Plus className="h-4 w-4" />
-						<span>Tambah Kategori</span>
+						<span>Tambah Kategori Baru</span>
 					</button>
 				</div>
 
-				{/* Categories Table Card */}
+				{/* Categories Data Table */}
 				<div className="overflow-hidden rounded-3xl border border-border/60 bg-white shadow-sm">
 					<div className="overflow-x-auto">
 						<table className="w-full text-left text-xs">
-							<thead className="bg-[#FAF7F5] border-b border-border/60 text-muted-foreground uppercase font-bold tracking-wider text-[10px]">
+							<thead className="bg-[#F8FAFC] border-b border-border/60 text-muted-foreground uppercase font-bold tracking-wider text-[10px]">
 								<tr>
-									<th className="px-6 py-4">Nama Kategori</th>
+									<th className="px-6 py-4">Kategori</th>
 									<th className="px-6 py-4">Slug URL</th>
-									<th className="px-6 py-4">Jumlah Produk</th>
-									<th className="px-6 py-4">Status & Slide Switch</th>
+									<th className="px-6 py-4">Deskripsi</th>
+									<th className="px-6 py-4 text-center">Jumlah Produk</th>
+									<th className="px-6 py-4 text-center">Status</th>
 									<th className="px-6 py-4 text-right">Aksi</th>
 								</tr>
 							</thead>
 							<tbody className="divide-y divide-border/40">
 								{categories.data.length === 0 ? (
 									<tr>
-										<td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">
+										<td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">
 											Belum ada kategori yang ditambahkan.
 										</td>
 									</tr>
 								) : (
-									categories.data.map((category) => (
-										<tr key={category.id} className="hover:bg-secondary/30 transition-colors">
+									categories.data.map((cat) => (
+										<tr key={cat.id} className="hover:bg-secondary/30 transition-colors">
 											<td className="px-6 py-4 font-bold text-foreground">
 												<div className="flex items-center gap-3">
-													<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#80070A]/10 text-[#80070A]">
+													<div className="h-8 w-8 rounded-xl bg-cyan-500/10 text-[#0284C7] flex items-center justify-center font-bold text-xs shrink-0">
 														<Tag className="h-4 w-4" />
 													</div>
-													<div>
-														<p className="font-bold text-foreground">{category.name}</p>
-														{category.description && (
-															<p className="text-[11px] text-muted-foreground line-clamp-1 max-w-xs font-normal">
-																{category.description}
-															</p>
-														)}
-													</div>
+													<span>{cat.name}</span>
 												</div>
 											</td>
-											<td className="px-6 py-4 font-mono text-[11px] text-muted-foreground">/{category.slug}</td>
-											<td className="px-6 py-4 font-semibold text-foreground">
-												<span className="rounded-full bg-secondary px-2.5 py-1 text-xs">
-													{category.products_count ?? 0} Produk
+											<td className="px-6 py-4 font-mono text-[11px] text-muted-foreground">
+												/{cat.slug}
+											</td>
+											<td className="px-6 py-4 text-muted-foreground max-w-xs truncate">
+												{cat.description || '—'}
+											</td>
+											<td className="px-6 py-4 text-center">
+												<span className="inline-flex rounded-full bg-secondary px-3 py-1 text-[11px] font-bold text-foreground">
+													{cat.products_count ?? 0} Produk
 												</span>
 											</td>
-											<td className="px-6 py-4">
-												<div className="flex items-center gap-2.5">
-													<button
-														type="button"
-														onClick={() => handleToggleStatus(category)}
-														className={cn(
-															'relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none shadow-inner',
-															category.active ? 'bg-[#80070A]' : 'bg-gray-300'
-														)}
-														title={category.active ? 'Klik untuk Nonaktifkan' : 'Klik untuk Aktifkan'}
-													>
-														<span
-															className={cn(
-																'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out',
-																category.active ? 'translate-x-5' : 'translate-x-0'
-															)}
-														/>
-													</button>
-													<span
-														className={cn(
-															'text-[11px] font-bold',
-															category.active ? 'text-emerald-700' : 'text-gray-500'
-														)}
-													>
-														{category.active ? 'Aktif' : 'Nonaktif'}
-													</span>
-												</div>
+											<td className="px-6 py-4 text-center">
+												<button
+													type="button"
+													onClick={() => handleToggleStatus(cat)}
+													className={cn(
+														'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold transition-all',
+														cat.active
+															? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+															: 'bg-gray-100 text-gray-600 border border-gray-200'
+													)}
+													title="Klik untuk mengubah status aktif"
+												>
+													{cat.active ? (
+														<>
+															<CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+															<span>Aktif</span>
+														</>
+													) : (
+														<>
+															<XCircle className="h-3.5 w-3.5 text-gray-500" />
+															<span>Nonaktif</span>
+														</>
+													)}
+												</button>
 											</td>
 											<td className="px-6 py-4 text-right">
-												<div className="inline-flex items-center gap-1.5">
+												<div className="flex items-center justify-end gap-1.5">
 													<button
 														type="button"
-														onClick={() => openViewModal(category)}
-														className="rounded-lg p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
+														onClick={() => openViewModal(cat)}
+														className="rounded-lg p-2 text-muted-foreground hover:bg-secondary hover:text-foreground"
 														title="Lihat Detail"
 													>
 														<Eye className="h-4 w-4" />
 													</button>
 													<button
 														type="button"
-														onClick={() => openEditModal(category)}
-														className="rounded-lg p-1.5 text-blue-600 hover:bg-blue-50 transition-colors"
+														onClick={() => openEditModal(cat)}
+														className="rounded-lg p-2 text-[#0284C7] hover:bg-cyan-50"
 														title="Edit Kategori"
 													>
 														<Pencil className="h-4 w-4" />
 													</button>
 													<button
 														type="button"
-														onClick={() => openDeleteModal(category)}
-														className="rounded-lg p-1.5 text-red-600 hover:bg-red-50 transition-colors"
+														onClick={() => openDeleteModal(cat)}
+														className="rounded-lg p-2 text-red-600 hover:bg-red-50"
 														title="Hapus Kategori"
 													>
 														<Trash2 className="h-4 w-4" />
@@ -254,21 +270,21 @@ export default function CategoriesIndex({ categories }: Props) {
 						</table>
 					</div>
 
-					{/* Pagination Footer - Always Visible */}
-					<div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-border/60 px-6 py-4 bg-[#FAF7F5]/50">
-						<p className="text-xs text-muted-foreground">
-							Menampilkan <strong className="text-foreground">{categories.from || 0}</strong>–<strong className="text-foreground">{categories.to || 0}</strong> dari <strong className="text-foreground">{categories.total}</strong> kategori
-						</p>
-						<div className="flex items-center gap-1.5">
+					{/* Pagination */}
+					<div className="border-t border-border/60 px-6 py-4 flex items-center justify-between">
+						<span className="text-xs text-muted-foreground">
+							Menampilkan {categories.data.length} dari {categories.total} kategori
+						</span>
+
+						<div className="flex items-center gap-1">
 							{categories.links.map((link, idx) => (
 								<Link
 									key={idx}
 									href={link.url || '#'}
-									preserveScroll
 									className={cn(
-										'rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all',
+										'flex h-8 min-w-[32px] items-center justify-center rounded-lg px-2.5 text-xs font-semibold transition-colors',
 										link.active
-											? 'bg-[#80070A] text-white shadow-sm'
+											? 'bg-[#0284C7] text-white shadow-sm'
 											: link.url
 											? 'bg-white text-foreground border border-border hover:bg-secondary'
 											: 'text-muted-foreground/40 cursor-not-allowed bg-transparent'
@@ -281,20 +297,29 @@ export default function CategoriesIndex({ categories }: Props) {
 				</div>
 			</div>
 
-			{/* 1. Modal Tambah Kategori */}
+			{/* 1. Modal Tambah Kategori (With Shake Effect on Outside Click) */}
 			{createModalOpen && (
-				<div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto">
-					<div className="relative max-w-lg w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up my-8">
+				<div
+					className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto"
+					onClick={createGuard.handleBackdropClick}
+				>
+					<div
+						onClick={(e) => e.stopPropagation()}
+						className={cn(
+							'relative max-w-lg w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up my-8 transition-transform',
+							createGuard.isShaking && 'animate-modal-shake'
+						)}
+					>
 						<button
-							onClick={() => setCreateModalOpen(false)}
+							onClick={createGuard.handleClose}
 							className="absolute right-5 top-5 rounded-full p-1.5 text-muted-foreground hover:bg-secondary"
 						>
 							<X className="h-5 w-5" />
 						</button>
 
 						<div className="border-b border-border/60 pb-4">
-							<h3 className="font-display text-xl font-bold text-foreground">Tambah Kategori Baru</h3>
-							<p className="text-xs text-muted-foreground mt-0.5">Buat kategori klasifikasi komoditas rempah.</p>
+							<h3 className="text-xl font-bold text-foreground">Tambah Kategori Baru</h3>
+							<p className="text-xs text-muted-foreground mt-0.5">Buat kategori klasifikasi produk material dekorasi.</p>
 						</div>
 
 						<form onSubmit={handleCreateSubmit} className="mt-5 space-y-4">
@@ -307,8 +332,8 @@ export default function CategoriesIndex({ categories }: Props) {
 									value={createForm.data.name}
 									onChange={(e) => handleNameChange(e.target.value, false)}
 									required
-									placeholder="Contoh: Rempah Kering & Biji"
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#80070A]"
+									placeholder="Contoh: Kaca Film Riben & Sparta"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7]"
 								/>
 								{createForm.errors.name && <p className="mt-1 text-xs text-red-600">{createForm.errors.name}</p>}
 							</div>
@@ -324,7 +349,7 @@ export default function CategoriesIndex({ categories }: Props) {
 										readOnly
 										tabIndex={-1}
 										placeholder="otomatis-mengikuti-nama-kategori"
-										className="w-full h-10 rounded-xl border border-border/80 bg-[#F4EFEA]/80 pl-8 pr-3 text-xs font-mono text-muted-foreground cursor-not-allowed select-none"
+										className="w-full h-10 rounded-xl border border-border/80 bg-slate-100 pl-8 pr-3 text-xs font-mono text-muted-foreground cursor-not-allowed select-none"
 									/>
 									<Lock className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground/70" />
 								</div>
@@ -337,8 +362,8 @@ export default function CategoriesIndex({ categories }: Props) {
 									value={createForm.data.description}
 									onChange={(e) => createForm.setData('description', e.target.value)}
 									rows={3}
-									placeholder="Penjelasan ringkas tentang komoditas dalam kategori ini..."
-									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#80070A]"
+									placeholder="Penjelasan ringkas tentang material dalam kategori ini..."
+									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7]"
 								/>
 							</div>
 
@@ -348,7 +373,7 @@ export default function CategoriesIndex({ categories }: Props) {
 										type="checkbox"
 										checked={createForm.data.active}
 										onChange={(e) => createForm.setData('active', e.target.checked)}
-										className="h-4 w-4 rounded text-[#80070A] focus:ring-[#80070A]"
+										className="h-4 w-4 rounded text-[#0284C7] focus:ring-[#0284C7]"
 									/>
 									<span className="text-xs font-semibold text-foreground">Aktifkan kategori ini di etalase publik</span>
 								</label>
@@ -357,7 +382,7 @@ export default function CategoriesIndex({ categories }: Props) {
 							<div className="flex items-center justify-end gap-3 pt-4 border-t border-border/60">
 								<button
 									type="button"
-									onClick={() => setCreateModalOpen(false)}
+									onClick={createGuard.handleClose}
 									className="rounded-full border border-border px-5 py-2 text-xs font-bold hover:bg-secondary"
 								>
 									Batal
@@ -365,7 +390,7 @@ export default function CategoriesIndex({ categories }: Props) {
 								<button
 									type="submit"
 									disabled={createForm.processing}
-									className="rounded-full bg-[#80070A] px-6 py-2 text-xs font-bold text-white hover:brightness-110 disabled:opacity-60 shadow-md"
+									className="rounded-full bg-[#0284C7] px-6 py-2 text-xs font-bold text-white hover:bg-[#0369a1] disabled:opacity-60 shadow-md"
 								>
 									{createForm.processing ? 'Menyimpan...' : 'Simpan Kategori'}
 								</button>
@@ -375,19 +400,28 @@ export default function CategoriesIndex({ categories }: Props) {
 				</div>
 			)}
 
-			{/* 2. Modal Edit Kategori */}
+			{/* 2. Modal Edit Kategori (With Shake Effect on Outside Click) */}
 			{editModalOpen && selectedCategory && (
-				<div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto">
-					<div className="relative max-w-lg w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up my-8">
+				<div
+					className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto"
+					onClick={editGuard.handleBackdropClick}
+				>
+					<div
+						onClick={(e) => e.stopPropagation()}
+						className={cn(
+							'relative max-w-lg w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up my-8 transition-transform',
+							editGuard.isShaking && 'animate-modal-shake'
+						)}
+					>
 						<button
-							onClick={() => setEditModalOpen(false)}
+							onClick={editGuard.handleClose}
 							className="absolute right-5 top-5 rounded-full p-1.5 text-muted-foreground hover:bg-secondary"
 						>
 							<X className="h-5 w-5" />
 						</button>
 
 						<div className="border-b border-border/60 pb-4">
-							<h3 className="font-display text-xl font-bold text-foreground">Edit Kategori</h3>
+							<h3 className="text-xl font-bold text-foreground">Edit Kategori</h3>
 							<p className="text-xs text-muted-foreground mt-0.5">Perbarui nama, slug, atau status kategori.</p>
 						</div>
 
@@ -401,7 +435,7 @@ export default function CategoriesIndex({ categories }: Props) {
 									value={editForm.data.name}
 									onChange={(e) => handleNameChange(e.target.value, true)}
 									required
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#80070A]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7]"
 								/>
 								{editForm.errors.name && <p className="mt-1 text-xs text-red-600">{editForm.errors.name}</p>}
 							</div>
@@ -416,7 +450,7 @@ export default function CategoriesIndex({ categories }: Props) {
 										value={editForm.data.slug}
 										readOnly
 										tabIndex={-1}
-										className="w-full h-10 rounded-xl border border-border/80 bg-[#F4EFEA]/80 pl-8 pr-3 text-xs font-mono text-muted-foreground cursor-not-allowed select-none"
+										className="w-full h-10 rounded-xl border border-border/80 bg-slate-100 pl-8 pr-3 text-xs font-mono text-muted-foreground cursor-not-allowed select-none"
 									/>
 									<Lock className="absolute left-2.5 top-3 h-4 w-4 text-muted-foreground/70" />
 								</div>
@@ -429,7 +463,7 @@ export default function CategoriesIndex({ categories }: Props) {
 									value={editForm.data.description}
 									onChange={(e) => editForm.setData('description', e.target.value)}
 									rows={3}
-									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#80070A]"
+									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#0284C7] focus:ring-1 focus:ring-[#0284C7]"
 								/>
 							</div>
 
@@ -439,7 +473,7 @@ export default function CategoriesIndex({ categories }: Props) {
 										type="checkbox"
 										checked={editForm.data.active}
 										onChange={(e) => editForm.setData('active', e.target.checked)}
-										className="h-4 w-4 rounded text-[#80070A] focus:ring-[#80070A]"
+										className="h-4 w-4 rounded text-[#0284C7] focus:ring-[#0284C7]"
 									/>
 									<span className="text-xs font-semibold text-foreground">Aktifkan kategori ini di etalase publik</span>
 								</label>
@@ -448,7 +482,7 @@ export default function CategoriesIndex({ categories }: Props) {
 							<div className="flex items-center justify-end gap-3 pt-4 border-t border-border/60">
 								<button
 									type="button"
-									onClick={() => setEditModalOpen(false)}
+									onClick={editGuard.handleClose}
 									className="rounded-full border border-border px-5 py-2 text-xs font-bold hover:bg-secondary"
 								>
 									Batal
@@ -456,7 +490,7 @@ export default function CategoriesIndex({ categories }: Props) {
 								<button
 									type="submit"
 									disabled={editForm.processing}
-									className="rounded-full bg-[#80070A] px-6 py-2 text-xs font-bold text-white hover:brightness-110 disabled:opacity-60 shadow-md"
+									className="rounded-full bg-[#0284C7] px-6 py-2 text-xs font-bold text-white hover:bg-[#0369a1] disabled:opacity-60 shadow-md"
 								>
 									{editForm.processing ? 'Menyimpan...' : 'Simpan Perubahan'}
 								</button>
@@ -468,8 +502,14 @@ export default function CategoriesIndex({ categories }: Props) {
 
 			{/* 3. Modal Lihat Detail Kategori */}
 			{viewModalOpen && selectedCategory && (
-				<div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
-					<div className="relative max-w-md w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up space-y-6">
+				<div
+					className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in"
+					onClick={() => setViewModalOpen(false)}
+				>
+					<div
+						onClick={(e) => e.stopPropagation()}
+						className="relative max-w-md w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up space-y-6"
+					>
 						<button
 							onClick={() => setViewModalOpen(false)}
 							className="absolute right-5 top-5 rounded-full p-1.5 text-muted-foreground hover:bg-secondary"
@@ -478,11 +518,11 @@ export default function CategoriesIndex({ categories }: Props) {
 						</button>
 
 						<div className="flex items-center gap-3 border-b border-border/60 pb-5">
-							<div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#80070A] text-[#F8C300]">
+							<div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-500/10 text-[#0284C7]">
 								<Tag className="h-6 w-6" />
 							</div>
 							<div>
-								<h3 className="font-display text-xl font-bold text-foreground">{selectedCategory.name}</h3>
+								<h3 className="text-xl font-bold text-foreground">{selectedCategory.name}</h3>
 								<p className="font-mono text-xs text-muted-foreground">slug: /{selectedCategory.slug}</p>
 							</div>
 						</div>
@@ -519,14 +559,20 @@ export default function CategoriesIndex({ categories }: Props) {
 
 			{/* 4. Modal Konfirmasi Hapus Kategori */}
 			{deleteModalOpen && selectedCategory && (
-				<div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
-					<div className="relative max-w-md w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up space-y-5">
+				<div
+					className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in"
+					onClick={() => setDeleteModalOpen(false)}
+				>
+					<div
+						onClick={(e) => e.stopPropagation()}
+						className="relative max-w-md w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up space-y-5"
+					>
 						<div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100 text-red-600">
 							<Trash2 className="h-6 w-6" />
 						</div>
 
 						<div>
-							<h3 className="font-display text-xl font-bold text-foreground">
+							<h3 className="text-xl font-bold text-foreground">
 								Hapus Kategori
 							</h3>
 							<p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">

@@ -19,52 +19,52 @@ export default function Home({ categories, featuredProducts }: HomeProps) {
 	return (
 		<StorefrontLayout>
 			<Head>
-				<title>PT LFM Global Jayatama — Eksportir Rempah Pilihan Indonesia ke Pasar Global</title>
+				<title>Tritama Decorindo Stiker — Kaca Film, Sandblast, Wallpaper & Interior Sejak 2009</title>
 				<meta
 					name="description"
-					content="PT LFM Global Jayatama mengekspor komoditas rempah asli Indonesia: Cengkeh Maluku Grade AB6, Biji Pala Banda ABCD, Kayu Manis Kerinci, Vanilla Beans Planifolia, dan Lada Hitam Lampung standar mutu internasional."
+					content="Tritama Decorindo Stiker menyediakan material & jasa pemasangan Kaca Film Riben/Sparta/One Way, Sandblast Cutting Logo, Wallpaper 3D, Roller Blinds, Huruf Timbul LED, dan Gorden di Jabodetabek."
 				/>
 				<meta
 					name="keywords"
-					content="eksportir rempah indonesia, cengkeh maluku ekspor, biji pala banda abcd, kayu manis kerinci korintje, vanilla beans gourmet planifolia, lada hitam lampung faq, supplier rempah indonesia, pt lfm global jayatama"
+					content="kaca film bekasi, kaca film jakarta, sandblast cutting logo kantor, pasang wallpaper 3d, roller blinds blackout, huruf timbul akrilik, vertical blinds, tritama decorindo stiker"
 				/>
-				<meta property="og:title" content="PT LFM Global Jayatama — Eksportir Rempah Pilihan Indonesia" />
+				<meta property="og:title" content="Tritama Decorindo Stiker — Ahli Kaca Film & Dekorasi Interior" />
 				<meta
 					property="og:description"
-					content="Penyedia dan eksportir resmi komoditas rempah Nusantara standar ekspor global (FOB/CIF). Dapatkan spesifikasi CoA dan penawaran resmi."
+					content="Solusi dekorasi, branding visual, interior dan eksterior terpercaya sejak 2009. Pemasangan rapi, presisi, harga kompetitif, dan konsultasi gratis."
 				/>
-				<meta property="og:image" content="/images/products/cengkeh-maluku.webp" />
-				<meta name="twitter:title" content="PT LFM Global Jayatama — Eksportir Rempah Nusantara" />
+				<meta property="og:image" content="/images/products/kaca-film-sparta.webp" />
+				<meta name="twitter:title" content="Tritama Decorindo Stiker — Kaca Film & Interior" />
 				<meta
 					name="twitter:description"
-					content="Penyedia dan eksportir resmi komoditas rempah Nusantara standar ekspor global (FOB/CIF)."
+					content="Penyedia material dan jasa pasang Kaca Film, Sandblast, Wallpaper, Blinds, dan Signage di Jabodetabek."
 				/>
-				<meta name="twitter:image" content="/images/products/cengkeh-maluku.webp" />
+				<meta name="twitter:image" content="/images/products/kaca-film-sparta.webp" />
 			</Head>
 
-			<main className="pb-20">
+			<main className="pb-16">
 				{/* 1. Hero */}
 				<HeroSection />
 
-				{/* 2. Komoditas Kategori */}
+				{/* 2. Kategori Produk */}
 				<CategoryCards categories={categories} />
 
-				{/* 3. Featured Collection */}
+				{/* 3. Featured Showcase */}
 				<FeaturedCollection products={featuredProducts} />
 
-				{/* 4. Product Grid */}
+				{/* 4. Product & Price Grid */}
 				<ProductGrid products={featuredProducts} limit={8} />
 
-				{/* 5. Komitmen Ekspor & Mutu */}
+				{/* 5. 7 Keunggulan Layanan */}
 				<SustainableBanner />
 
-				{/* 6. Profil Perusahaan */}
+				{/* 6. Profil Perusahaan & Sektor Layanan */}
 				<AboutSection />
 
-				{/* 7. Artikel & Edukasi Rempah */}
+				{/* 7. Area Layanan & Tips Edukasi */}
 				<JournalSection />
 
-				{/* 8. B2B Inquiry Form */}
+				{/* 8. Form Konsultasi & Survey Lokasi Gratis */}
 				<NewsletterSection />
 			</main>
 		</StorefrontLayout>

@@ -5,32 +5,32 @@
 :root {
 	--radius: 1rem;
 
-	/* RGB channels for Tailwind v3 opacity modifiers */
-	--background: 250 244 240; /* #faf4f0 */
-	--foreground: 26 2 3;      /* #1a0203 */
-	--card: 255 255 255;
-	--card-foreground: 26 2 3;
+	/* Opsi A: Nano-Ceramic Cool Tech Palette (RGB channels) */
+	--background: 248 250 252;       /* #f8fafc (Clean Slate Light Canvas) */
+	--foreground: 15 23 42;          /* #0f172a (Deep Slate / Navy Charcoal) */
+	--card: 255 255 255;             /* #ffffff (Pure White Elevated Card) */
+	--card-foreground: 15 23 42;
 	--popover: 255 255 255;
-	--popover-foreground: 26 2 3;
-	--primary: 128 7 10;       /* #80070a */
+	--popover-foreground: 15 23 42;
+	--primary: 15 23 42;             /* #0f172a (Deep Slate Carbon) */
 	--primary-foreground: 255 255 255;
-	--secondary: 247 230 230;  /* #f7e6e6 */
-	--secondary-foreground: 128 7 10;
-	--muted: 245 232 232;      /* #f5e8e8 */
-	--muted-foreground: 125 38 41; /* #7d2629 */
-	--accent: 248 195 0;       /* #f8c300 */
-	--accent-foreground: 26 2 3;
+	--secondary: 241 245 249;        /* #f1f5f9 (Soft Titanium Slate) */
+	--secondary-foreground: 15 23 42;
+	--muted: 241 245 249;            /* #f1f5f9 */
+	--muted-foreground: 100 116 139; /* #64748b (Slate Muted Description) */
+	--accent: 2 132 199;             /* #0284c7 (Electric Cool Blue / Heat Shield) */
+	--accent-foreground: 255 255 255;
 	--destructive: 220 38 38;
-	--border: 235 213 213;     /* #ebd5d5 */
-	--input: 235 213 213;
-	--ring: 128 7 10;
+	--border: 226 232 240;           /* #e2e8f0 (Clean Crisp Border) */
+	--input: 226 232 240;
+	--ring: 2 132 199;
 
-	--yns-cream: #faf4f0;
-	--yns-rose: 247 230 230;
-	--yns-cocoa: 128 7 10;
-	--yns-clay: 163 18 21;
-	--yns-sun: 248 195 0;
-	--yns-mist: 245 232 232;
+	--yns-cream: #f8fafc;
+	--yns-rose: 241 245 249;
+	--yns-cocoa: 15 23 42;
+	--yns-clay: 30 41 59;
+	--yns-sun: 2 132 199;
+	--yns-mist: 241 245 249;
 }
 
 @layer base {
@@ -112,4 +112,21 @@
 .yns-outline-text {
 	-webkit-text-stroke: 1.5px #f5e6dc;
 	color: transparent;
+}
+
+/* Modal Shake / Jiggle Effect (300ms) for Unsaved Changes Guard */
+@keyframes modal-shake {
+	0%, 100% {
+		transform: translateX(0);
+	}
+	20%, 60% {
+		transform: translateX(-10px);
+	}
+	40%, 80% {
+		transform: translateX(10px);
+	}
+}
+
+.animate-modal-shake {
+	animation: modal-shake 300ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }

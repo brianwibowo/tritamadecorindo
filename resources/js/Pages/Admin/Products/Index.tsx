@@ -1,3 +1,4 @@
+import useModalGuard from '@/hooks/useModalGuard';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { cn, formatMoney, slugify } from '@/lib/utils';
 import { Head, Link, router, useForm } from '@inertiajs/react';
@@ -103,6 +104,25 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 		images: [],
 		variants: [],
 		_method: 'PUT',
+	});
+
+	const isCreateDirty = Boolean(createForm.data.name.trim() || createForm.data.summary.trim() || createForm.data.description.trim());
+	const isEditDirty = editForm.isDirty;
+
+	const createGuard = useModalGuard({
+		isDirty: isCreateDirty,
+		onClose: () => {
+			setCreateModalOpen(false);
+			createForm.reset();
+		},
+	});
+
+	const editGuard = useModalGuard({
+		isDirty: isEditDirty,
+		onClose: () => {
+			setEditModalOpen(false);
+			editForm.reset();
+		},
 	});
 
 	// Check slug availability via API
@@ -253,8 +273,8 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 	};
 
 	return (
-		<AdminLayout header="Katalog Produk Rempah">
-			<Head title="Katalog Produk — Panel Admin LFM" />
+		<AdminLayout header="Katalog Produk & Material">
+			<Head title="Katalog Produk — Panel Admin Tritama Decorindo" />
 
 			<div className="space-y-6">
 				{/* Top Toolbar */}
@@ -340,7 +360,7 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 								{products.data.length === 0 ? (
 									<tr>
 										<td colSpan={6} className="px-6 py-12 text-center text-muted-foreground">
-											Tidak ada komoditas rempah yang ditemukan.
+											Tidak ada produk material dekorasi yang ditemukan.
 										</td>
 									</tr>
 								) : (
@@ -476,19 +496,28 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 				</div>
 			</div>
 
-			{/* 1. Modal Tambah Komoditas Produk */}
+			{/* 1. Modal Tambah Produk (With Shake Effect on Outside Click) */}
 			{createModalOpen && (
-				<div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto">
-					<div className="relative max-w-2xl w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up my-8 max-h-[90vh] overflow-y-auto">
+				<div
+					className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto"
+					onClick={createGuard.handleBackdropClick}
+				>
+					<div
+						onClick={(e) => e.stopPropagation()}
+						className={cn(
+							'relative max-w-2xl w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up my-8 max-h-[90vh] overflow-y-auto transition-transform',
+							createGuard.isShaking && 'animate-modal-shake'
+						)}
+					>
 						<button
-							onClick={() => setCreateModalOpen(false)}
+							onClick={createGuard.handleClose}
 							className="absolute right-5 top-5 rounded-full p-1.5 text-muted-foreground hover:bg-secondary"
 						>
 							<X className="h-5 w-5" />
 						</button>
 
 						<div className="border-b border-border/60 pb-4">
-							<h3 className="font-display text-xl font-bold text-foreground">Tambah Komoditas Rempah Baru</h3>
+							<h3 className="font-display text-xl font-bold text-foreground">Tambah Produk Baru</h3>
 							<p className="text-xs text-muted-foreground mt-0.5">Lengkapi data komoditas, URL slug otomatis, dan spesifikasi kemasan.</p>
 						</div>
 
@@ -689,7 +718,7 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 							<div className="flex items-center justify-end gap-3 pt-4 border-t border-border/60">
 								<button
 									type="button"
-									onClick={() => setCreateModalOpen(false)}
+									onClick={createGuard.handleClose}
 									className="rounded-full border border-border px-5 py-2 text-xs font-bold hover:bg-secondary"
 								>
 									Batal
@@ -697,9 +726,9 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 								<button
 									type="submit"
 									disabled={createForm.processing}
-									className="rounded-full bg-[#80070A] px-6 py-2 text-xs font-bold text-white hover:brightness-110 disabled:opacity-60 shadow-md"
+									className="rounded-full bg-[#0284C7] px-6 py-2 text-xs font-bold text-white hover:bg-[#0369a1] disabled:opacity-60 shadow-md"
 								>
-									{createForm.processing ? 'Menyimpan...' : 'Simpan Komoditas'}
+									{createForm.processing ? 'Menyimpan...' : 'Simpan Produk'}
 								</button>
 							</div>
 						</form>
@@ -707,20 +736,29 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 				</div>
 			)}
 
-			{/* 2. Modal Edit Komoditas Produk */}
+			{/* 2. Modal Edit Produk (With Shake Effect on Outside Click) */}
 			{editModalOpen && selectedProduct && (
-				<div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto">
-					<div className="relative max-w-2xl w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up my-8 max-h-[90vh] overflow-y-auto">
+				<div
+					className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto"
+					onClick={editGuard.handleBackdropClick}
+				>
+					<div
+						onClick={(e) => e.stopPropagation()}
+						className={cn(
+							'relative max-w-2xl w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up my-8 max-h-[90vh] overflow-y-auto transition-transform',
+							editGuard.isShaking && 'animate-modal-shake'
+						)}
+					>
 						<button
-							onClick={() => setEditModalOpen(false)}
+							onClick={editGuard.handleClose}
 							className="absolute right-5 top-5 rounded-full p-1.5 text-muted-foreground hover:bg-secondary"
 						>
 							<X className="h-5 w-5" />
 						</button>
 
 						<div className="border-b border-border/60 pb-4">
-							<h3 className="font-display text-xl font-bold text-foreground">Edit Komoditas Rempah</h3>
-							<p className="text-xs text-muted-foreground mt-0.5">Perbarui informasi komoditas, slug URL otomatis, atau varian kemasan.</p>
+							<h3 className="text-xl font-bold text-foreground">Edit Produk</h3>
+							<p className="text-xs text-muted-foreground mt-0.5">Perbarui informasi produk, slug URL otomatis, atau varian ukuran/harga.</p>
 						</div>
 
 						<form onSubmit={handleEditSubmit} className="mt-5 space-y-4">
@@ -916,7 +954,7 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 							<div className="flex items-center justify-end gap-3 pt-4 border-t border-border/60">
 								<button
 									type="button"
-									onClick={() => setEditModalOpen(false)}
+									onClick={editGuard.handleClose}
 									className="rounded-full border border-border px-5 py-2 text-xs font-bold hover:bg-secondary"
 								>
 									Batal
@@ -924,7 +962,7 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 								<button
 									type="submit"
 									disabled={editForm.processing}
-									className="rounded-full bg-[#80070A] px-6 py-2 text-xs font-bold text-white hover:brightness-110 disabled:opacity-60 shadow-md"
+									className="rounded-full bg-[#0284C7] px-6 py-2 text-xs font-bold text-white hover:bg-[#0369a1] disabled:opacity-60 shadow-md"
 								>
 									{editForm.processing ? 'Menyimpan...' : 'Simpan Perubahan'}
 								</button>
@@ -955,7 +993,7 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 							</div>
 							<div>
 								<span className="text-[10px] font-bold uppercase tracking-widest text-[#80070A]">
-									{selectedProduct.category?.name || 'Komoditas Rempah'}
+									{selectedProduct.category?.name || 'Produk Material'}
 								</span>
 								<h3 className="font-display text-xl font-bold text-foreground leading-tight">
 									{selectedProduct.name}

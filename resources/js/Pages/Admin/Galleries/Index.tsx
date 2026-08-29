@@ -1,3 +1,4 @@
+import useModalGuard from '@/hooks/useModalGuard';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { cn } from '@/lib/utils';
 import { Head, Link, router, useForm } from '@inertiajs/react';
@@ -60,10 +61,10 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 	}>({
 		title: '',
 		caption: '',
-		category: 'fasilitas',
+		category: 'kaca_film',
 		active: true,
 		image: null,
-		image_url: '/images/products/cengkeh-maluku.webp',
+		image_url: '/images/products/kaca-film-riben.webp',
 	});
 
 	// Edit Form
@@ -77,10 +78,31 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 	}>({
 		title: '',
 		caption: '',
-		category: 'fasilitas',
+		category: 'kaca_film',
 		active: true,
 		image: null,
 		_method: 'PUT',
+	});
+
+	const isCreateDirty = Boolean(createForm.data.title.trim() || createForm.data.caption.trim() || createForm.data.image !== null);
+	const isEditDirty = editForm.isDirty;
+
+	const createGuard = useModalGuard({
+		isDirty: isCreateDirty,
+		onClose: () => {
+			setCreateModalOpen(false);
+			createForm.reset();
+			setImagePreview(null);
+		},
+	});
+
+	const editGuard = useModalGuard({
+		isDirty: isEditDirty,
+		onClose: () => {
+			setEditModalOpen(false);
+			editForm.reset();
+			setImagePreview(null);
+		},
 	});
 
 	const handleFilterChange = (params: Record<string, string>) => {
@@ -203,7 +225,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 
 	return (
 		<AdminLayout header="Galeri Fasilitas & Ekspor">
-			<Head title="Manajemen Galeri — Panel Admin LFM" />
+			<Head title="Manajemen Galeri — Panel Admin Tritama Decorindo" />
 
 			<div className="space-y-6">
 				{/* Top Controls Toolbar */}
@@ -408,20 +430,29 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 				</div>
 			</div>
 
-			{/* 1. Modal Tambah Foto Galeri */}
+			{/* 1. Modal Tambah Foto Galeri (With Shake Effect on Outside Click) */}
 			{createModalOpen && (
-				<div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto">
-					<div className="relative max-w-lg w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up my-8">
+				<div
+					className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto"
+					onClick={createGuard.handleBackdropClick}
+				>
+					<div
+						onClick={(e) => e.stopPropagation()}
+						className={cn(
+							'relative max-w-lg w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up my-8 transition-transform',
+							createGuard.isShaking && 'animate-modal-shake'
+						)}
+					>
 						<button
-							onClick={() => setCreateModalOpen(false)}
+							onClick={createGuard.handleClose}
 							className="absolute right-5 top-5 rounded-full p-1.5 text-muted-foreground hover:bg-secondary"
 						>
 							<X className="h-5 w-5" />
 						</button>
 
 						<div className="border-b border-border/60 pb-4">
-							<h3 className="font-display text-xl font-bold text-foreground">Tambah Foto Galeri Baru</h3>
-							<p className="text-xs text-muted-foreground mt-0.5">Unggah dokumentasi fasilitas, uji laboratorium, atau ekspor.</p>
+							<h3 className="text-xl font-bold text-foreground">Tambah Foto Galeri Baru</h3>
+							<p className="text-xs text-muted-foreground mt-0.5">Unggah dokumentasi proyek pemasangan dan hasil dekorasi.</p>
 						</div>
 
 						<form onSubmit={handleCreateSubmit} className="mt-5 space-y-4">
@@ -438,7 +469,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 									<button
 										type="button"
 										onClick={() => fileInputRef.current?.click()}
-										className="absolute bottom-3 right-3 rounded-full bg-[#80070A] text-white p-2 shadow-lg hover:brightness-110 flex items-center gap-1.5 text-xs font-semibold px-3"
+										className="absolute bottom-3 right-3 rounded-full bg-[#0284C7] text-white p-2 shadow-lg hover:bg-[#0369a1] flex items-center gap-1.5 text-xs font-semibold px-3"
 									>
 										<Camera className="h-3.5 w-3.5" />
 										<span>Pilih Foto</span>
@@ -461,8 +492,8 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 									value={createForm.data.title}
 									onChange={(e) => createForm.setData('title', e.target.value)}
 									required
-									placeholder="Contoh: Sortasi & Pembersihan Cengkeh Maluku Standar Ekspor"
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#80070A]"
+									placeholder="Contoh: Pemasangan Sandblast Cutting Logo Kantor Jakarta Pusat"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
 								/>
 								{createForm.errors.title && <p className="mt-1 text-xs text-red-600">{createForm.errors.title}</p>}
 							</div>
@@ -472,7 +503,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 								<select
 									value={createForm.data.category}
 									onChange={(e) => createForm.setData('category', e.target.value)}
-									className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#80070A]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#0284C7]"
 								>
 									{categories.map((c) => (
 										<option key={c.value} value={c.value}>
@@ -488,8 +519,8 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 									value={createForm.data.caption}
 									onChange={(e) => createForm.setData('caption', e.target.value)}
 									rows={3}
-									placeholder="Penjelasan detail proses sortasi, pengujian laboratorium, atau sertifikasi mutu..."
-									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#80070A]"
+									placeholder="Penjelasan detail hasil pengerjaan pemasangan..."
+									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#0284C7]"
 								/>
 							</div>
 
@@ -499,7 +530,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 										type="checkbox"
 										checked={createForm.data.active}
 										onChange={(e) => createForm.setData('active', e.target.checked)}
-										className="h-4 w-4 rounded text-[#80070A] focus:ring-[#80070A]"
+										className="h-4 w-4 rounded text-[#0284C7] focus:ring-[#0284C7]"
 									/>
 									<span className="text-xs font-semibold text-foreground">Tampilkan foto ini di halaman galeri publik</span>
 								</label>
@@ -508,7 +539,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 							<div className="flex items-center justify-end gap-3 pt-4 border-t border-border/60">
 								<button
 									type="button"
-									onClick={() => setCreateModalOpen(false)}
+									onClick={createGuard.handleClose}
 									className="rounded-full border border-border px-5 py-2 text-xs font-bold hover:bg-secondary"
 								>
 									Batal
@@ -516,7 +547,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 								<button
 									type="submit"
 									disabled={createForm.processing}
-									className="rounded-full bg-[#80070A] px-6 py-2 text-xs font-bold text-white hover:brightness-110 disabled:opacity-60 shadow-md"
+									className="rounded-full bg-[#0284C7] px-6 py-2 text-xs font-bold text-white hover:bg-[#0369a1] disabled:opacity-60 shadow-md"
 								>
 									{createForm.processing ? 'Menyimpan...' : 'Simpan Galeri'}
 								</button>
@@ -526,19 +557,28 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 				</div>
 			)}
 
-			{/* 2. Modal Edit Foto Galeri */}
+			{/* 2. Modal Edit Foto Galeri (With Shake Effect on Outside Click) */}
 			{editModalOpen && selectedGallery && (
-				<div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto">
-					<div className="relative max-w-lg w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up my-8">
+				<div
+					className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto"
+					onClick={editGuard.handleBackdropClick}
+				>
+					<div
+						onClick={(e) => e.stopPropagation()}
+						className={cn(
+							'relative max-w-lg w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up my-8 transition-transform',
+							editGuard.isShaking && 'animate-modal-shake'
+						)}
+					>
 						<button
-							onClick={() => setEditModalOpen(false)}
+							onClick={editGuard.handleClose}
 							className="absolute right-5 top-5 rounded-full p-1.5 text-muted-foreground hover:bg-secondary"
 						>
 							<X className="h-5 w-5" />
 						</button>
 
 						<div className="border-b border-border/60 pb-4">
-							<h3 className="font-display text-xl font-bold text-foreground">Edit Foto Galeri</h3>
+							<h3 className="text-xl font-bold text-foreground">Edit Foto Galeri</h3>
 							<p className="text-xs text-muted-foreground mt-0.5">Perbarui judul, kategori, caption, atau foto dokumentasi.</p>
 						</div>
 
@@ -556,7 +596,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 									<button
 										type="button"
 										onClick={() => fileInputRef.current?.click()}
-										className="absolute bottom-3 right-3 rounded-full bg-[#80070A] text-white p-2 shadow-lg hover:brightness-110 flex items-center gap-1.5 text-xs font-semibold px-3"
+										className="absolute bottom-3 right-3 rounded-full bg-[#0284C7] text-white p-2 shadow-lg hover:bg-[#0369a1] flex items-center gap-1.5 text-xs font-semibold px-3"
 									>
 										<Camera className="h-3.5 w-3.5" />
 										<span>Ganti Foto</span>
@@ -579,7 +619,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 									value={editForm.data.title}
 									onChange={(e) => editForm.setData('title', e.target.value)}
 									required
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#80070A]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#0284C7]"
 								/>
 								{editForm.errors.title && <p className="mt-1 text-xs text-red-600">{editForm.errors.title}</p>}
 							</div>
@@ -589,7 +629,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 								<select
 									value={editForm.data.category}
 									onChange={(e) => editForm.setData('category', e.target.value)}
-									className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#80070A]"
+									className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#0284C7]"
 								>
 									{categories.map((c) => (
 										<option key={c.value} value={c.value}>
@@ -605,7 +645,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 									value={editForm.data.caption}
 									onChange={(e) => editForm.setData('caption', e.target.value)}
 									rows={3}
-									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#80070A]"
+									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#0284C7]"
 								/>
 							</div>
 
@@ -615,7 +655,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 										type="checkbox"
 										checked={editForm.data.active}
 										onChange={(e) => editForm.setData('active', e.target.checked)}
-										className="h-4 w-4 rounded text-[#80070A] focus:ring-[#80070A]"
+										className="h-4 w-4 rounded text-[#0284C7] focus:ring-[#0284C7]"
 									/>
 									<span className="text-xs font-semibold text-foreground">Tampilkan foto ini di halaman galeri publik</span>
 								</label>
@@ -624,7 +664,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 							<div className="flex items-center justify-end gap-3 pt-4 border-t border-border/60">
 								<button
 									type="button"
-									onClick={() => setEditModalOpen(false)}
+									onClick={editGuard.handleClose}
 									className="rounded-full border border-border px-5 py-2 text-xs font-bold hover:bg-secondary"
 								>
 									Batal
@@ -632,7 +672,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 								<button
 									type="submit"
 									disabled={editForm.processing}
-									className="rounded-full bg-[#80070A] px-6 py-2 text-xs font-bold text-white hover:brightness-110 disabled:opacity-60 shadow-md"
+									className="rounded-full bg-[#0284C7] px-6 py-2 text-xs font-bold text-white hover:bg-[#0369a1] disabled:opacity-60 shadow-md"
 								>
 									{editForm.processing ? 'Menyimpan...' : 'Simpan Perubahan'}
 								</button>

@@ -1,21 +1,22 @@
-import { Globe } from 'lucide-react';
+import { CheckCircle2, Phone, ShieldCheck, Sparkles } from 'lucide-react';
 
 const items = [
-	'PT LFM Global Jayatama (LFM) — Eksportir Rempah Nusantara ke Pasar Global',
-	'Kualitas Ekspor Standar Internasional (HACCP, ISO & Phytosanitary)',
-	'Melayani Pengadaan Industri Nasional & Kontrak Ekspor Global',
-	'Cengkeh Maluku, Biji Pala Banda, Kayu Manis Kerinci & Vanilla Beans',
+	'Tritama Decorindo Stiker — Ahli Kaca Film, Sandblast, Wallpaper & Interior Sejak 2009',
+	'Melayani Wilayah Jakarta, Bogor, Depok, Tangerang, Bekasi, Cibubur & Sekitarnya',
+	'Pemasangan Rapi & Presisi oleh Teknisi Berpengalaman • Konsultasi Gratis: 0819-9090-9646',
+	'Solusi Lengkap Dekorasi Rumah, Kantor, Gedung, Ruko, Toko, Hotel & Instansi',
+	'Kaca Film Riben, Sparta, One Way • Sandblast Cutting Logo • Huruf Timbul LED • Blinds',
 ];
 
 export default function AnnouncementBar() {
 	return (
-		<div className="bg-[#1a0203] text-[#F8C300] text-[12px] tracking-[0.18em] uppercase font-medium border-b border-white/10 m-0 p-0">
+		<div className="bg-[#0B0F17] text-[#38BDF8] text-[11px] sm:text-[12px] tracking-[0.16em] uppercase font-medium border-b border-white/10 m-0 p-0">
 			<div className="relative overflow-hidden">
-				<div className="flex whitespace-nowrap yns-marquee py-2.5">
-					{[...items, ...items, ...items].map((item, idx) => (
-						<span key={idx} className="flex items-center gap-3 px-8 shrink-0">
-							<Globe className="h-3.5 w-3.5 text-[#F8C300]" />
-							{item}
+				<div className="flex whitespace-nowrap yns-marquee py-2">
+					{[...items, ...items].map((item, idx) => (
+						<span key={idx} className="flex items-center gap-2.5 px-6 shrink-0">
+							<Sparkles className="h-3 w-3 text-[#38BDF8]" />
+							<span className="text-slate-200">{item}</span>
 						</span>
 					))}
 				</div>

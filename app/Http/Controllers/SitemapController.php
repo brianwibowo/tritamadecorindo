@@ -47,7 +47,7 @@ class SitemapController extends Controller
             $productUrl = $baseUrl.'/product/'.$product->slug;
             $imageUrl = ! empty($product->images) && isset($product->images[0])
                 ? (str_starts_with($product->images[0], 'http') ? $product->images[0] : $baseUrl.$product->images[0])
-                : $baseUrl.'/images/products/cengkeh-maluku.webp';
+                : $baseUrl.'/images/products/kaca-film-riben.webp';
 
             $xml .= '<url>';
             $xml .= '<loc>'.$productUrl.'</loc>';
@@ -56,7 +56,7 @@ class SitemapController extends Controller
             $xml .= '<priority>0.85</priority>';
             $xml .= '<image:image>';
             $xml .= '<image:loc>'.htmlspecialchars($imageUrl).'</image:loc>';
-            $xml .= '<image:title>'.htmlspecialchars($product->name).' - PT LFM Global Jayatama</image:title>';
+            $xml .= '<image:title>'.htmlspecialchars($product->name).' - Tritama Decorindo Stiker</image:title>';
             $xml .= '</image:image>';
             $xml .= '</url>';
         }
