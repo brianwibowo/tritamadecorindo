@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--radius: 1rem;
+
+	/* RGB channels for Tailwind v3 opacity modifiers */
+	--background: 250 244 240; /* #faf4f0 */
+	--foreground: 26 2 3;      /* #1a0203 */
+	--card: 255 255 255;
+	--card-foreground: 26 2 3;
+	--popover: 255 255 255;
+	--popover-foreground: 26 2 3;
+	--primary: 128 7 10;       /* #80070a */
+	--primary-foreground: 255 255 255;
+	--secondary: 247 230 230;  /* #f7e6e6 */
+	--secondary-foreground: 128 7 10;
+	--muted: 245 232 232;      /* #f5e8e8 */
+	--muted-foreground: 125 38 41; /* #7d2629 */
+	--accent: 248 195 0;       /* #f8c300 */
+	--accent-foreground: 26 2 3;
+	--destructive: 220 38 38;
+	--border: 235 213 213;     /* #ebd5d5 */
+	--input: 235 213 213;
+	--ring: 128 7 10;
+
+	--yns-cream: #faf4f0;
+	--yns-rose: 247 230 230;
+	--yns-cocoa: 128 7 10;
+	--yns-clay: 163 18 21;
+	--yns-sun: 248 195 0;
+	--yns-mist: 245 232 232;
+}
+
+@layer base {
+	html {
+		scroll-behavior: smooth;
+	}
+	body {
+		@apply bg-background text-foreground;
+		font-feature-settings: "ss01", "cv01";
+	}
+	h1, h2, h3, h4, .yns-display {
+		font-family: 'Fraunces', Georgia, serif;
+	}
+}
+
+.yns-image-shimmer {
+	background: linear-gradient(
+		90deg,
+		#ede1d4 0%,
+		#f5e6dc 40%,
+		#ffffff 50%,
+		#f5e6dc 60%,
+		#ede1d4 100%
+	);
+	background-size: 200% 100%;
+	animation: yns-image-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes yns-image-shimmer {
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
+}
+
+/* Hero gradient (warm cocoa room) */
+.yns-hero-gradient {
+	background:
+		radial-gradient(ellipse 80% 60% at 20% 100%, rgba(244, 210, 58, 0.18) 0%, transparent 60%),
+		radial-gradient(ellipse 60% 80% at 90% 20%, rgba(245, 230, 220, 0.6) 0%, transparent 55%),
+		linear-gradient(135deg, #3a2820 0%, #5c3a2a 45%, #8b5e3c 100%);
+}
+
+.yns-paper {
+	background-color: #f5e6dc;
+	background-image:
+		radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.5) 0%, transparent 50%),
+		radial-gradient(circle at 80% 70%, rgba(240, 214, 200, 0.6) 0%, transparent 50%);
+}
+
+.yns-sun-stripes {
+	background:
+		repeating-linear-gradient(
+			-45deg,
+			#f4d23a,
+			#f4d23a 14px,
+			#e8c428 14px,
+			#e8c428 28px
+		);
+}
+
+.yns-display {
+	font-family: 'Fraunces', Georgia, serif;
+	letter-spacing: -0.02em;
+}
+
+.yns-marquee {
+	animation: yns-marquee 40s linear infinite;
+}
+
+@keyframes yns-marquee {
+	from { transform: translateX(0); }
+	to { transform: translateX(-50%); }
+}
+
+/* Outline text used in oversized hero word */
+.yns-outline-text {
+	-webkit-text-stroke: 1.5px #f5e6dc;
+	color: transparent;
+}

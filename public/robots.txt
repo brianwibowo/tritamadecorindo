@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Allow: /products
+Allow: /product/
+Allow: /galeri
+Disallow: /admin/
+Disallow: /admin/*
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password
+Disallow: /dashboard
+
+Sitemap: https://lfmjayatama.com/sitemap.xml

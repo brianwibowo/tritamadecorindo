@@ -1,0 +1,60 @@
+name: Deploy to Shared Hosting (cPanel)
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🐘 Setup PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, bcmath, zip
+          coverage: none
+
+      - name: 📦 Install Composer Dependencies
+        run: |
+          composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 🎨 Install NPM Dependencies & Build Assets
+        run: |
+          npm ci --legacy-peer-deps || npm install --legacy-peer-deps
+          npm run build
+
+      - name: 🧪 Run Automated Tests
+        run: |
+          php artisan test --compact
+
+      - name: 🧹 Prepare Deployment Files
+        run: |
+          # Remove development-only files
+          rm -rf node_modules
+          rm -rf tests
+          rm -rf .github
+
+      # Deploy via FTP/FTPS to Shared Hosting
+      - name: 🚀 Deploy to cPanel via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_TARGET_DIR || '/' }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            .env
+            storage/logs/*.log
