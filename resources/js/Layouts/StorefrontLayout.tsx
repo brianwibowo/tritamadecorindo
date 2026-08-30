@@ -56,7 +56,13 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 	}, []);
 
 	const scrollToTop = () => {
-		window.scrollTo({ top: 0, behavior: 'smooth' });
+		try {
+			window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+			document.documentElement.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+			document.body.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+		} catch {
+			window.scrollTo(0, 0);
+		}
 	};
 
 	// Lock scroll when mobile side menu is open
@@ -432,14 +438,14 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 				onClick={scrollToTop}
 				aria-label="Scroll ke atas"
 				className={cn(
-					'fixed bottom-24 right-6 z-40 flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#111FA2] shadow-xl border border-slate-200/80 transition-all duration-300 hover:bg-[#FFDE42] hover:text-[#111FA2] hover:scale-110 active:scale-95',
+					'fixed bottom-6 left-5 sm:bottom-28 sm:right-6 z-50 flex h-12 w-12 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white text-[#111FA2] shadow-2xl border border-slate-200/80 transition-all duration-300 hover:bg-[#FFDE42] hover:text-[#111FA2] hover:scale-110 active:scale-95 cursor-pointer touch-manipulation',
 					showScrollTop
 						? 'translate-y-0 opacity-100 scale-100 pointer-events-auto'
 						: 'translate-y-8 opacity-0 scale-75 pointer-events-none'
 				)}
 				title="Kembali ke Atas"
 			>
-				<ArrowUp className="h-5 w-5" />
+				<ArrowUp className="h-5 w-5 stroke-[2.5]" />
 			</button>
 		</div>
 	);
