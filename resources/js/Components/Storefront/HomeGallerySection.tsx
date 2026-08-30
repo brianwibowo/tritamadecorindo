@@ -124,7 +124,7 @@ export default function HomeGallerySection({ galleries = [] }: HomeGallerySectio
 			{/* Lightbox / Preview Modal */}
 			{previewItem && (
 				<div
-					className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4 animate-in fade-in duration-200"
+					className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-4 animate-in fade-in duration-200"
 					onClick={(e) => {
 						if (e.target === e.currentTarget) setPreviewItem(null);
 					}}
@@ -134,10 +134,10 @@ export default function HomeGallerySection({ galleries = [] }: HomeGallerySectio
 						<button
 							type="button"
 							onClick={() => setPreviewItem(null)}
-							className="absolute top-3 right-3 z-20 h-9 w-9 rounded-full bg-black/60 hover:bg-black text-white flex items-center justify-center transition-colors shadow-md"
-							title="Tutup Preview"
+							className="absolute top-3 right-3 z-30 h-10 w-10 rounded-full bg-black/70 hover:bg-red-600 text-white border border-white/30 flex items-center justify-center transition-all shadow-xl active:scale-95 cursor-pointer"
+							title="Tutup Preview (Esc)"
 						>
-							<X className="h-4 w-4" />
+							<X className="h-5 w-5 stroke-[2.5]" />
 						</button>
 
 						{/* Image Section */}

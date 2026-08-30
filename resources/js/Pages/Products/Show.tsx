@@ -400,20 +400,26 @@ export default function ProductShow({ product, relatedProducts }: ProductShowPro
 
 			{/* Fullscreen Lightbox Modal */}
 			{isLightboxOpen && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-200">
+				<div
+					className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-md p-4 animate-in fade-in duration-200 select-none"
+					onClick={(e) => {
+						if (e.target === e.currentTarget) setIsLightboxOpen(false);
+					}}
+				>
 					{/* Close Button */}
 					<button
 						type="button"
 						onClick={() => setIsLightboxOpen(false)}
-						className="absolute top-5 right-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 active:scale-95 transition-all"
+						className="absolute top-5 right-5 z-[10000] flex h-12 w-12 items-center justify-center rounded-full bg-slate-900/90 text-white border-2 border-white/50 shadow-2xl hover:bg-red-600 hover:border-red-500 hover:scale-110 active:scale-95 transition-all cursor-pointer group"
 						aria-label="Tutup Galeri"
+						title="Tutup (Esc)"
 					>
-						<X className="h-6 w-6" />
+						<X className="h-6 w-6 text-white stroke-[2.5] group-hover:rotate-90 transition-transform duration-200" />
 					</button>
 
 					{/* Counter */}
-					<div className="absolute top-5 left-5 z-20">
-						<span className="rounded-full bg-black/50 px-4 py-1.5 text-xs font-bold text-white border border-white/20">
+					<div className="absolute top-5 left-5 z-[10000]">
+						<span className="rounded-full bg-black/70 px-4 py-1.5 text-xs font-bold text-white border border-white/30 backdrop-blur-md shadow-lg">
 							{activeImageIndex + 1} / {allImages.length} Foto
 						</span>
 					</div>
