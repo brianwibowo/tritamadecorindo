@@ -22,4 +22,7 @@ require $base_path . '/vendor/autoload.php';
 /** @var Application $app */
 $app = require_once $base_path . '/bootstrap/app.php';
 
+// Bind active public folder so Vite finds build/manifest.json accurately
+$app->usePublicPath(__DIR__);
+
 $app->handleRequest(Request::capture());
