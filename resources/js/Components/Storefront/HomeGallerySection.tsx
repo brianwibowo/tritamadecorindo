@@ -1,7 +1,8 @@
 import ScrollReveal from '@/Components/UI/ScrollReveal';
 import { ArrowUpRight, Eye, MapPin, Phone, X } from 'lucide-react';
 import { Link } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 interface GalleryItem {
 	id: number;
@@ -24,7 +25,31 @@ const coverageAreas = [
 ];
 
 export default function HomeGallerySection({ galleries = [] }: HomeGallerySectionProps) {
+	const [mounted, setMounted] = useState(false);
 	const [previewItem, setPreviewItem] = useState<GalleryItem | null>(null);
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
+
+	// Lock scroll when preview is open
+	useEffect(() => {
+		if (previewItem) {
+			document.body.style.overflow = 'hidden';
+		} else {
+			document.body.style.overflow = '';
+		}
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.key === 'Escape' && previewItem) {
+				setPreviewItem(null);
+			}
+		};
+		window.addEventListener('keydown', handleKeyDown);
+		return () => {
+			document.body.style.overflow = '';
+			window.removeEventListener('keydown', handleKeyDown);
+		};
+	}, [previewItem]);
 
 	return (
 		<section className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 pt-16 sm:pt-24">
@@ -122,9 +147,9 @@ export default function HomeGallerySection({ galleries = [] }: HomeGallerySectio
 			</div>
 
 			{/* Lightbox / Preview Modal */}
-			{previewItem && (
+			{previewItem && mounted && createPortal(
 				<div
-					className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-4 animate-in fade-in duration-200"
+					className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-4 animate-in fade-in duration-200"
 					onClick={(e) => {
 						if (e.target === e.currentTarget) setPreviewItem(null);
 					}}
@@ -134,7 +159,7 @@ export default function HomeGallerySection({ galleries = [] }: HomeGallerySectio
 						<button
 							type="button"
 							onClick={() => setPreviewItem(null)}
-							className="absolute top-3 right-3 z-30 h-10 w-10 rounded-full bg-black/70 hover:bg-red-600 text-white border border-white/30 flex items-center justify-center transition-all shadow-xl active:scale-95 cursor-pointer"
+							className="absolute top-3 right-3 z-[100000] h-10 w-10 rounded-full bg-black/70 hover:bg-red-600 text-white border border-white/30 flex items-center justify-center transition-all shadow-xl active:scale-95 cursor-pointer"
 							title="Tutup Preview (Esc)"
 						>
 							<X className="h-5 w-5 stroke-[2.5]" />
@@ -177,7 +202,8 @@ export default function HomeGallerySection({ galleries = [] }: HomeGallerySectio
 							</div>
 						</div>
 					</div>
-				</div>
+				</div>,
+				document.body
 			)}
 		</section>
 	);

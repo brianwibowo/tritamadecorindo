@@ -3,7 +3,8 @@ import StorefrontLayout from '@/Layouts/StorefrontLayout';
 import { cn } from '@/lib/utils';
 import { Head, Link, router } from '@inertiajs/react';
 import { Eye, Phone, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { PaginatedData } from '@/types';
 
 interface GalleryItem {
@@ -22,7 +23,31 @@ interface GalleryProps {
 }
 
 export default function Gallery({ galleryItems, currentCategory = 'all' }: GalleryProps) {
+	const [mounted, setMounted] = useState(false);
 	const [previewItem, setPreviewItem] = useState<GalleryItem | null>(null);
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
+
+	// Lock scroll when preview is open
+	useEffect(() => {
+		if (previewItem) {
+			document.body.style.overflow = 'hidden';
+		} else {
+			document.body.style.overflow = '';
+		}
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.key === 'Escape' && previewItem) {
+				setPreviewItem(null);
+			}
+		};
+		window.addEventListener('keydown', handleKeyDown);
+		return () => {
+			document.body.style.overflow = '';
+			window.removeEventListener('keydown', handleKeyDown);
+		};
+	}, [previewItem]);
 
 	const categories = [
 		{ key: 'all', label: 'Semua Proyek' },
@@ -155,9 +180,9 @@ export default function Gallery({ galleryItems, currentCategory = 'all' }: Galle
 				)}
 
 				{/* Lightbox / Preview Modal */}
-				{previewItem && (
+				{previewItem && mounted && createPortal(
 					<div
-						className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-4 animate-in fade-in duration-200"
+						className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-4 animate-in fade-in duration-200"
 						onClick={(e) => {
 							if (e.target === e.currentTarget) setPreviewItem(null);
 						}}
@@ -167,7 +192,7 @@ export default function Gallery({ galleryItems, currentCategory = 'all' }: Galle
 							<button
 								type="button"
 								onClick={() => setPreviewItem(null)}
-								className="absolute top-3 right-3 z-30 h-10 w-10 rounded-full bg-black/70 hover:bg-red-600 text-white border border-white/30 flex items-center justify-center transition-all shadow-xl active:scale-95 cursor-pointer"
+								className="absolute top-3 right-3 z-[100000] h-10 w-10 rounded-full bg-black/70 hover:bg-red-600 text-white border border-white/30 flex items-center justify-center transition-all shadow-xl active:scale-95 cursor-pointer"
 								title="Tutup Preview (Esc)"
 							>
 								<X className="h-5 w-5 stroke-[2.5]" />
@@ -210,7 +235,8 @@ export default function Gallery({ galleryItems, currentCategory = 'all' }: Galle
 								</div>
 							</div>
 						</div>
-					</div>
+					</div>,
+					document.body
 				)}
 			</div>
 		</StorefrontLayout>

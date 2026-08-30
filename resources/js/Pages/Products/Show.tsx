@@ -17,6 +17,7 @@ import {
 	X,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { Product, Variant } from '@/types';
 
 interface ProductShowProps {
@@ -25,12 +26,29 @@ interface ProductShowProps {
 }
 
 export default function ProductShow({ product, relatedProducts }: ProductShowProps) {
+	const [mounted, setMounted] = useState(false);
 	const [selectedVariant, setSelectedVariant] = useState<Variant | null>(
 		product.variants && product.variants.length > 0 ? product.variants[0] : null
 	);
 	const [quantity, setQuantity] = useState(1);
 	const [activeImageIndex, setActiveImageIndex] = useState(0);
 	const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+
+	useEffect(() => {
+		setMounted(true);
+	}, []);
+
+	// Lock scroll when lightbox is open
+	useEffect(() => {
+		if (isLightboxOpen) {
+			document.body.style.overflow = 'hidden';
+		} else {
+			document.body.style.overflow = '';
+		}
+		return () => {
+			document.body.style.overflow = '';
+		};
+	}, [isLightboxOpen]);
 
 	const allImages = Array.from(
 		new Set([
@@ -399,9 +417,9 @@ export default function ProductShow({ product, relatedProducts }: ProductShowPro
 			</div>
 
 			{/* Fullscreen Lightbox Modal */}
-			{isLightboxOpen && (
+			{isLightboxOpen && mounted && createPortal(
 				<div
-					className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-md p-4 animate-in fade-in duration-200 select-none"
+					className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/95 backdrop-blur-md p-4 animate-in fade-in duration-200 select-none"
 					onClick={(e) => {
 						if (e.target === e.currentTarget) setIsLightboxOpen(false);
 					}}
@@ -410,7 +428,7 @@ export default function ProductShow({ product, relatedProducts }: ProductShowPro
 					<button
 						type="button"
 						onClick={() => setIsLightboxOpen(false)}
-						className="absolute top-5 right-5 z-[10000] flex h-12 w-12 items-center justify-center rounded-full bg-slate-900/90 text-white border-2 border-white/50 shadow-2xl hover:bg-red-600 hover:border-red-500 hover:scale-110 active:scale-95 transition-all cursor-pointer group"
+						className="absolute top-5 right-5 z-[100000] flex h-12 w-12 items-center justify-center rounded-full bg-slate-900/90 text-white border-2 border-white/50 shadow-2xl hover:bg-red-600 hover:border-red-500 hover:scale-110 active:scale-95 transition-all cursor-pointer group"
 						aria-label="Tutup Galeri"
 						title="Tutup (Esc)"
 					>
@@ -418,7 +436,7 @@ export default function ProductShow({ product, relatedProducts }: ProductShowPro
 					</button>
 
 					{/* Counter */}
-					<div className="absolute top-5 left-5 z-[10000]">
+					<div className="absolute top-5 left-5 z-[100000]">
 						<span className="rounded-full bg-black/70 px-4 py-1.5 text-xs font-bold text-white border border-white/30 backdrop-blur-md shadow-lg">
 							{activeImageIndex + 1} / {allImages.length} Foto
 						</span>
@@ -441,7 +459,7 @@ export default function ProductShow({ product, relatedProducts }: ProductShowPro
 								onClick={() =>
 									setActiveImageIndex((prev) => (prev === 0 ? allImages.length - 1 : prev - 1))
 								}
-								className="absolute left-4 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 active:scale-95 transition-all"
+								className="absolute left-4 top-1/2 -translate-y-1/2 z-[100000] flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 active:scale-95 transition-all"
 								aria-label="Foto Sebelumnya"
 							>
 								<ChevronLeft className="h-7 w-7" />
@@ -452,7 +470,7 @@ export default function ProductShow({ product, relatedProducts }: ProductShowPro
 								onClick={() =>
 									setActiveImageIndex((prev) => (prev === allImages.length - 1 ? 0 : prev + 1))
 								}
-								className="absolute right-4 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 active:scale-95 transition-all"
+								className="absolute right-4 top-1/2 -translate-y-1/2 z-[100000] flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 active:scale-95 transition-all"
 								aria-label="Foto Berikutnya"
 							>
 								<ChevronRight className="h-7 w-7" />
@@ -462,7 +480,7 @@ export default function ProductShow({ product, relatedProducts }: ProductShowPro
 
 					{/* Bottom Thumbnail Strip inside Lightbox */}
 					{allImages.length > 1 && (
-						<div className="absolute bottom-6 inset-x-0 flex items-center justify-center gap-2 overflow-x-auto px-4">
+						<div className="absolute bottom-6 inset-x-0 z-[100000] flex items-center justify-center gap-2 overflow-x-auto px-4">
 							{allImages.map((img, idx) => (
 								<button
 									key={idx}
@@ -480,7 +498,8 @@ export default function ProductShow({ product, relatedProducts }: ProductShowPro
 							))}
 						</div>
 					)}
-				</div>
+				</div>,
+				document.body
 			)}
 		</StorefrontLayout>
 	);
