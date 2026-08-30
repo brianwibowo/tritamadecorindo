@@ -1,9 +1,13 @@
 <?php
 /**
- * Auto-Deploy Webhook Handler for Laravel on cPanel
+ * Auto-Deploy Webhook Handler for Laravel on cPanel / LiteSpeed
  * Project: Tritama Decorindo Stiker
  */
 
+// Allow long execution time
+@set_time_limit(180);
+@ini_set('max_execution_time', '180');
+@ini_set('memory_limit', '256M');
 error_reporting(0);
 ini_set('display_errors', '0');
 
@@ -15,13 +19,13 @@ if (!isset($_GET['token']) || $_GET['token'] !== $secret_token) {
     header('Content-Type: application/json');
     echo json_encode([
         'status' => 'error',
-        'message' => 'Forbidden: Invalid token.'
+        'message' => 'Forbidden: Invalid or missing secret token.'
     ]);
     exit();
 }
 
 // 2. Set Extended Environment Path
-putenv('PATH=' . getenv('PATH') . ':/usr/local/bin:/usr/bin:/bin:/usr/local/cpanel/3rdparty/bin:/usr/local/easy/bin');
+putenv('PATH=' . getenv('PATH') . ':/usr/local/bin:/usr/bin:/bin:/usr/local/cpanel/3rdparty/bin:/usr/local/easy/bin:/opt/cpanel/ea-php82/root/usr/bin:/opt/cpanel/ea-php83/root/usr/bin');
 
 // 3. Locate Git Binary
 $git_paths = [
@@ -39,18 +43,38 @@ foreach ($git_paths as $path) {
     }
 }
 
-// 4. Locate PHP Binary
-$php = defined('PHP_BINARY') && file_exists(PHP_BINARY) ? PHP_BINARY : 'php';
+// 4. Locate CLI PHP Binary (Do not use PHP_BINARY as LiteSpeed sets it to lsphp)
+$php_candidates = [
+    '/usr/local/bin/php',
+    '/usr/bin/php',
+    '/opt/cpanel/ea-php83/root/usr/bin/php',
+    '/opt/cpanel/ea-php82/root/usr/bin/php',
+    'php'
+];
+
+$php = 'php';
+foreach ($php_candidates as $cand) {
+    if (file_exists($cand) && is_executable($cand)) {
+        $php = $cand;
+        break;
+    }
+}
 
 // 5. Determine Project Root Directory
-$project_root = dirname(__DIR__);
+$project_root = realpath(__DIR__ . '/..');
+if (!$project_root || !file_exists($project_root . '/artisan')) {
+    $home_dir = getenv('HOME') ?: '/home/omag8228';
+    if (file_exists($home_dir . '/tritama_app/artisan')) {
+        $project_root = $home_dir . '/tritama_app';
+    }
+}
 
 $start_time = microtime(true);
 $logs = [];
 $status = 'success';
 
 /**
- * Helper to run shell commands and record logs
+ * Helper to run shell commands safely
  */
 function runCommand($cmd, &$logs, &$status) {
     $output = [];
@@ -70,21 +94,20 @@ function runCommand($cmd, &$logs, &$status) {
 // Step 1: Git Fetch & Reset to latest main
 runCommand("cd {$project_root} && {$git} fetch origin main && {$git} reset --hard origin/main", $logs, $status);
 
-// Step 2: Database Migration
-runCommand("cd {$project_root} && {$php} artisan migrate --force", $logs, $status);
-
-// Step 3: Clear and Rebuild Laravel Caches
-runCommand("cd {$project_root} && {$php} artisan optimize:clear", $logs, $status);
-runCommand("cd {$project_root} && {$php} artisan config:cache", $logs, $status);
-runCommand("cd {$project_root} && {$php} artisan route:cache", $logs, $status);
-runCommand("cd {$project_root} && {$php} artisan view:cache", $logs, $status);
-
-// Step 4: Ensure Storage Symlink Exists
-runCommand("cd {$project_root} && {$php} artisan storage:link", $logs, $status);
+// Step 2: Database Migration (if artisan is accessible)
+if (file_exists("{$project_root}/artisan")) {
+    runCommand("cd {$project_root} && {$php} artisan migrate --force", $logs, $status);
+    runCommand("cd {$project_root} && {$php} artisan optimize:clear", $logs, $status);
+    runCommand("cd {$project_root} && {$php} artisan config:cache", $logs, $status);
+    runCommand("cd {$project_root} && {$php} artisan route:cache", $logs, $status);
+    runCommand("cd {$project_root} && {$php} artisan view:cache", $logs, $status);
+    runCommand("cd {$project_root} && {$php} artisan storage:link", $logs, $status);
+}
 
 $duration = round(microtime(true) - $start_time, 2);
 
-// Response Output
+// Always return HTTP 200 JSON Response to GitHub
+http_response_code(200);
 header('Content-Type: application/json');
 echo json_encode([
     'status' => $status,
