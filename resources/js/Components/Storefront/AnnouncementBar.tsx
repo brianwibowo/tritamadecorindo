@@ -10,13 +10,13 @@ const items = [
 
 export default function AnnouncementBar() {
 	return (
-		<div className="bg-[#111FA2] text-[#FFDE42] text-[11px] sm:text-[12px] tracking-[0.16em] uppercase font-medium border-b border-[#5478FF]/20 m-0 p-0">
-			<div className="relative overflow-hidden">
-				<div className="flex whitespace-nowrap yns-marquee py-2">
+		<div className="bg-[#111FA2] text-[#FFDE42] text-[11px] sm:text-[12px] tracking-[0.14em] uppercase font-medium border-b border-[#5478FF]/20 m-0 p-0 overflow-hidden select-none">
+			<div className="relative w-full overflow-hidden">
+				<div className="flex whitespace-nowrap yns-marquee py-2.5">
 					{[...items, ...items].map((item, idx) => (
-						<span key={idx} className="flex items-center gap-2.5 px-6 shrink-0">
-							<Sparkles className="h-3 w-3 text-[#FFDE42]" />
-							<span className="text-white font-semibold">{item}</span>
+						<span key={idx} className="inline-flex items-center gap-2.5 px-6 shrink-0">
+							<Sparkles className="h-3 w-3 text-[#FFDE42] shrink-0" />
+							<span className="text-white font-semibold text-xs tracking-wider">{item}</span>
 						</span>
 					))}
 				</div>

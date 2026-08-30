@@ -432,13 +432,13 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 			{/* Floating WhatsApp Consultation */}
 			<FloatingWhatsApp />
 
-			{/* Scroll To Top Button */}
+			{/* Scroll To Top Button (Permanently on bottom-left corner) */}
 			<button
 				type="button"
 				onClick={scrollToTop}
 				aria-label="Scroll ke atas"
 				className={cn(
-					'fixed bottom-6 left-5 sm:bottom-28 sm:right-6 z-50 flex h-12 w-12 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-white text-[#111FA2] shadow-2xl border border-slate-200/80 transition-all duration-300 hover:bg-[#FFDE42] hover:text-[#111FA2] hover:scale-110 active:scale-95 cursor-pointer touch-manipulation',
+					'fixed bottom-6 left-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#111FA2] shadow-2xl border border-slate-200/80 transition-all duration-300 hover:bg-[#FFDE42] hover:text-[#111FA2] hover:scale-110 active:scale-95 cursor-pointer touch-manipulation',
 					showScrollTop
 						? 'translate-y-0 opacity-100 scale-100 pointer-events-auto'
 						: 'translate-y-8 opacity-0 scale-75 pointer-events-none'

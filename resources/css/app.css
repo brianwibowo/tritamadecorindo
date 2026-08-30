@@ -142,3 +142,24 @@
 .animate-pulse-glow {
 	animation: pulse-glow 3s infinite ease-in-out;
 }
+
+/* Infinite Running Marquee / Announcement Bar Ticker */
+@keyframes marquee-scroll {
+	0% {
+		transform: translateX(0);
+	}
+	100% {
+		transform: translateX(-50%);
+	}
+}
+
+.yns-marquee {
+	display: flex;
+	width: max-content;
+	animation: marquee-scroll 32s linear infinite;
+	will-change: transform;
+}
+
+.yns-marquee:hover {
+	animation-play-state: paused;
+}
