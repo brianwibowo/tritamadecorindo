@@ -5,9 +5,10 @@ export interface User {
     email_verified_at?: string;
     role: 'admin' | 'buyer';
     phone?: string;
-    status: string;
+    status: 'active' | 'inactive';
     image?: string;
-    banned: boolean;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface Category {
@@ -17,8 +18,9 @@ export interface Category {
     description?: string;
     image?: string;
     active: boolean;
-    created_at: string;
     products_count?: number;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface Variant {
@@ -27,18 +29,21 @@ export interface Variant {
     name?: string;
     price: number;
     stock: number;
-    images: string[];
-    attributes: Record<string, unknown>;
+    sku?: string;
+    images?: string[];
+    attributes?: Record<string, unknown>;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface Product {
     id: string;
     name: string;
     slug: string;
-    description?: string;
-    summary?: string;
     category_id: string;
-    images: string[];
+    summary?: string;
+    description?: string;
+    images?: string[];
     active: boolean;
     show_price?: boolean;
     created_at: string;
@@ -46,25 +51,6 @@ export interface Product {
     category?: Category;
     variants?: Variant[];
     lowest_price?: number;
-}
-
-export interface CartItem {
-    id: string;
-    cart_id: string;
-    variant_id: string;
-    quantity: number;
-    created_at: string;
-    updated_at: string;
-    variant?: Variant;
-    product?: Product;
-}
-
-export interface Cart {
-    id: string;
-    user_id?: number;
-    created_at: string;
-    updated_at: string;
-    items?: CartItem[];
 }
 
 export interface OrderItem {
@@ -122,5 +108,4 @@ export type PageProps<
         user: User;
     };
     flash: FlashMessages;
-    cart_count?: number;
 };

@@ -9,13 +9,11 @@ use Illuminate\Support\Facades\Route;
 // SEO Sitemap
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
-// Storefront (Theme-012)
+// Storefront
 Route::get('/', [Buyer\HomeController::class, 'index'])->name('home');
 Route::get('/products', [Buyer\ProductController::class, 'index'])->name('products.index');
 Route::get('/product/{slug}', [Buyer\ProductController::class, 'show'])->name('products.show');
 Route::get('/galeri', [Buyer\GalleryController::class, 'index'])->name('gallery.index');
-
-Route::get('/cart', fn () => redirect()->route('products.index'));
 
 // Auth Dashboard / Profile
 Route::get('/dashboard', function () {
