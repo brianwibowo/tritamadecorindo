@@ -1,87 +1,95 @@
 <?php
 /**
- * Auto-Deploy Webhook Handler — Tritama Decorindo Stiker
- * Path: public/deploy.php
+ * Auto-Deploy Webhook Handler for Laravel on cPanel
+ * Project: Tritama Decorindo Stiker
  */
+
 error_reporting(0);
 ini_set('display_errors', '0');
 
-// Token keamanan rahasia
-$secret_token = 'tritama_deploy_2026';
+// 1. Secret Token Verification
+$secret_token = 'tritama_deploy_secret_2026';
 
-// 1. Validasi Token Keamanan
-$token = $_GET['token'] ?? $_SERVER['HTTP_X_DEPLOY_TOKEN'] ?? '';
-if ($token !== $secret_token) {
+if (!isset($_GET['token']) || $_GET['token'] !== $secret_token) {
     http_response_code(403);
     header('Content-Type: application/json');
     echo json_encode([
         'status' => 'error',
-        'message' => 'Forbidden: Invalid or missing token'
+        'message' => 'Forbidden: Invalid token.'
     ]);
     exit();
 }
 
-// 2. Setup Environment Path cPanel
-putenv('PATH=' . getenv('PATH') . ':/usr/local/bin:/usr/bin:/bin:/usr/local/cpanel/3rdparty/bin:/usr/local/php82/bin:/usr/local/php83/bin:/opt/cpanel/ea-php82/root/usr/bin:/opt/cpanel/ea-php83/root/usr/bin');
+// 2. Set Extended Environment Path
+putenv('PATH=' . getenv('PATH') . ':/usr/local/bin:/usr/bin:/bin:/usr/local/cpanel/3rdparty/bin:/usr/local/easy/bin');
 
-// 3. Masuk ke root direktori project
-$rootDir = dirname(__DIR__);
-if (!is_dir($rootDir) || !file_exists($rootDir . '/artisan')) {
-    http_response_code(500);
-    header('Content-Type: application/json');
-    echo json_encode(['status' => 'error', 'message' => 'Cannot locate project root']);
-    exit();
-}
-chdir($rootDir);
-
-// 4. Deteksi binary git & php
-$git = 'git';
-if (file_exists('/usr/local/cpanel/3rdparty/bin/git')) {
-    $git = '/usr/local/cpanel/3rdparty/bin/git';
-} elseif (file_exists('/usr/bin/git')) {
-    $git = '/usr/bin/git';
-}
-
-$php = 'php';
-if (file_exists('/usr/local/bin/php')) {
-    $php = '/usr/local/bin/php';
-}
-
-// 5. Eksekusi daftar command deployment
-$commands = [
-    'Git Atomic Sync' => "$git fetch origin main 2>&1 && $git reset --hard origin/main 2>&1 || ($git fetch origin master 2>&1 && $git reset --hard origin/master 2>&1)",
-    'Run Migrations' => "$php artisan migrate --force 2>&1",
-    'Link Storage' => "$php artisan storage:link 2>&1",
-    'Clear Optimization' => "$php artisan optimize:clear 2>&1",
-    'Cache Optimization' => "$php artisan optimize 2>&1",
+// 3. Locate Git Binary
+$git_paths = [
+    '/usr/local/cpanel/3rdparty/bin/git',
+    '/usr/bin/git',
+    '/bin/git',
+    'git'
 ];
 
-$results = [];
-$hasError = false;
-
-foreach ($commands as $label => $cmd) {
-    $output = [];
-    $returnVar = 0;
-    exec($cmd, $output, $returnVar);
-
-    $isOk = ($returnVar === 0);
-    $results[$label] = [
-        'command' => $cmd,
-        'status' => $isOk ? 'success' : 'error',
-        'code' => $returnVar,
-        'output' => $output
-    ];
-
-    if (!$isOk && strpos($label, 'Git') !== false) {
-        $hasError = true;
+$git = 'git';
+foreach ($git_paths as $path) {
+    if (file_exists($path) && is_executable($path)) {
+        $git = $path;
         break;
     }
 }
 
+// 4. Locate PHP Binary
+$php = defined('PHP_BINARY') && file_exists(PHP_BINARY) ? PHP_BINARY : 'php';
+
+// 5. Determine Project Root Directory
+$project_root = dirname(__DIR__);
+
+$start_time = microtime(true);
+$logs = [];
+$status = 'success';
+
+/**
+ * Helper to run shell commands and record logs
+ */
+function runCommand($cmd, &$logs, &$status) {
+    $output = [];
+    $return_var = 0;
+    exec($cmd . ' 2>&1', $output, $return_var);
+    $logs[] = [
+        'command' => $cmd,
+        'exit_code' => $return_var,
+        'output' => $output
+    ];
+    if ($return_var !== 0) {
+        $status = 'warning';
+    }
+    return $return_var;
+}
+
+// Step 1: Git Fetch & Reset to latest main
+runCommand("cd {$project_root} && {$git} fetch origin main && {$git} reset --hard origin/main", $logs, $status);
+
+// Step 2: Database Migration
+runCommand("cd {$project_root} && {$php} artisan migrate --force", $logs, $status);
+
+// Step 3: Clear and Rebuild Laravel Caches
+runCommand("cd {$project_root} && {$php} artisan optimize:clear", $logs, $status);
+runCommand("cd {$project_root} && {$php} artisan config:cache", $logs, $status);
+runCommand("cd {$project_root} && {$php} artisan route:cache", $logs, $status);
+runCommand("cd {$project_root} && {$php} artisan view:cache", $logs, $status);
+
+// Step 4: Ensure Storage Symlink Exists
+runCommand("cd {$project_root} && {$php} artisan storage:link", $logs, $status);
+
+$duration = round(microtime(true) - $start_time, 2);
+
+// Response Output
 header('Content-Type: application/json');
 echo json_encode([
-    'status' => $hasError ? 'error' : 'success',
+    'status' => $status,
+    'duration' => $duration . 's',
     'timestamp' => date('Y-m-d H:i:s'),
-    'project' => 'Tritama Decorindo Stiker',
-    'results' => $results
+    'project_root' => $project_root,
+    'logs' => $logs
 ], JSON_PRETTY_PRINT);
