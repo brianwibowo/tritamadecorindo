@@ -419,7 +419,8 @@ export default function ProductShow({ product, relatedProducts }: ProductShowPro
 			{/* Fullscreen Lightbox Modal */}
 			{isLightboxOpen && mounted && createPortal(
 				<div
-					className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/95 backdrop-blur-md p-4 animate-in fade-in duration-200 select-none"
+					style={{ zIndex: 999999 }}
+					className="fixed inset-0 flex items-center justify-center bg-black/95 backdrop-blur-md p-4 animate-in fade-in duration-200 select-none"
 					onClick={(e) => {
 						if (e.target === e.currentTarget) setIsLightboxOpen(false);
 					}}
@@ -427,8 +428,9 @@ export default function ProductShow({ product, relatedProducts }: ProductShowPro
 					{/* Close Button */}
 					<button
 						type="button"
+						style={{ zIndex: 1000000 }}
 						onClick={() => setIsLightboxOpen(false)}
-						className="absolute top-5 right-5 z-[100000] flex h-12 w-12 items-center justify-center rounded-full bg-slate-900/90 text-white border-2 border-white/50 shadow-2xl hover:bg-red-600 hover:border-red-500 hover:scale-110 active:scale-95 transition-all cursor-pointer group"
+						className="absolute top-5 right-5 flex h-12 w-12 items-center justify-center rounded-full bg-slate-900/90 text-white border-2 border-white/50 shadow-2xl hover:bg-red-600 hover:border-red-500 hover:scale-110 active:scale-95 transition-all cursor-pointer group"
 						aria-label="Tutup Galeri"
 						title="Tutup (Esc)"
 					>
@@ -436,7 +438,7 @@ export default function ProductShow({ product, relatedProducts }: ProductShowPro
 					</button>
 
 					{/* Counter */}
-					<div className="absolute top-5 left-5 z-[100000]">
+					<div style={{ zIndex: 1000000 }} className="absolute top-5 left-5">
 						<span className="rounded-full bg-black/70 px-4 py-1.5 text-xs font-bold text-white border border-white/30 backdrop-blur-md shadow-lg">
 							{activeImageIndex + 1} / {allImages.length} Foto
 						</span>
@@ -456,10 +458,11 @@ export default function ProductShow({ product, relatedProducts }: ProductShowPro
 						<>
 							<button
 								type="button"
+								style={{ zIndex: 1000000 }}
 								onClick={() =>
 									setActiveImageIndex((prev) => (prev === 0 ? allImages.length - 1 : prev - 1))
 								}
-								className="absolute left-4 top-1/2 -translate-y-1/2 z-[100000] flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 active:scale-95 transition-all"
+								className="absolute left-4 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 active:scale-95 transition-all"
 								aria-label="Foto Sebelumnya"
 							>
 								<ChevronLeft className="h-7 w-7" />
@@ -467,10 +470,11 @@ export default function ProductShow({ product, relatedProducts }: ProductShowPro
 
 							<button
 								type="button"
+								style={{ zIndex: 1000000 }}
 								onClick={() =>
 									setActiveImageIndex((prev) => (prev === allImages.length - 1 ? 0 : prev + 1))
 								}
-								className="absolute right-4 top-1/2 -translate-y-1/2 z-[100000] flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 active:scale-95 transition-all"
+								className="absolute right-4 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/30 active:scale-95 transition-all"
 								aria-label="Foto Berikutnya"
 							>
 								<ChevronRight className="h-7 w-7" />

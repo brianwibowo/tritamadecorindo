@@ -149,7 +149,8 @@ export default function HomeGallerySection({ galleries = [] }: HomeGallerySectio
 			{/* Lightbox / Preview Modal */}
 			{previewItem && mounted && createPortal(
 				<div
-					className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-4 animate-in fade-in duration-200"
+					style={{ zIndex: 999999 }}
+					className="fixed inset-0 flex items-center justify-center bg-black/85 backdrop-blur-md p-3 sm:p-4 animate-in fade-in duration-200"
 					onClick={(e) => {
 						if (e.target === e.currentTarget) setPreviewItem(null);
 					}}
@@ -158,8 +159,9 @@ export default function HomeGallerySection({ galleries = [] }: HomeGallerySectio
 						{/* Close Button */}
 						<button
 							type="button"
+							style={{ zIndex: 1000000 }}
 							onClick={() => setPreviewItem(null)}
-							className="absolute top-3 right-3 z-[100000] h-10 w-10 rounded-full bg-black/70 hover:bg-red-600 text-white border border-white/30 flex items-center justify-center transition-all shadow-xl active:scale-95 cursor-pointer"
+							className="absolute top-3 right-3 h-10 w-10 rounded-full bg-black/70 hover:bg-red-600 text-white border border-white/30 flex items-center justify-center transition-all shadow-xl active:scale-95 cursor-pointer"
 							title="Tutup Preview (Esc)"
 						>
 							<X className="h-5 w-5 stroke-[2.5]" />
