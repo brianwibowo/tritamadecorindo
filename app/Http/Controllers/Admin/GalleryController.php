@@ -75,20 +75,21 @@ class GalleryController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'caption' => ['nullable', 'string'],
-            'category' => ['required', Rule::in(['fasilitas', 'laboratorium', 'perkebunan', 'ekspor'])],
+            'category' => ['required', Rule::in(['kaca_film', 'sandblast', 'wallpaper', 'signage', 'blinds'])],
             'active' => ['required', 'boolean'],
             'image' => ['nullable', 'image', 'max:5120'],
             'image_url' => ['nullable', 'string'],
         ]);
 
         $categoryLabels = [
-            'fasilitas' => 'Fasilitas & QC',
-            'laboratorium' => 'Uji Laboratorium',
-            'perkebunan' => 'Sentra Perkebunan',
-            'ekspor' => 'Logistik & Ekspor',
+            'kaca_film' => 'Kaca Film',
+            'sandblast' => 'Sandblast & Stiker',
+            'wallpaper' => 'Wallpaper Dinding',
+            'signage' => 'Signage & Huruf Timbul',
+            'blinds' => 'Blinds & Gorden',
         ];
 
-        $imagePath = $validated['image_url'] ?? '/images/products/cengkeh-maluku.webp';
+        $imagePath = $validated['image_url'] ?? '/images/products/kaca-film-riben.webp';
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('galleries', 'public');
             $imagePath = '/storage/'.$path;
@@ -98,7 +99,7 @@ class GalleryController extends Controller
             'title' => $validated['title'],
             'caption' => $validated['caption'] ?? null,
             'category' => $validated['category'],
-            'category_label' => $categoryLabels[$validated['category']] ?? 'Fasilitas & QC',
+            'category_label' => $categoryLabels[$validated['category']] ?? 'Kaca Film',
             'image' => $imagePath,
             'active' => $validated['active'],
             'sort_order' => 0,
@@ -115,16 +116,17 @@ class GalleryController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'caption' => ['nullable', 'string'],
-            'category' => ['required', Rule::in(['fasilitas', 'laboratorium', 'perkebunan', 'ekspor'])],
+            'category' => ['required', Rule::in(['kaca_film', 'sandblast', 'wallpaper', 'signage', 'blinds'])],
             'active' => ['required', 'boolean'],
             'image' => ['nullable', 'image', 'max:5120'],
         ]);
 
         $categoryLabels = [
-            'fasilitas' => 'Fasilitas & QC',
-            'laboratorium' => 'Uji Laboratorium',
-            'perkebunan' => 'Sentra Perkebunan',
-            'ekspor' => 'Logistik & Ekspor',
+            'kaca_film' => 'Kaca Film',
+            'sandblast' => 'Sandblast & Stiker',
+            'wallpaper' => 'Wallpaper Dinding',
+            'signage' => 'Signage & Huruf Timbul',
+            'blinds' => 'Blinds & Gorden',
         ];
 
         if ($request->hasFile('image')) {
@@ -139,7 +141,7 @@ class GalleryController extends Controller
         $gallery->title = $validated['title'];
         $gallery->caption = $validated['caption'] ?? null;
         $gallery->category = $validated['category'];
-        $gallery->category_label = $categoryLabels[$validated['category']] ?? 'Fasilitas & QC';
+        $gallery->category_label = $categoryLabels[$validated['category']] ?? 'Kaca Film';
         $gallery->active = $validated['active'];
         $gallery->save();
 

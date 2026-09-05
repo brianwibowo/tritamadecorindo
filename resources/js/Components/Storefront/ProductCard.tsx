@@ -18,7 +18,7 @@ export function ProductCard({
 	];
 
 	// Fallback image if empty
-	const primaryImage = allImages[0] || '/images/products/cengkeh-maluku.webp';
+	const primaryImage = allImages[0] || '/images/products/kaca-film-riben.webp';
 	const secondaryImage = allImages[1] || null;
 
 	const isPriceShown = product.show_price !== false;

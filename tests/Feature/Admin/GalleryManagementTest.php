@@ -41,20 +41,21 @@ class GalleryManagementTest extends TestCase
     public function test_admin_can_create_gallery_item(): void
     {
         Storage::fake('public');
-        $file = UploadedFile::fake()->image('spice_sortasi.jpg');
+        $file = UploadedFile::fake()->image('proyek_kaca_film.jpg');
 
         $response = $this->actingAs($this->admin)->post(route('admin.galleries.store'), [
-            'title' => 'Sortasi Biji Cengkeh Maluku',
-            'caption' => 'Pembersihan debu dan pemisahan gagang cengkeh.',
-            'category' => 'fasilitas',
+            'title' => 'Pemasangan Kaca Film Gedung',
+            'caption' => 'Pemasangan kaca film riben penolak panas 80%.',
+            'category' => 'kaca_film',
             'active' => true,
             'image' => $file,
         ]);
 
         $response->assertRedirect(route('admin.galleries.index'));
         $this->assertDatabaseHas('galleries', [
-            'title' => 'Sortasi Biji Cengkeh Maluku',
-            'category' => 'fasilitas',
+            'title' => 'Pemasangan Kaca Film Gedung',
+            'category' => 'kaca_film',
+            'category_label' => 'Kaca Film',
         ]);
     }
 
@@ -63,16 +64,16 @@ class GalleryManagementTest extends TestCase
         $gallery = Gallery::create([
             'title' => 'Judul Lama',
             'caption' => 'Caption Lama',
-            'category' => 'perkebunan',
-            'category_label' => 'Sentra Perkebunan',
-            'image' => '/images/products/pala-banda.webp',
+            'category' => 'sandblast',
+            'category_label' => 'Sandblast & Stiker',
+            'image' => '/images/products/sandblast-polos.webp',
             'active' => true,
         ]);
 
         $response = $this->actingAs($this->admin)->put(route('admin.galleries.update', $gallery->id), [
             'title' => 'Judul Baru Diperbarui',
             'caption' => 'Caption Baru',
-            'category' => 'ekspor',
+            'category' => 'wallpaper',
             'active' => false,
         ]);
 
@@ -80,7 +81,8 @@ class GalleryManagementTest extends TestCase
         $this->assertDatabaseHas('galleries', [
             'id' => $gallery->id,
             'title' => 'Judul Baru Diperbarui',
-            'category' => 'ekspor',
+            'category' => 'wallpaper',
+            'category_label' => 'Wallpaper Dinding',
             'active' => false,
         ]);
     }
@@ -89,8 +91,8 @@ class GalleryManagementTest extends TestCase
     {
         $gallery = Gallery::create([
             'title' => 'Dokumentasi untuk dihapus',
-            'category' => 'fasilitas',
-            'image' => '/images/products/cengkeh-maluku.webp',
+            'category' => 'kaca_film',
+            'image' => '/images/products/kaca-film-riben.webp',
             'active' => true,
         ]);
 
@@ -105,9 +107,9 @@ class GalleryManagementTest extends TestCase
         Gallery::create([
             'title' => 'Dokumentasi Publik',
             'caption' => 'Penjelasan publik',
-            'category' => 'fasilitas',
-            'category_label' => 'Fasilitas & QC',
-            'image' => '/images/products/cengkeh-maluku.webp',
+            'category' => 'kaca_film',
+            'category_label' => 'Kaca Film',
+            'image' => '/images/products/kaca-film-riben.webp',
             'active' => true,
         ]);
 

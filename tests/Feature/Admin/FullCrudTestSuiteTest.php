@@ -202,19 +202,19 @@ class FullCrudTestSuiteTest extends TestCase
         Storage::fake('public');
 
         // 1. Create Gallery Item
-        $photo = UploadedFile::fake()->image('qc-facility.webp');
+        $photo = UploadedFile::fake()->image('proyek-sandblast.webp');
         $createResponse = $this->actingAs($this->admin)->post(route('admin.galleries.store'), [
-            'title' => 'Ruang Quality Control & Laboratorium Rempah',
-            'category' => 'laboratorium',
-            'caption' => 'Pemeriksaan kadar air dan kebersihan cengkeh sebelum pengemasan ekspor.',
+            'title' => 'Pemasangan Sandblast Cutting Logo Kantor',
+            'category' => 'sandblast',
+            'caption' => 'Pengerjaan cutting stiker sandblast presisi tinggi pada pintu kaca partisi.',
             'active' => true,
             'image' => $photo,
         ]);
         $createResponse->assertRedirect(route('admin.galleries.index'));
 
-        $gallery = Gallery::where('title', 'Ruang Quality Control & Laboratorium Rempah')->first();
+        $gallery = Gallery::where('title', 'Pemasangan Sandblast Cutting Logo Kantor')->first();
         $this->assertNotNull($gallery);
-        $this->assertSame('laboratorium', $gallery->category);
+        $this->assertSame('sandblast', $gallery->category);
 
         // 2. Read / Index Admin & Public
         $adminIndex = $this->actingAs($this->admin)->get(route('admin.galleries.index'));
@@ -225,13 +225,13 @@ class FullCrudTestSuiteTest extends TestCase
 
         // 3. Update Gallery Item
         $updateResponse = $this->actingAs($this->admin)->put(route('admin.galleries.update', $gallery->id), [
-            'title' => 'Laboratorium Standar Internasional PT LFM',
-            'category' => 'laboratorium',
+            'title' => 'Pemasangan Sandblast Cutting Logo Kantor Jakarta',
+            'category' => 'sandblast',
             'caption' => 'Caption diperbarui.',
             'active' => true,
         ]);
         $updateResponse->assertRedirect(route('admin.galleries.index'));
-        $this->assertSame('Laboratorium Standar Internasional PT LFM', $gallery->fresh()->title);
+        $this->assertSame('Pemasangan Sandblast Cutting Logo Kantor Jakarta', $gallery->fresh()->title);
 
         // 4. Toggle Gallery Visibility
         $toggleResponse = $this->actingAs($this->admin)->patch(route('admin.galleries.toggle', $gallery->id));
