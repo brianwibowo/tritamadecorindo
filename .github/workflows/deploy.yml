@@ -4,6 +4,9 @@ on:
   push:
     branches: [ main ]
 
+env:
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: "true"
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -25,10 +28,10 @@ jobs:
           cp .env.example .env
           php artisan key:generate
 
-      - name: 🟢 Setup Node.js (LTS)
+      - name: 🟢 Setup Node.js 24
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
 
       - name: 🎨 Install NPM Dependencies & Build Assets
         run: |
@@ -51,17 +54,25 @@ jobs:
           rm -rf tests
           rm -rf .github
 
-      # Deploy via FTP/FTPS to Shared Hosting
+      # Deploy via FTP/FTPS to Shared Hosting (Runs if FTP_SERVER secret is configured)
       - name: 🚀 Deploy to cPanel via FTP
+        if: ${{ secrets.FTP_SERVER != '' || secrets.FTP_HOST != '' }}
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER || secrets.FTP_HOST || secrets.HOST }}
-          username: ${{ secrets.FTP_USERNAME || secrets.FTP_USER || secrets.USER }}
-          password: ${{ secrets.FTP_PASSWORD || secrets.FTP_PASS || secrets.PASSWORD }}
-          server-dir: ${{ secrets.FTP_TARGET_DIR || secrets.FTP_DIR || '/' }}
+          server: ${{ secrets.FTP_SERVER || secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME || secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD || secrets.FTP_PASS }}
+          server-dir: ${{ secrets.FTP_TARGET_DIR || '/' }}
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
             .env
             storage/logs/*.log
+
+      - name: ℹ️ FTP Secret Notice
+        if: ${{ secrets.FTP_SERVER == '' && secrets.FTP_HOST == '' }}
+        run: |
+          echo "ℹ️ FTP_SERVER secret belum dikonfigurasi di GitHub Repository Settings -> Secrets -> Actions."
+          echo "Build & Test selesai dengan sukses."
+
