@@ -4,6 +4,7 @@ import HeroSection from '@/Components/Storefront/HeroSection';
 import HomeGallerySection from '@/Components/Storefront/HomeGallerySection';
 import NewsletterSection from '@/Components/Storefront/NewsletterSection';
 import ProductGrid from '@/Components/Storefront/ProductGrid';
+import { useSmoothScroll } from '@/hooks/useSmoothScroll';
 import StorefrontLayout from '@/Layouts/StorefrontLayout';
 import { Head } from '@inertiajs/react';
 import type { Category, Product } from '@/types';
@@ -25,6 +26,9 @@ interface HomeProps {
 }
 
 export default function Home({ categories, featuredProducts, featuredGalleries = [] }: HomeProps) {
+	// Calm, smooth momentum scroll on desktop mousewheel/trackpad so animations reveal gracefully
+	useSmoothScroll({ speedMultiplier: 0.72, ease: 0.075 });
+
 	return (
 		<StorefrontLayout>
 			<Head>
