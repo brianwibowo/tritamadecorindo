@@ -141,7 +141,7 @@ export default function Login({
 									autoComplete="username"
 									autoFocus
 									onChange={(e) => setData('email', e.target.value)}
-									placeholder="admin@tritamadecorindo.com"
+									placeholder="Email Anda"
 									required
 									className="h-11 w-full rounded-xl border border-slate-300 bg-white pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-[#0284C7] focus:outline-none focus:ring-1 focus:ring-[#0284C7]"
 								/>
