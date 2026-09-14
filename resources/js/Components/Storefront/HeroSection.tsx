@@ -43,7 +43,7 @@ export default function HeroSection() {
 	}, []);
 
 	return (
-		<section className="relative w-full min-h-[85vh] sm:min-h-[90vh] flex flex-col justify-end items-start overflow-hidden rounded-b-[36px] sm:rounded-b-[50px] bg-slate-950 shadow-2xl pb-12 sm:pb-16 lg:pb-20 pt-16 sm:pt-20 px-4 sm:px-8 lg:px-14 border-b border-[#5478FF]/20">
+		<section className="relative w-full min-h-[85vh] sm:min-h-[90vh] flex flex-col justify-end items-start overflow-hidden rounded-b-[36px] sm:rounded-b-[50px] bg-slate-950 shadow-2xl pb-12 sm:pb-16 lg:pb-20 pt-28 sm:pt-36 px-4 sm:px-8 lg:px-14 border-b border-[#5478FF]/20">
 			{/* 1. Rotating Tritama Gallery Background Images */}
 			<div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
 				{gallerySlides.map((slide, idx) => (

@@ -138,8 +138,17 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 			{/* Top Announcement Bar (Running Text Marquee - Selalu Tampil) */}
 			<AnnouncementBar />
 
-			{/* Sticky Header with Signature Tritama Blue Theme */}
-			<header className="sticky top-0 z-50 transition-all duration-300 w-full border-b border-[#5478FF]/20 bg-[#111FA2] text-white py-1 shadow-md">
+			{/* Smart Header: Transparent when on hero at top of homepage; Sticky blue #111FA2 when scrolled or on other pages */}
+			<header
+				className={cn(
+					'transition-all duration-300 w-full z-50',
+					isHomePage
+						? isScrolled
+							? 'fixed top-0 left-0 right-0 bg-[#111FA2] text-white shadow-md border-b border-[#5478FF]/20 py-1 animate-in fade-in duration-300'
+							: 'absolute top-[37px] left-0 right-0 bg-transparent border-none text-white py-1 shadow-none'
+						: 'sticky top-0 bg-[#111FA2] text-white shadow-md border-b border-[#5478FF]/20 py-1'
+				)}
+			>
 				<div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
 					<div className="flex items-center justify-between h-20">
 						{/* Left Side: Logo */}
@@ -148,10 +157,20 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 								<img src="/images/logo.png" alt="Tritama Decorindo Logo" className="h-full w-full object-contain" />
 							</div>
 							<div className="flex flex-col">
-								<span className="font-display text-xl sm:text-2xl font-bold tracking-tight leading-none text-white">
+								<span
+									className={cn(
+										'font-display text-xl sm:text-2xl font-bold tracking-tight leading-none text-white transition-all',
+										isDarkTopHeader && 'drop-shadow-[0_2px_4px_rgba(0,0,0,0.85)]'
+									)}
+								>
 									Tritama Decorindo
 								</span>
-								<span className="text-[10px] tracking-[0.2em] font-bold uppercase mt-0.5 text-[#FFDE42]">
+								<span
+									className={cn(
+										'text-[10px] tracking-[0.2em] font-bold uppercase mt-0.5 text-[#FFDE42] transition-all',
+										isDarkTopHeader && 'drop-shadow-[0_1px_3px_rgba(0,0,0,0.85)]'
+									)}
+								>
 									Stiker & Interior • Sejak 2009
 								</span>
 							</div>
@@ -159,7 +178,14 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 
 						{/* Right Side: Main Navigation Pill Capsule: Beranda, Produk, Galeri, Login Admin */}
 						<div className="flex items-center gap-3">
-							<nav className="hidden sm:flex items-center gap-1.5 p-1.5 rounded-full shadow-sm bg-white/10 backdrop-blur-md border border-white/20 text-white transition-all duration-300">
+							<nav
+								className={cn(
+									'hidden sm:flex items-center gap-1.5 p-1.5 rounded-full shadow-sm transition-all duration-300',
+									isDarkTopHeader
+										? 'bg-black/35 backdrop-blur-md border border-white/25 text-white shadow-xl'
+										: 'bg-white/10 backdrop-blur-md border border-white/20 text-white'
+								)}
+							>
 								{navLinks.map((link) => {
 									const active = isLinkActive(link.href);
 									return (
@@ -212,7 +238,10 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 									href={route('logout')}
 									method="post"
 									as="button"
-									className="hidden sm:inline-block text-xs underline pl-1 text-white/80 hover:text-white transition-colors font-medium"
+									className={cn(
+										'hidden sm:inline-block text-xs underline pl-1 transition-colors font-medium',
+										isDarkTopHeader ? 'text-white/90 hover:text-white drop-shadow' : 'text-white/80 hover:text-white'
+									)}
 								>
 									Keluar
 								</Link>
@@ -222,7 +251,12 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 							<button
 								type="button"
 								onClick={() => setMobileMenuOpen(true)}
-								className="sm:hidden rounded-full p-2.5 border shadow-sm transition-colors cursor-pointer bg-white/10 border-white/20 text-white hover:bg-white/20"
+								className={cn(
+									'sm:hidden rounded-full p-2.5 border shadow-sm transition-colors cursor-pointer',
+									isDarkTopHeader
+										? 'bg-black/35 border-white/25 text-white hover:bg-black/50'
+										: 'bg-white/10 border-white/20 text-white hover:bg-white/20'
+								)}
 								aria-label="Buka Menu Navigasi Samping"
 							>
 								<Menu className="h-6 w-6" />
