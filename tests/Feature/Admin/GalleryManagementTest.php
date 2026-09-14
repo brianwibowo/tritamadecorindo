@@ -44,18 +44,18 @@ class GalleryManagementTest extends TestCase
         $file = UploadedFile::fake()->image('proyek_kaca_film.jpg');
 
         $response = $this->actingAs($this->admin)->post(route('admin.galleries.store'), [
-            'caption' => 'Pemasangan kaca film riben penolak panas 80%.',
+            'title' => 'Pemasangan kaca film riben penolak panas 80%.',
             'active' => true,
             'image' => $file,
         ]);
 
         $response->assertRedirect(route('admin.galleries.index'));
         $this->assertDatabaseHas('galleries', [
-            'caption' => 'Pemasangan kaca film riben penolak panas 80%.',
+            'title' => 'Pemasangan kaca film riben penolak panas 80%.',
         ]);
     }
 
-    public function test_admin_can_create_multiple_gallery_items_at_once(): void
+    public function test_admin_can_create_gallery_with_multiple_photos(): void
     {
         Storage::fake('public');
         $files = [
@@ -65,31 +65,34 @@ class GalleryManagementTest extends TestCase
         ];
 
         $response = $this->actingAs($this->admin)->post(route('admin.galleries.store'), [
-            'caption' => 'Pemasangan sandblast cutting logo kantor 3 lantai.',
+            'title' => 'Pemasangan sandblast cutting logo kantor 3 lantai',
             'active' => true,
             'images' => $files,
         ]);
 
         $response->assertRedirect(route('admin.galleries.index'));
-        $this->assertDatabaseCount('galleries', 3);
+        $this->assertDatabaseCount('galleries', 1);
+        $gallery = Gallery::first();
+        $this->assertEquals('Pemasangan sandblast cutting logo kantor 3 lantai', $gallery->title);
+        $this->assertCount(3, $gallery->images);
     }
 
     public function test_admin_can_update_gallery_item(): void
     {
         $gallery = Gallery::create([
             'title' => 'Judul Lama',
-            'caption' => 'Caption Lama',
             'category' => 'sandblast',
             'category_label' => 'Sandblast & Stiker',
             'image' => '/images/products/sandblast-polos.webp',
+            'images' => ['/images/products/sandblast-polos.webp'],
             'active' => true,
         ]);
 
         $response = $this->actingAs($this->admin)->put(route('admin.galleries.update', $gallery->id), [
             'title' => 'Judul Baru Diperbarui',
-            'caption' => 'Caption Baru',
             'category' => 'wallpaper',
             'active' => false,
+            'existing_images' => ['/images/products/sandblast-polos.webp'],
         ]);
 
         $response->assertRedirect(route('admin.galleries.index'));
