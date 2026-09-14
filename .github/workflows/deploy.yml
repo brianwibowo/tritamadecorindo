@@ -19,9 +19,11 @@ jobs:
           extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, bcmath, zip
           coverage: none
 
-      - name: 📦 Install Composer Dependencies
+      - name: 📦 Install Composer Dependencies (Dev & Test)
         run: |
-          composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+          composer install --no-interaction --prefer-dist
+          cp .env.example .env
+          php artisan key:generate
 
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
@@ -36,6 +38,10 @@ jobs:
       - name: 🧪 Run Automated Tests
         run: |
           php artisan test --compact
+
+      - name: 📦 Optimize Composer Dependencies for Production
+        run: |
+          composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
       - name: 🧹 Prepare Deployment Files
         run: |

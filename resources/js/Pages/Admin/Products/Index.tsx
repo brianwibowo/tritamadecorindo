@@ -428,10 +428,30 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 		]);
 	};
 
+	const [isSearchExpanded, setIsSearchExpanded] = useState(Boolean(filters.search));
+	const searchInputRef = useRef<HTMLInputElement>(null);
+
 	const removeEditVariant = (index: number) => {
 		editForm.setData(
 			'variants',
 			editForm.data.variants.filter((_, idx) => idx !== index)
+		);
+	};
+
+	const handleExpandSearch = () => {
+		setIsSearchExpanded(true);
+		setTimeout(() => {
+			searchInputRef.current?.focus();
+		}, 100);
+	};
+
+	const handleClearSearch = () => {
+		setSearch('');
+		setIsSearchExpanded(false);
+		router.get(
+			route('admin.products.index'),
+			{ search: '', category: filters.category },
+			{ preserveState: true }
 		);
 	};
 
@@ -447,7 +467,7 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 	const handleCategoryFilter = (catId: string) => {
 		router.get(
 			route('admin.products.index'),
-			{ search: filters.search, category: catId },
+			{ search, category: catId },
 			{ preserveState: true }
 		);
 	};
@@ -480,27 +500,77 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 					</button>
 				</div>
 
-				{/* Filter & Search Bar */}
-				<div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-border shadow-sm">
-					<form onSubmit={handleSearchSubmit} className="relative flex-1 w-full sm:w-auto">
-						<input
-							type="text"
-							value={search}
-							onChange={(e) => setSearch(e.target.value)}
-							placeholder="Cari produk berdasarkan nama..."
-							className="w-full h-10 rounded-xl border border-border bg-[#FDFBF9] pl-9 pr-4 text-xs text-foreground placeholder:text-muted-foreground focus:border-[#5478FF] focus:outline-none"
-						/>
-						<Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-					</form>
+				{/* Filter & Expandable Search Bar */}
+				<div className="flex items-center gap-2.5 bg-white p-3 sm:p-3.5 rounded-2xl border border-border shadow-xs overflow-hidden">
+					{/* Expanding Search Container */}
+					<div
+						className={cn(
+							'relative flex items-center transition-all duration-300 ease-in-out shrink-0',
+							isSearchExpanded || search
+								? 'w-64 sm:w-80 md:w-96'
+								: 'w-10'
+						)}
+					>
+						{isSearchExpanded || search ? (
+							<form onSubmit={handleSearchSubmit} className="relative w-full flex items-center">
+								<input
+									ref={searchInputRef}
+									type="text"
+									value={search}
+									onChange={(e) => setSearch(e.target.value)}
+									onKeyDown={(e) => {
+										if (e.key === 'Escape' && !search) {
+											setIsSearchExpanded(false);
+										}
+									}}
+									onBlur={() => {
+										if (!search) setIsSearchExpanded(false);
+									}}
+									placeholder="Ketik nama produk lalu tekan Enter..."
+									className="w-full h-10 rounded-xl border border-[#5478FF] bg-[#FDFBF9] pl-9 pr-8 text-xs font-medium text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#5478FF]/20 shadow-xs animate-in fade-in duration-200"
+								/>
+								<Search className="absolute left-3 top-3 h-4 w-4 text-[#5478FF]" />
+								{search ? (
+									<button
+										type="button"
+										onClick={handleClearSearch}
+										className="absolute right-2.5 top-2.5 rounded-full p-0.5 text-muted-foreground hover:bg-slate-200 hover:text-foreground transition-colors"
+										title="Hapus pencarian"
+									>
+										<X className="h-4 w-4" />
+									</button>
+								) : (
+									<button
+										type="button"
+										onClick={() => setIsSearchExpanded(false)}
+										className="absolute right-2.5 top-2.5 rounded-full p-0.5 text-muted-foreground hover:bg-slate-200 hover:text-foreground transition-colors"
+										title="Tutup pencarian (Esc)"
+									>
+										<X className="h-4 w-4" />
+									</button>
+								)}
+							</form>
+						) : (
+							<button
+								type="button"
+								onClick={handleExpandSearch}
+								className="h-10 w-10 rounded-xl border border-border bg-[#FDFBF9] hover:bg-blue-50/50 hover:border-[#5478FF] flex items-center justify-center text-muted-foreground hover:text-[#5478FF] transition-all shadow-xs active:scale-95 group"
+								title="Buka Pencarian Produk"
+							>
+								<Search className="h-4 w-4 transition-transform group-hover:scale-110" />
+							</button>
+						)}
+					</div>
 
-					<div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+					{/* Category Filter Pills (Scrollable horizontal strip) */}
+					<div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 flex-1 min-w-0">
 						<button
 							type="button"
 							onClick={() => handleCategoryFilter('')}
 							className={cn(
-								'px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0',
+								'px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 whitespace-nowrap',
 								!filters.category
-									? 'bg-[#111FA2] text-white shadow-sm'
+									? 'bg-[#111FA2] text-white shadow-xs'
 									: 'bg-secondary text-muted-foreground hover:bg-slate-200'
 							)}
 						>
@@ -512,9 +582,9 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 								type="button"
 								onClick={() => handleCategoryFilter(c.id)}
 								className={cn(
-									'px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0',
+									'px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 whitespace-nowrap',
 									filters.category === c.id
-										? 'bg-[#111FA2] text-white shadow-sm'
+										? 'bg-[#111FA2] text-white shadow-xs'
 										: 'bg-secondary text-muted-foreground hover:bg-slate-200'
 								)}
 							>
