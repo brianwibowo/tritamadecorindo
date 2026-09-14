@@ -121,7 +121,7 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 		}
 	};
 
-	// Determine whether to use dark overlay header on top of homepage vs solid theme header
+	// Determine whether to use dark transparent overlay header on top of homepage hero vs solid theme header
 	const isDarkTopHeader = isHomePage && !isScrolled;
 
 	return (
@@ -133,16 +133,18 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 				</div>
 			)}
 
-			{/* Top Announcement Bar */}
-			<AnnouncementBar />
+			{/* Top Announcement Bar (Displayed on other pages, hidden on homepage so hero sits at top:0) */}
+			{!isHomePage && <AnnouncementBar />}
 
-			{/* Sticky Header with Smart Page & Scroll Detection */}
+			{/* Smart Header: Completely transparent absolute overlay on top of homepage hero; Sticky background on scroll or other pages */}
 			<header
 				className={cn(
-					'sticky top-0 z-50 transition-all duration-300 w-full',
-					isDarkTopHeader
-						? 'border-none bg-[#111FA2] text-white py-1 shadow-none'
-						: 'border-b border-border/80 bg-background/95 backdrop-blur-xl shadow-sm text-foreground py-0'
+					'transition-all duration-300 w-full z-50',
+					isHomePage
+						? isScrolled
+							? 'fixed top-0 left-0 right-0 border-b border-border/80 bg-background/95 backdrop-blur-xl shadow-sm text-foreground py-0'
+							: 'absolute top-0 left-0 right-0 bg-transparent border-none text-white py-2 shadow-none'
+						: 'sticky top-0 border-b border-border/80 bg-background/95 backdrop-blur-xl shadow-sm text-foreground py-0'
 				)}
 			>
 				<div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
@@ -156,7 +158,7 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 								<span
 									className={cn(
 										'font-display text-xl sm:text-2xl font-bold tracking-tight leading-none transition-colors',
-										isDarkTopHeader ? 'text-white' : 'text-[#111FA2]'
+										isDarkTopHeader ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]' : 'text-[#111FA2]'
 									)}
 								>
 									Tritama Decorindo
@@ -164,7 +166,7 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 								<span
 									className={cn(
 										'text-[10px] tracking-[0.2em] font-bold uppercase mt-0.5 transition-colors',
-										isDarkTopHeader ? 'text-[#FFDE42]' : 'text-slate-500'
+										isDarkTopHeader ? 'text-[#FFDE42] drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]' : 'text-slate-500'
 									)}
 								>
 									Stiker & Interior • Sejak 2009
@@ -178,7 +180,7 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 								className={cn(
 									'hidden sm:flex items-center gap-1.5 p-1.5 rounded-full shadow-sm transition-all duration-300',
 									isDarkTopHeader
-										? 'bg-white/10 backdrop-blur-xl border border-white/20 text-white shadow-2xl'
+										? 'bg-black/35 backdrop-blur-md border border-white/25 text-white shadow-xl'
 										: 'bg-secondary/80 border border-border/60 text-foreground'
 								)}
 							>
@@ -193,7 +195,7 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 												active
 													? 'bg-[#5478FF] text-white shadow-md'
 													: isDarkTopHeader
-													? 'text-white/90 hover:text-white hover:bg-white/15'
+													? 'text-white/90 hover:text-white hover:bg-white/20'
 													: 'text-[#111FA2] hover:text-[#5478FF] hover:bg-black/5'
 											)}
 										>
@@ -238,7 +240,7 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 									as="button"
 									className={cn(
 										'hidden sm:inline-block text-xs underline pl-1 transition-colors font-medium',
-										isDarkTopHeader ? 'text-white/80 hover:text-white' : 'text-slate-500 hover:text-[#111FA2]'
+										isDarkTopHeader ? 'text-white/90 hover:text-white drop-shadow' : 'text-slate-500 hover:text-[#111FA2]'
 									)}
 								>
 									Keluar
@@ -252,7 +254,7 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 								className={cn(
 									'sm:hidden rounded-full p-2.5 border shadow-sm transition-colors cursor-pointer',
 									isDarkTopHeader
-										? 'bg-white/10 border-white/20 text-white hover:bg-white/20'
+										? 'bg-black/35 border-white/25 text-white hover:bg-black/50'
 										: 'bg-white border-border text-[#111FA2] hover:bg-slate-100'
 								)}
 								aria-label="Buka Menu Navigasi Samping"

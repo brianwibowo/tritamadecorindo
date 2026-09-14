@@ -43,8 +43,8 @@ export default function HeroSection() {
 	}, []);
 
 	return (
-		<section className="relative w-full min-h-[85vh] sm:min-h-[90vh] flex flex-col justify-end items-start overflow-hidden rounded-b-[40px] sm:rounded-b-[60px] bg-slate-950 shadow-2xl pb-12 sm:pb-16 lg:pb-20 px-4 sm:px-8 lg:px-14 border-b border-[#5478FF]/20">
-			{/* 1. Rotating Tritama Gallery Background Images (Vibrant & Clear) */}
+		<section className="relative w-full min-h-[90vh] sm:min-h-screen flex flex-col justify-end items-start overflow-hidden bg-slate-950 pb-12 sm:pb-16 lg:pb-20 pt-32 sm:pt-40 px-4 sm:px-8 lg:px-14 border-b border-border">
+			{/* 1. Rotating Tritama Gallery Background Images (100% Clear, Natural & Vibrant - NO Gradient Overlays) */}
 			<div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
 				{gallerySlides.map((slide, idx) => (
 					<div
@@ -63,11 +63,6 @@ export default function HeroSection() {
 						/>
 					</div>
 				))}
-
-				{/* Subtle natural vignette: only soft darkening at the edges/bottom for text contrast, center is clear & bright */}
-				<div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-transparent h-36" />
-				<div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
-				<div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent" />
 			</div>
 
 			{/* 2. Bottom-Left Hero Copy Block (Following Gambar 2) */}
@@ -75,8 +70,8 @@ export default function HeroSection() {
 				{/* Top Subtitle with Star Icon */}
 				<ScrollReveal effect="fade-up" delay={100}>
 					<div className="flex items-start gap-2.5 max-w-2xl mb-4 sm:mb-5">
-						<Star className="h-4 w-4 sm:h-5 sm:w-5 text-[#FFDE42] fill-[#FFDE42] shrink-0 mt-0.5" />
-						<p className="text-xs sm:text-sm lg:text-base text-slate-200 font-medium leading-relaxed drop-shadow-md">
+						<Star className="h-4 w-4 sm:h-5 sm:w-5 text-[#FFDE42] fill-[#FFDE42] shrink-0 mt-0.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]" />
+						<p className="text-xs sm:text-sm lg:text-base text-white font-medium leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
 							Material Berkualitas & Jasa Pemasangan <strong className="text-[#FFDE42] font-bold">Kaca Film Gedung, Sandblast Cutting Logo, Wallpaper, Roller Blinds & Signage</strong> bergaransi sejak 2009 di Jabodetabek.
 						</p>
 					</div>
@@ -85,9 +80,9 @@ export default function HeroSection() {
 				{/* Giant H1 */}
 				<ScrollReveal effect="fade-up" delay={200}>
 					<div className="max-w-4xl">
-						<h1 className="font-display text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight text-white leading-[1.06] drop-shadow-lg">
+						<h1 className="font-display text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight text-white leading-[1.06] drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
 							Solusi Dekorasi, Kaca Film &{' '}
-							<span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFDE42] via-[#53CBF3] to-white">
+							<span className="text-[#FFDE42] drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
 								Stiker Interior.
 							</span>
 						</h1>
@@ -95,9 +90,9 @@ export default function HeroSection() {
 				</ScrollReveal>
 			</div>
 
-			{/* 3. Subtle Gallery Slides Indicator on Bottom Right (No "Nomor Alat") */}
-			<div className="absolute right-6 sm:right-10 lg:right-14 bottom-12 sm:bottom-16 hidden sm:flex flex-col items-end gap-2 text-right">
-				<span className="text-xs font-semibold text-[#FFDE42] max-w-xs truncate drop-shadow-md">
+			{/* 3. Subtle Gallery Slides Indicator on Bottom Right */}
+			<div className="absolute right-6 sm:right-10 lg:right-14 bottom-12 sm:bottom-16 hidden sm:flex flex-col items-end gap-2 text-right z-10">
+				<span className="text-xs font-semibold text-[#FFDE42] max-w-xs truncate drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">
 					{gallerySlides[activeIndex].title}
 				</span>
 				<div className="flex items-center gap-1.5 pt-1">
@@ -106,8 +101,8 @@ export default function HeroSection() {
 							key={i}
 							onClick={() => setActiveIndex(i)}
 							className={cn(
-								'h-1.5 rounded-full transition-all duration-300 cursor-pointer shadow-sm',
-								i === activeIndex ? 'w-7 bg-[#FFDE42]' : 'w-2 bg-white/40 hover:bg-white/70'
+								'h-1.5 rounded-full transition-all duration-300 cursor-pointer shadow-md',
+								i === activeIndex ? 'w-7 bg-[#FFDE42]' : 'w-2 bg-white/60 hover:bg-white'
 							)}
 							aria-label={`Slide ${i + 1}`}
 						/>

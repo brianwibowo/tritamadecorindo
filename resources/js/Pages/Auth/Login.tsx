@@ -211,17 +211,6 @@ export default function Login({
 							{!processing && <ArrowRight className="h-4 w-4" />}
 						</button>
 					</form>
-
-					{/* Demo Credential Helper Box */}
-					<div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-xs space-y-1">
-						<p className="font-bold text-slate-800">💡 Akun Administrator Default:</p>
-						<p className="text-slate-600">
-							Email: <code className="font-mono text-slate-900 font-semibold">admin@tritamadecorindo.com</code>
-						</p>
-						<p className="text-slate-600">
-							Password: <code className="font-mono text-slate-900 font-semibold">password123</code>
-						</p>
-					</div>
 				</div>
 
 				{/* Bottom Footer Text */}
