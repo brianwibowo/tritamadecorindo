@@ -59,7 +59,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 		name: '',
 		email: '',
 		password: '',
-		role: 'buyer',
+		role: 'admin',
 		phone: '',
 		status: 'active',
 		image: null,
@@ -79,7 +79,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 		name: '',
 		email: '',
 		password: '',
-		role: 'buyer',
+		role: 'admin',
 		phone: '',
 		status: 'active',
 		image: null,
@@ -139,7 +139,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 			name: user.name,
 			email: user.email,
 			password: '',
-			role: typeof user.role === 'object' ? (user.role as any).value || 'buyer' : user.role || 'buyer',
+			role: 'admin',
 			phone: user.phone || '',
 			status: user.status || 'active',
 			image: null,
@@ -210,27 +210,18 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 		}
 	};
 
-	const getRoleBadge = (role: string | any) => {
-		const roleVal = typeof role === 'object' ? role.value : role;
-		if (roleVal === 'admin') {
-			return (
-				<span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-0.5 text-[11px] font-bold text-amber-800 ring-1 ring-amber-500/20">
-					<Shield className="h-3 w-3" />
-					Admin
-				</span>
-			);
-		}
+	const getRoleBadge = (role?: string | any) => {
 		return (
-			<span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2.5 py-0.5 text-[11px] font-bold text-blue-800 ring-1 ring-blue-500/20">
-				<UserIcon className="h-3 w-3" />
-				Buyer / Klien
+			<span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1 text-[11px] font-bold text-amber-800 ring-1 ring-amber-500/25">
+				<Shield className="h-3.5 w-3.5 text-amber-600" />
+				Administrator
 			</span>
 		);
 	};
 
 	return (
-		<AdminLayout header="Manajemen Pengguna">
-			<Head title="Manajemen Pengguna — Panel Admin Tritama Decorindo" />
+		<AdminLayout header="Manajemen Admin">
+			<Head title="Manajemen Admin — Panel Admin Tritama Decorindo" />
 
 			<div className="space-y-6">
 				{/* Top Controls Toolbar */}
@@ -243,38 +234,27 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 								type="text"
 								value={search}
 								onChange={(e) => setSearch(e.target.value)}
-								placeholder="Cari nama, email, telepon..."
-								className="w-full h-10 rounded-xl border border-border bg-[#FDFBF9] pl-9 pr-3 text-xs text-foreground placeholder:text-muted-foreground/60 focus:border-[#80070A] focus:ring-1 focus:ring-[#80070A]"
+								placeholder="Cari nama, email, telepon admin..."
+								className="w-full h-10 rounded-xl border border-border bg-[#FDFBF9] pl-9 pr-3 text-xs text-foreground placeholder:text-muted-foreground/60 focus:border-[#5478FF] focus:ring-1 focus:ring-[#5478FF]"
 							/>
 							<Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
 						</form>
-
-						{/* Role Filter */}
-						<select
-							value={filters.role || ''}
-							onChange={(e) => handleFilterChange({ role: e.target.value })}
-							className="h-10 rounded-xl border border-border bg-[#FDFBF9] px-3 text-xs font-semibold text-foreground focus:border-[#80070A]"
-						>
-							<option value="">Semua Peran</option>
-							<option value="admin">Administrator</option>
-							<option value="buyer">Buyer / Klien</option>
-						</select>
 
 						{/* Status Filter */}
 						<select
 							value={filters.status || ''}
 							onChange={(e) => handleFilterChange({ status: e.target.value })}
-							className="h-10 rounded-xl border border-border bg-[#FDFBF9] px-3 text-xs font-semibold text-foreground focus:border-[#80070A]"
+							className="h-10 rounded-xl border border-border bg-[#FDFBF9] pl-3.5 pr-8 text-xs font-semibold text-foreground focus:border-[#5478FF] cursor-pointer shadow-2xs"
 						>
 							<option value="">Semua Status</option>
 							<option value="active">Aktif</option>
 							<option value="inactive">Nonaktif</option>
 						</select>
 
-						{(filters.search || filters.role || filters.status) && (
+						{(filters.search || filters.status) && (
 							<button
 								onClick={() => router.get(route('admin.users.index'))}
-								className="inline-flex items-center gap-1 text-xs text-[#80070A] hover:underline"
+								className="inline-flex items-center gap-1 text-xs text-[#5478FF] hover:underline"
 							>
 								<RotateCcw className="h-3 w-3" />
 								Reset
@@ -282,7 +262,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 						)}
 					</div>
 
-					{/* Add User Button */}
+					{/* Add Admin Button */}
 					<button
 						type="button"
 						onClick={() => {
@@ -290,10 +270,10 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 							setAvatarPreview(null);
 							setCreateModalOpen(true);
 						}}
-						className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#80070A] px-5 py-2.5 text-xs font-bold text-white hover:brightness-110 transition-all shadow-md active:scale-95 whitespace-nowrap"
+						className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#5478FF] hover:bg-[#4064EB] px-5 py-2.5 text-xs font-bold text-white transition-all shadow-md active:scale-95 whitespace-nowrap"
 					>
 						<Plus className="h-4 w-4" />
-						<span>Tambah Pengguna</span>
+						<span>Tambah Admin Baru</span>
 					</button>
 				</div>
 
@@ -477,8 +457,8 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 						</button>
 
 						<div className="border-b border-border/60 pb-4">
-							<h3 className="text-xl font-bold text-foreground">Tambah Pengguna Baru</h3>
-							<p className="text-xs text-muted-foreground mt-0.5">Lengkapi formulir untuk membuat akun admin atau klien baru.</p>
+							<h3 className="text-xl font-bold text-foreground">Tambah Admin Baru</h3>
+							<p className="text-xs text-muted-foreground mt-0.5">Lengkapi formulir untuk menambahkan akun administrator baru.</p>
 						</div>
 
 						<form onSubmit={handleCreateSubmit} className="mt-5 space-y-4">
@@ -556,17 +536,13 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 							<div className="grid grid-cols-2 gap-3">
 								<div>
 									<label className="block text-xs font-bold uppercase tracking-wider mb-1">Peran (Role)</label>
-									<select
-										value={createForm.data.role}
-										onChange={(e) => createForm.setData('role', e.target.value)}
-										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#5478FF]"
-									>
-										<option value="buyer">Buyer / Klien</option>
-										<option value="admin">Administrator</option>
-									</select>
+									<div className="flex h-10 items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 text-xs font-bold text-amber-800 select-none">
+										<Shield className="h-4 w-4 text-amber-600 shrink-0" />
+										<span>Administrator</span>
+									</div>
 								</div>
 								<div>
-									<label className="block text-xs font-bold uppercase tracking-wider mb-1">Status</label>
+									<label className="block text-xs font-bold uppercase tracking-wider mb-1">Status Akun</label>
 									<select
 										value={createForm.data.status}
 										onChange={(e) => createForm.setData('status', e.target.value)}
@@ -604,7 +580,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 									disabled={createForm.processing}
 									className="rounded-full bg-[#5478FF] px-6 py-2 text-xs font-bold text-white hover:bg-[#4064EB] disabled:opacity-60 shadow-md"
 								>
-									{createForm.processing ? 'Menyimpan...' : 'Simpan Pengguna'}
+									{createForm.processing ? 'Menyimpan...' : 'Simpan Admin'}
 								</button>
 							</div>
 						</form>
@@ -633,8 +609,8 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 						</button>
 
 						<div className="border-b border-border/60 pb-4">
-							<h3 className="text-xl font-bold text-foreground">Edit Data Pengguna</h3>
-							<p className="text-xs text-muted-foreground mt-0.5">Perbarui data profil, peran, status, atau password pengguna.</p>
+							<h3 className="text-xl font-bold text-foreground">Edit Data Admin</h3>
+							<p className="text-xs text-muted-foreground mt-0.5">Perbarui data profil, status, atau password administrator.</p>
 						</div>
 
 						<form onSubmit={handleEditSubmit} className="mt-5 space-y-4">
@@ -711,17 +687,13 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 							<div className="grid grid-cols-2 gap-3">
 								<div>
 									<label className="block text-xs font-bold uppercase tracking-wider mb-1">Peran (Role)</label>
-									<select
-										value={editForm.data.role}
-										onChange={(e) => editForm.setData('role', e.target.value)}
-										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#5478FF]"
-									>
-										<option value="buyer">Buyer / Klien</option>
-										<option value="admin">Administrator</option>
-									</select>
+									<div className="flex h-10 items-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 text-xs font-bold text-amber-800 select-none">
+										<Shield className="h-4 w-4 text-amber-600 shrink-0" />
+										<span>Administrator</span>
+									</div>
 								</div>
 								<div>
-									<label className="block text-xs font-bold uppercase tracking-wider mb-1">Status</label>
+									<label className="block text-xs font-bold uppercase tracking-wider mb-1">Status Akun</label>
 									<select
 										value={editForm.data.status}
 										onChange={(e) => editForm.setData('status', e.target.value)}
@@ -767,7 +739,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 				</div>
 			)}
 
-			{/* 3. Modal Lihat Detail Pengguna */}
+			{/* 3. Modal Lihat Detail Admin */}
 			{viewModalOpen && selectedUser && (
 				<div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
 					<div className="relative max-w-md w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up space-y-6">
@@ -804,7 +776,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 								<dd className="font-bold text-foreground">{selectedUser.phone || 'Belum diisi'}</dd>
 							</div>
 							<div className="flex justify-between py-1">
-								<dt className="text-muted-foreground">Tanggal Bergabung</dt>
+								<dt className="text-muted-foreground">Tanggal Dibuat</dt>
 								<dd className="font-bold text-foreground">
 									{new Date(selectedUser.created_at).toLocaleDateString('id-ID', {
 										day: 'numeric',
@@ -828,7 +800,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 				</div>
 			)}
 
-			{/* 4. Modal Konfirmasi Hapus Pengguna */}
+			{/* 4. Modal Konfirmasi Hapus Admin */}
 			{deleteModalOpen && selectedUser && (
 				<div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
 					<div className="relative max-w-md w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up space-y-5">
@@ -838,10 +810,10 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 
 						<div>
 							<h3 className="font-display text-xl font-bold text-foreground">
-								Hapus Pengguna
+								Hapus Akun Admin
 							</h3>
 							<p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">
-								Apakah Anda yakin ingin menghapus pengguna <strong className="text-foreground">{selectedUser.name}</strong> ({selectedUser.email})? Tindakan ini tidak dapat dibatalkan.
+								Apakah Anda yakin ingin menghapus akun admin <strong className="text-foreground">{selectedUser.name}</strong> ({selectedUser.email})? Tindakan ini tidak dapat dibatalkan.
 							</p>
 						</div>
 
@@ -858,7 +830,7 @@ export default function UsersIndex({ users, filters, roles }: UsersIndexProps) {
 								onClick={handleDeleteSubmit}
 								className="rounded-full bg-red-600 px-6 py-2.5 text-xs font-bold text-white hover:bg-red-700 shadow-md active:scale-95"
 							>
-								Ya, Hapus
+								Hapus Admin
 							</button>
 						</div>
 					</div>

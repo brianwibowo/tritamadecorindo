@@ -151,21 +151,21 @@ class FullCrudTestSuiteTest extends TestCase
         Storage::fake('public');
 
         // 1. Create User
-        $avatar = UploadedFile::fake()->image('klien.jpg');
+        $avatar = UploadedFile::fake()->image('admin-user.jpg');
         $createResponse = $this->actingAs($this->admin)->post(route('admin.users.store'), [
-            'name' => 'Hendrawan Buyer Global',
-            'email' => 'hendrawan@importer.com',
+            'name' => 'Budi Staff Admin',
+            'email' => 'budi.staff@tritamadecorindostiker.com',
             'password' => 'securepass123',
-            'role' => 'buyer',
+            'role' => 'admin',
             'phone' => '+62811223344',
             'status' => 'active',
             'image' => $avatar,
         ]);
         $createResponse->assertRedirect(route('admin.users.index'));
 
-        $user = User::where('email', 'hendrawan@importer.com')->first();
+        $user = User::where('email', 'budi.staff@tritamadecorindostiker.com')->first();
         $this->assertNotNull($user);
-        $this->assertSame(UserRole::Buyer, $user->role);
+        $this->assertSame(UserRole::Admin, $user->role);
         $this->assertNotNull($user->image);
 
         // 2. Read / Index
@@ -174,14 +174,14 @@ class FullCrudTestSuiteTest extends TestCase
 
         // 3. Update User
         $updateResponse = $this->actingAs($this->admin)->put(route('admin.users.update', $user->id), [
-            'name' => 'Hendrawan Senior Buyer',
-            'email' => 'hendrawan.senior@importer.com',
-            'role' => 'buyer',
+            'name' => 'Budi Senior Admin',
+            'email' => 'budi.senior@tritamadecorindostiker.com',
+            'role' => 'admin',
             'phone' => '+62899887766',
             'status' => 'active',
         ]);
         $updateResponse->assertRedirect(route('admin.users.index'));
-        $this->assertSame('Hendrawan Senior Buyer', $user->fresh()->name);
+        $this->assertSame('Budi Senior Admin', $user->fresh()->name);
 
         // 4. Toggle User Status
         $toggleResponse = $this->actingAs($this->admin)->patch(route('admin.users.toggle', $user->id));

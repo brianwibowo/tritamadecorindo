@@ -31,10 +31,6 @@ class UserController extends Controller
             });
         }
 
-        if ($role = request('role')) {
-            $query->where('role', $role);
-        }
-
         if ($status = request('status')) {
             $query->where('status', $status);
         }
@@ -45,12 +41,10 @@ class UserController extends Controller
             'users' => $users,
             'filters' => [
                 'search' => request('search', ''),
-                'role' => request('role', ''),
                 'status' => request('status', ''),
             ],
             'roles' => [
                 ['value' => UserRole::Admin->value, 'label' => 'Administrator'],
-                ['value' => UserRole::Buyer->value, 'label' => 'Buyer / Klien'],
             ],
         ]);
     }
@@ -83,7 +77,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', Password::defaults()],
-            'role' => ['required', Rule::in(['admin', 'buyer'])],
+            'role' => ['nullable', 'string'],
             'phone' => ['nullable', 'string', 'max:50'],
             'status' => ['required', Rule::in(['active', 'inactive', 'suspended'])],
             'image' => ['nullable', 'image', 'max:5120'], // Max 5MB, all image formats
@@ -99,13 +93,13 @@ class UserController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
-            'role' => $validated['role'] === 'admin' ? UserRole::Admin : UserRole::Buyer,
+            'role' => UserRole::Admin,
             'phone' => $validated['phone'] ?? null,
             'status' => $validated['status'],
             'image' => $imagePath,
         ]);
 
-        return redirect()->route('admin.users.index')->with('success', 'Pengguna baru berhasil ditambahkan.');
+        return redirect()->route('admin.users.index')->with('success', 'Admin baru berhasil ditambahkan.');
     }
 
     /**
@@ -129,7 +123,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => ['nullable', Password::defaults()],
-            'role' => ['required', Rule::in(['admin', 'buyer'])],
+            'role' => ['nullable', 'string'],
             'phone' => ['nullable', 'string', 'max:50'],
             'status' => ['required', Rule::in(['active', 'inactive', 'suspended'])],
             'image' => ['nullable', 'image', 'max:5120'],
@@ -146,7 +140,7 @@ class UserController extends Controller
 
         $user->name = $validated['name'];
         $user->email = $validated['email'];
-        $user->role = $validated['role'] === 'admin' ? UserRole::Admin : UserRole::Buyer;
+        $user->role = UserRole::Admin;
         $user->phone = $validated['phone'] ?? null;
         $user->status = $validated['status'];
 
@@ -156,7 +150,7 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()->route('admin.users.index')->with('success', 'Data pengguna berhasil diperbarui.');
+        return redirect()->route('admin.users.index')->with('success', 'Data admin berhasil diperbarui.');
     }
 
     /**
