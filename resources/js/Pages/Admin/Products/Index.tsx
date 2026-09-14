@@ -16,6 +16,7 @@ import {
 	RotateCcw,
 	Search,
 	Star,
+	Tag,
 	Trash2,
 	Upload,
 	X,
@@ -64,6 +65,18 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 	const [viewModalOpen, setViewModalOpen] = useState(false);
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 	const [selectedProduct, setSelectedProduct] = useState<ProductWithMeta | null>(null);
+
+	// Category management state
+	const [categoryList, setCategoryList] = useState<Array<{ id: string; name: string }>>(categories);
+	const [quickCategoryModalOpen, setQuickCategoryModalOpen] = useState(false);
+	const [quickCategoryTarget, setQuickCategoryTarget] = useState<'create' | 'edit'>('create');
+	const [quickCategoryName, setQuickCategoryName] = useState('');
+	const [quickCategoryLoading, setQuickCategoryLoading] = useState(false);
+	const [quickCategoryError, setQuickCategoryError] = useState('');
+
+	useEffect(() => {
+		setCategoryList(categories);
+	}, [categories]);
 
 	// Image previews state
 	const [createImages, setCreateImages] = useState<ImageItem[]>([]);
@@ -193,6 +206,85 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 			});
 		} catch (e) {
 			setSlugStatus({ loading: false, checked: false, available: true, slug: slugToCheck });
+		}
+	};
+
+	// Quick Category modal handlers
+	const handleOpenQuickCategory = (target: 'create' | 'edit') => {
+		setQuickCategoryTarget(target);
+		setQuickCategoryName('');
+		setQuickCategoryError('');
+		setQuickCategoryModalOpen(true);
+	};
+
+	const handleQuickCategorySubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		const trimmedName = quickCategoryName.trim();
+		if (!trimmedName) {
+			setQuickCategoryError('Nama kategori wajib diisi.');
+			return;
+		}
+
+		// Check if already exists in list (case-insensitive)
+		const existing = categoryList.find(
+			(c) => c.name.toLowerCase() === trimmedName.toLowerCase()
+		);
+		if (existing) {
+			if (quickCategoryTarget === 'create') {
+				createForm.setData('category_id', existing.id);
+			} else {
+				editForm.setData('category_id', existing.id);
+			}
+			setQuickCategoryModalOpen(false);
+			setQuickCategoryName('');
+			return;
+		}
+
+		setQuickCategoryLoading(true);
+		setQuickCategoryError('');
+
+		try {
+			const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+			const res = await fetch(route('admin.categories.store'), {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json',
+					'X-Requested-With': 'XMLHttpRequest',
+					'X-CSRF-TOKEN': csrfToken,
+				},
+				body: JSON.stringify({ name: trimmedName }),
+			});
+
+			const data = await res.json();
+
+			if (!res.ok) {
+				const errorMsg = data?.message || data?.errors?.name?.[0] || 'Gagal menambahkan kategori.';
+				setQuickCategoryError(errorMsg);
+				setQuickCategoryLoading(false);
+				return;
+			}
+
+			if (data?.category) {
+				const newCat = { id: String(data.category.id), name: String(data.category.name) };
+				setCategoryList((prev) => {
+					if (prev.some((c) => c.id === newCat.id)) return prev;
+					return [...prev, newCat];
+				});
+
+				if (quickCategoryTarget === 'create') {
+					createForm.setData('category_id', newCat.id);
+				} else {
+					editForm.setData('category_id', newCat.id);
+				}
+
+				setQuickCategoryModalOpen(false);
+				setQuickCategoryName('');
+			}
+		} catch (err) {
+			setQuickCategoryError('Terjadi kesalahan koneksi saat menyimpan kategori.');
+		} finally {
+			setQuickCategoryLoading(false);
 		}
 	};
 
@@ -576,7 +668,7 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 						>
 							Semua Kategori
 						</button>
-						{categories.map((c) => (
+						{categoryList.map((c) => (
 							<button
 								key={c.id}
 								type="button"
@@ -857,21 +949,44 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 							{/* Category & Status */}
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 								<div>
-									<label className="block text-xs font-bold uppercase tracking-wider mb-1">
-										Kategori Produk <span className="text-red-500">*</span>
-									</label>
-									<select
-										value={createForm.data.category_id}
-										onChange={(e) => createForm.setData('category_id', e.target.value)}
-										required
-										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#5478FF]"
-									>
-										{categories.map((c) => (
-											<option key={c.id} value={c.id}>
-												{c.name}
-											</option>
-										))}
-									</select>
+									<div className="flex items-center justify-between mb-1">
+										<label className="block text-xs font-bold uppercase tracking-wider">
+											Kategori Produk <span className="text-red-500">*</span>
+										</label>
+										<button
+											type="button"
+											onClick={() => handleOpenQuickCategory('create')}
+											className="inline-flex items-center gap-1 text-[11px] font-bold text-[#5478FF] hover:text-[#385ceb] transition-colors"
+										>
+											<Plus className="h-3 w-3" />
+											<span>Tambah Kategori</span>
+										</button>
+									</div>
+									<div className="flex items-center gap-2">
+										<select
+											value={createForm.data.category_id}
+											onChange={(e) => createForm.setData('category_id', e.target.value)}
+											required
+											className="flex-1 h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#5478FF]"
+										>
+											{categoryList.map((c) => (
+												<option key={c.id} value={c.id}>
+													{c.name}
+												</option>
+											))}
+										</select>
+										<button
+											type="button"
+											onClick={() => handleOpenQuickCategory('create')}
+											title="Kelola & Tambah Kategori Baru"
+											className="h-10 px-3 rounded-xl border border-dashed border-[#5478FF]/60 text-[#5478FF] hover:bg-[#5478FF]/10 flex items-center justify-center transition-colors shrink-0"
+										>
+											<Plus className="h-4 w-4" />
+										</button>
+									</div>
+									{createForm.errors.category_id && (
+										<p className="mt-1 text-xs text-red-600">{createForm.errors.category_id}</p>
+									)}
 								</div>
 
 								<div>
@@ -1221,21 +1336,44 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 							{/* Category & Status */}
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 								<div>
-									<label className="block text-xs font-bold uppercase tracking-wider mb-1">
-										Kategori Produk <span className="text-red-500">*</span>
-									</label>
-									<select
-										value={editForm.data.category_id}
-										onChange={(e) => editForm.setData('category_id', e.target.value)}
-										required
-										className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#5478FF]"
-									>
-										{categories.map((c) => (
-											<option key={c.id} value={c.id}>
-												{c.name}
-											</option>
-										))}
-									</select>
+									<div className="flex items-center justify-between mb-1">
+										<label className="block text-xs font-bold uppercase tracking-wider">
+											Kategori Produk <span className="text-red-500">*</span>
+										</label>
+										<button
+											type="button"
+											onClick={() => handleOpenQuickCategory('edit')}
+											className="inline-flex items-center gap-1 text-[11px] font-bold text-[#5478FF] hover:text-[#385ceb] transition-colors"
+										>
+											<Plus className="h-3 w-3" />
+											<span>Tambah Kategori</span>
+										</button>
+									</div>
+									<div className="flex items-center gap-2">
+										<select
+											value={editForm.data.category_id}
+											onChange={(e) => editForm.setData('category_id', e.target.value)}
+											required
+											className="flex-1 h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#5478FF]"
+										>
+											{categoryList.map((c) => (
+												<option key={c.id} value={c.id}>
+													{c.name}
+												</option>
+											))}
+										</select>
+										<button
+											type="button"
+											onClick={() => handleOpenQuickCategory('edit')}
+											title="Kelola & Tambah Kategori Baru"
+											className="h-10 px-3 rounded-xl border border-dashed border-[#5478FF]/60 text-[#5478FF] hover:bg-[#5478FF]/10 flex items-center justify-center transition-colors shrink-0"
+										>
+											<Plus className="h-4 w-4" />
+										</button>
+									</div>
+									{editForm.errors.category_id && (
+										<p className="mt-1 text-xs text-red-600">{editForm.errors.category_id}</p>
+									)}
 								</div>
 
 								<div>
@@ -1629,6 +1767,126 @@ export default function ProductsIndex({ products, categories, filters }: Props) 
 								className="rounded-full bg-red-600 px-6 py-2 text-xs font-bold text-white hover:bg-red-700 shadow-md"
 							>
 								Hapus Permanen
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
+
+			{/* 5. Modal Quick Category (Tambah / Pilih Kategori) */}
+			{quickCategoryModalOpen && (
+				<div className="fixed inset-0 z-[140] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
+					<div className="relative max-w-md w-full rounded-3xl bg-white p-6 sm:p-7 shadow-2xl border border-border animate-scale-up space-y-5">
+						<div className="flex items-center justify-between border-b border-border pb-3.5">
+							<div className="flex items-center gap-3">
+								<div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#5478FF]/10 text-[#5478FF]">
+									<Tag className="h-5 w-5" />
+								</div>
+								<div>
+									<h3 className="text-base font-bold text-foreground">Kategori Produk</h3>
+									<p className="text-[11px] text-muted-foreground">Tambah kategori baru atau pilih dari daftar</p>
+								</div>
+							</div>
+							<button
+								type="button"
+								onClick={() => setQuickCategoryModalOpen(false)}
+								className="rounded-full p-1.5 text-muted-foreground hover:bg-secondary transition-colors"
+							>
+								<X className="h-5 w-5" />
+							</button>
+						</div>
+
+						{/* Form Tambah Kategori Baru */}
+						<form onSubmit={handleQuickCategorySubmit} className="space-y-3">
+							<label className="block text-xs font-bold uppercase tracking-wider text-foreground">
+								Buat Kategori Baru
+							</label>
+							<div className="flex gap-2">
+								<input
+									type="text"
+									value={quickCategoryName}
+									onChange={(e) => {
+										setQuickCategoryName(e.target.value);
+										if (quickCategoryError) setQuickCategoryError('');
+									}}
+									placeholder="Nama kategori baru..."
+									autoFocus
+									className="flex-1 h-10 rounded-xl border border-border bg-[#FDFBF9] px-3 text-xs font-semibold focus:border-[#5478FF] focus:bg-white transition-all"
+								/>
+								<button
+									type="submit"
+									disabled={quickCategoryLoading || !quickCategoryName.trim()}
+									className="h-10 px-4 rounded-xl bg-[#5478FF] hover:bg-[#4062e0] text-white text-xs font-bold flex items-center gap-1.5 shadow-sm disabled:opacity-50 transition-all shrink-0"
+								>
+									{quickCategoryLoading ? (
+										<Loader2 className="h-4 w-4 animate-spin" />
+									) : (
+										<>
+											<Plus className="h-4 w-4" />
+											<span>Simpan & Pilih</span>
+										</>
+									)}
+								</button>
+							</div>
+							{quickCategoryError && (
+								<p className="text-xs text-red-600 font-medium">{quickCategoryError}</p>
+							)}
+						</form>
+
+						{/* Daftar Kategori yang Tersedia */}
+						<div className="space-y-2 pt-2 border-t border-border">
+							<div className="flex items-center justify-between text-xs">
+								<span className="font-bold text-foreground uppercase tracking-wider text-[11px]">
+									Kategori yang Ada ({categoryList.length})
+								</span>
+								<span className="text-[10px] text-muted-foreground">Klik untuk langsung memilih</span>
+							</div>
+
+							<div className="max-h-48 overflow-y-auto rounded-2xl bg-secondary/40 p-3 border border-border/60 flex flex-wrap gap-2">
+								{categoryList.length === 0 ? (
+									<p className="text-xs text-muted-foreground italic py-2">Belum ada kategori.</p>
+								) : (
+									categoryList.map((cat) => {
+										const isSelected =
+											quickCategoryTarget === 'create'
+												? createForm.data.category_id === cat.id
+												: editForm.data.category_id === cat.id;
+
+										return (
+											<button
+												key={cat.id}
+												type="button"
+												onClick={() => {
+													if (quickCategoryTarget === 'create') {
+														createForm.setData('category_id', cat.id);
+													} else {
+														editForm.setData('category_id', cat.id);
+													}
+													setQuickCategoryModalOpen(false);
+												}}
+												className={cn(
+													'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all',
+													isSelected
+														? 'bg-[#111FA2] text-white shadow-xs'
+														: 'bg-white text-foreground border border-border hover:border-[#5478FF] hover:text-[#5478FF]'
+												)}
+											>
+												{isSelected && <CheckCircle2 className="h-3 w-3 text-white" />}
+												<span>{cat.name}</span>
+											</button>
+										);
+									})
+								)}
+							</div>
+						</div>
+
+						<div className="flex justify-end pt-1">
+							<button
+								type="button"
+								onClick={() => setQuickCategoryModalOpen(false)}
+								className="px-4 py-2 rounded-xl border border-border text-xs font-bold text-muted-foreground hover:bg-secondary transition-colors"
+							>
+								Tutup
 							</button>
 						</div>
 					</div>

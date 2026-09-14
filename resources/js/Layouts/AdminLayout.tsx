@@ -35,7 +35,6 @@ interface AdminLayoutProps {
 const navItems = [
 	{ label: 'Dashboard', href: '/admin', icon: BarChart3, routeName: 'admin.dashboard' },
 	{ label: 'Produk', href: '/admin/products', icon: Package, routeName: 'admin.products.*' },
-	{ label: 'Kategori', href: '/admin/categories', icon: Tag, routeName: 'admin.categories.*' },
 	{ label: 'Galeri', href: '/admin/galleries', icon: ImageIcon, routeName: 'admin.galleries.*' },
 	{ label: 'Arsip Pemesanan', href: '/admin/order-archives', icon: ClipboardList, routeName: 'admin.order-archives.*' },
 	{ label: 'Manajemen User', href: '/admin/users', icon: Users, routeName: 'admin.users.*' },

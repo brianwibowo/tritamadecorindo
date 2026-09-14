@@ -143,6 +143,25 @@ class FullCrudTestSuiteTest extends TestCase
         $this->assertDatabaseMissing('categories', ['id' => $category->id]);
     }
 
+    public function test_category_can_be_stored_via_json_quick_add_with_auto_slug(): void
+    {
+        $response = $this->actingAs($this->admin)->postJson(route('admin.categories.store'), [
+            'name' => 'Stiker Oneway Custom',
+        ]);
+
+        $response->assertCreated();
+        $response->assertJson([
+            'success' => true,
+            'message' => 'Kategori berhasil ditambahkan.',
+        ]);
+
+        $this->assertDatabaseHas('categories', [
+            'name' => 'Stiker Oneway Custom',
+            'slug' => 'stiker-oneway-custom',
+            'active' => true,
+        ]);
+    }
+
     // ==========================================
     // 3. USER MANAGEMENT CRUD TESTS
     // ==========================================

@@ -55,13 +55,21 @@ class CategoryController extends Controller
     /**
      * Store a newly created category.
      */
-    public function store(StoreCategoryRequest $request): RedirectResponse
+    public function store(StoreCategoryRequest $request)
     {
         $data = $request->validated();
         $data['id'] = 'cat-'.Str::uuid();
         $data['created_at'] = now();
 
-        Category::create($data);
+        $category = Category::create($data);
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Kategori berhasil ditambahkan.',
+                'category' => $category,
+            ], 201);
+        }
 
         return redirect()
             ->route('admin.categories.index')

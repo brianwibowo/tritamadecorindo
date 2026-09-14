@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Category;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class StoreCategoryRequest extends FormRequest
 {
@@ -13,6 +15,31 @@ class StoreCategoryRequest extends FormRequest
     public function authorize(): bool
     {
         return $this->user()?->isAdmin() === true;
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        if (! $this->has('slug') || empty($this->slug)) {
+            $baseSlug = Str::slug((string) $this->name);
+            $slug = $baseSlug;
+            $count = 1;
+            while (Category::where('slug', $slug)->exists()) {
+                $slug = "{$baseSlug}-{$count}";
+                $count++;
+            }
+            $this->merge([
+                'slug' => $slug,
+            ]);
+        }
+
+        if (! $this->has('active')) {
+            $this->merge([
+                'active' => true,
+            ]);
+        }
     }
 
     /**
