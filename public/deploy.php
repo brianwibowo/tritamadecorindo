@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Auto-Deploy Webhook Handler
  * Project: Tritama Decorindo Stiker
@@ -9,14 +10,14 @@ ini_set('display_errors', '0');
 // Token keamanan
 $secret_token = 'tritama_deploy_secret_2026';
 
-if (!isset($_GET['token']) || $_GET['token'] !== $secret_token) {
+if (! isset($_GET['token']) || $_GET['token'] !== $secret_token) {
     http_response_code(403);
     header('Content-Type: application/json');
     echo json_encode(['status' => 'error', 'message' => 'Forbidden']);
     exit();
 }
 
-putenv('PATH=' . getenv('PATH') . ':/usr/local/bin:/usr/bin:/bin:/usr/local/cpanel/3rdparty/bin');
+putenv('PATH='.getenv('PATH').':/usr/local/bin:/usr/bin:/bin:/usr/local/cpanel/3rdparty/bin');
 
 $git = file_exists('/usr/local/cpanel/3rdparty/bin/git') ? '/usr/local/cpanel/3rdparty/bin/git' : 'git';
 $output = [];
@@ -36,5 +37,5 @@ if (file_exists("{$target_dir}/artisan")) {
 header('Content-Type: application/json');
 echo json_encode([
     'status' => ($return_var === 0) ? 'success' : 'error',
-    'output' => $output
+    'output' => $output,
 ]);
