@@ -12,6 +12,7 @@
         <meta name="description" content="Tritama Decorindo Stiker melayani penjualan material & jasa pasang Kaca Film Gedung/Rumah, Sandblast Cutting Logo, Wallpaper 3D, Roller Blinds, Huruf Timbul LED, dan Gorden di Bekasi, Cikarang, Tambun, Jakarta & seluruh Jabodetabek. Pengerjaan rapi, presisi & bergaransi sejak 2009.">
         <meta name="keywords" content="kaca film bekasi, pasang kaca film bekasi, kaca film gedung bekasi, kaca film rumah bekasi, sandblast bekasi, sandblast cutting logo bekasi, wallpaper dinding bekasi, pasang wallpaper bekasi, roller blind bekasi, vertical blinds bekasi, huruf timbul bekasi, huruf timbul akrilik led bekasi, gorden bekasi, kaca film cikarang, kaca film tambun, kaca film cibubur, kaca film jakarta, kaca film jabodetabek, tritama decorindo stiker">
         <meta name="author" content="Tritama Decorindo Stiker">
+        <meta name="google-site-verification" content="google0acf7b7782458daf">
         <meta name="geo.region" content="ID-JB">
         <meta name="geo.placename" content="Bekasi">
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">

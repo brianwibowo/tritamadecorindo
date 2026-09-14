@@ -6,8 +6,13 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
-// SEO Sitemap
+// SEO Sitemap & Verification
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/google0acf7b7782458daf.html', function () {
+    return response('google-site-verification: google0acf7b7782458daf.html', 200, [
+        'Content-Type' => 'text/html; charset=UTF-8',
+    ]);
+});
 
 // Storefront
 Route::get('/', [Buyer\HomeController::class, 'index'])->name('home');
