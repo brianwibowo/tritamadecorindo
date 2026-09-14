@@ -25,10 +25,10 @@ jobs:
           cp .env.example .env
           php artisan key:generate
 
-      - name: 🟢 Setup Node.js
+      - name: 🟢 Setup Node.js (LTS)
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: 🎨 Install NPM Dependencies & Build Assets
         run: |
@@ -55,10 +55,10 @@ jobs:
       - name: 🚀 Deploy to cPanel via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_TARGET_DIR || '/' }}
+          server: ${{ secrets.FTP_SERVER || secrets.FTP_HOST || secrets.HOST }}
+          username: ${{ secrets.FTP_USERNAME || secrets.FTP_USER || secrets.USER }}
+          password: ${{ secrets.FTP_PASSWORD || secrets.FTP_PASS || secrets.PASSWORD }}
+          server-dir: ${{ secrets.FTP_TARGET_DIR || secrets.FTP_DIR || '/' }}
           exclude: |
             **/.git*
             **/.git*/**
