@@ -7,6 +7,7 @@ use App\Models\Gallery;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -31,7 +32,7 @@ class GalleryController extends Controller
             $query->where('category', $category);
         }
 
-        $galleries = $query->orderBy('sort_order')->latest('id')->paginate(10)->withQueryString();
+        $galleries = $query->orderBy('sort_order')->latest('id')->paginate(12)->withQueryString();
 
         $categoryOptions = [
             ['value' => 'kaca_film', 'label' => 'Kaca Film'],
@@ -64,20 +65,22 @@ class GalleryController extends Controller
 
         return redirect()
             ->back()
-            ->with('success', "Status galeri '{$gallery->title}' berhasil diubah menjadi {$statusText}.");
+            ->with('success', "Status galeri berhasil diubah menjadi {$statusText}.");
     }
 
     /**
-     * Store a newly created gallery item.
+     * Store a newly created gallery item (or multiple items in batch).
      */
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
+            'title' => ['nullable', 'string', 'max:255'],
             'caption' => ['nullable', 'string'],
-            'category' => ['required', Rule::in(['kaca_film', 'sandblast', 'wallpaper', 'signage', 'blinds'])],
-            'active' => ['required', 'boolean'],
-            'image' => ['nullable', 'image', 'max:5120'],
+            'category' => ['nullable', Rule::in(['kaca_film', 'sandblast', 'wallpaper', 'signage', 'blinds'])],
+            'active' => ['nullable', 'boolean'],
+            'image' => ['nullable', 'image', 'max:10240'],
+            'images' => ['nullable', 'array'],
+            'images.*' => ['nullable', 'image', 'max:10240'],
             'image_url' => ['nullable', 'string'],
         ]);
 
@@ -89,19 +92,58 @@ class GalleryController extends Controller
             'blinds' => 'Blinds & Gorden',
         ];
 
-        $imagePath = $validated['image_url'] ?? '/images/products/kaca-film-riben.webp';
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('galleries', 'public');
-            $imagePath = '/storage/'.$path;
+        $category = $validated['category'] ?? 'kaca_film';
+        $categoryLabel = $categoryLabels[$category] ?? 'Dokumentasi Proyek';
+        $active = isset($validated['active']) ? (bool) $validated['active'] : true;
+        $caption = $validated['caption'] ?? null;
+        $title = ! empty($validated['title']) ? $validated['title'] : ($caption ? Str::limit($caption, 60, '...') : 'Dokumentasi Proyek');
+
+        // Multiple images upload
+        if ($request->hasFile('images')) {
+            $uploadedFiles = $request->file('images');
+            foreach ($uploadedFiles as $file) {
+                $path = $file->store('galleries', 'public');
+                Gallery::create([
+                    'title' => $title,
+                    'caption' => $caption,
+                    'category' => $category,
+                    'category_label' => $categoryLabel,
+                    'image' => '/storage/'.$path,
+                    'active' => $active,
+                    'sort_order' => 0,
+                ]);
+            }
+
+            $count = count($uploadedFiles);
+
+            return redirect()->route('admin.galleries.index')->with('success', "Berhasil menambahkan {$count} foto ke galeri.");
         }
 
+        // Single image upload
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('galleries', 'public');
+            Gallery::create([
+                'title' => $title,
+                'caption' => $caption,
+                'category' => $category,
+                'category_label' => $categoryLabel,
+                'image' => '/storage/'.$path,
+                'active' => $active,
+                'sort_order' => 0,
+            ]);
+
+            return redirect()->route('admin.galleries.index')->with('success', 'Foto galeri berhasil ditambahkan.');
+        }
+
+        // Fallback image url
+        $imagePath = $validated['image_url'] ?? '/images/products/kaca-film-riben.webp';
         Gallery::create([
-            'title' => $validated['title'],
-            'caption' => $validated['caption'] ?? null,
-            'category' => $validated['category'],
-            'category_label' => $categoryLabels[$validated['category']] ?? 'Kaca Film',
+            'title' => $title,
+            'caption' => $caption,
+            'category' => $category,
+            'category_label' => $categoryLabel,
             'image' => $imagePath,
-            'active' => $validated['active'],
+            'active' => $active,
             'sort_order' => 0,
         ]);
 
@@ -114,11 +156,11 @@ class GalleryController extends Controller
     public function update(Request $request, Gallery $gallery): RedirectResponse
     {
         $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
+            'title' => ['nullable', 'string', 'max:255'],
             'caption' => ['nullable', 'string'],
-            'category' => ['required', Rule::in(['kaca_film', 'sandblast', 'wallpaper', 'signage', 'blinds'])],
-            'active' => ['required', 'boolean'],
-            'image' => ['nullable', 'image', 'max:5120'],
+            'category' => ['nullable', Rule::in(['kaca_film', 'sandblast', 'wallpaper', 'signage', 'blinds'])],
+            'active' => ['nullable', 'boolean'],
+            'image' => ['nullable', 'image', 'max:10240'],
         ]);
 
         $categoryLabels = [
@@ -129,6 +171,11 @@ class GalleryController extends Controller
             'blinds' => 'Blinds & Gorden',
         ];
 
+        $category = $validated['category'] ?? $gallery->category ?? 'kaca_film';
+        $categoryLabel = $categoryLabels[$category] ?? 'Dokumentasi Proyek';
+        $caption = array_key_exists('caption', $validated) ? $validated['caption'] : $gallery->caption;
+        $title = ! empty($validated['title']) ? $validated['title'] : ($caption ? Str::limit($caption, 60, '...') : ($gallery->title ?: 'Dokumentasi Proyek'));
+
         if ($request->hasFile('image')) {
             if ($gallery->image && str_starts_with($gallery->image, '/storage/')) {
                 $oldPath = str_replace('/storage/', '', $gallery->image);
@@ -138,11 +185,13 @@ class GalleryController extends Controller
             $gallery->image = '/storage/'.$path;
         }
 
-        $gallery->title = $validated['title'];
-        $gallery->caption = $validated['caption'] ?? null;
-        $gallery->category = $validated['category'];
-        $gallery->category_label = $categoryLabels[$validated['category']] ?? 'Kaca Film';
-        $gallery->active = $validated['active'];
+        $gallery->title = $title;
+        $gallery->caption = $caption;
+        $gallery->category = $category;
+        $gallery->category_label = $categoryLabel;
+        if (isset($validated['active'])) {
+            $gallery->active = (bool) $validated['active'];
+        }
         $gallery->save();
 
         return redirect()->route('admin.galleries.index')->with('success', 'Foto galeri berhasil diperbarui.');

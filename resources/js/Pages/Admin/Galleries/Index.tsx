@@ -7,23 +7,25 @@ import {
 	CheckCircle2,
 	Eye,
 	Image as ImageIcon,
+	Images,
 	Pencil,
 	Plus,
 	RotateCcw,
 	Search,
 	Trash2,
+	UploadCloud,
 	X,
-	XCircle
+	XCircle,
 } from 'lucide-react';
 import { useRef, useState } from 'react';
 import type { PaginatedData } from '@/types';
 
 interface GalleryItem {
 	id: number;
-	title: string;
+	title?: string | null;
 	caption?: string | null;
-	category: string;
-	category_label: string;
+	category?: string;
+	category_label?: string;
 	image: string;
 	active: boolean;
 	sort_order: number;
@@ -47,44 +49,36 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
 	const [selectedGallery, setSelectedGallery] = useState<GalleryItem | null>(null);
-	const [imagePreview, setImagePreview] = useState<string | null>(null);
-	const fileInputRef = useRef<HTMLInputElement>(null);
+	const [singleImagePreview, setSingleImagePreview] = useState<string | null>(null);
+	const [multiImagePreviews, setMultiImagePreviews] = useState<string[]>([]);
+	const createFileInputRef = useRef<HTMLInputElement>(null);
+	const editFileInputRef = useRef<HTMLInputElement>(null);
 
-	// Create Form
+	// Create Form (Supports Multiple Images & Description)
 	const createForm = useForm<{
-		title: string;
 		caption: string;
-		category: string;
 		active: boolean;
-		image: File | null;
-		image_url: string;
+		images: File[];
 	}>({
-		title: '',
 		caption: '',
-		category: 'kaca_film',
 		active: true,
-		image: null,
-		image_url: '/images/products/kaca-film-riben.webp',
+		images: [],
 	});
 
-	// Edit Form
+	// Edit Form (Single image replacement & description)
 	const editForm = useForm<{
-		title: string;
 		caption: string;
-		category: string;
 		active: boolean;
 		image: File | null;
 		_method: string;
 	}>({
-		title: '',
 		caption: '',
-		category: 'kaca_film',
 		active: true,
 		image: null,
 		_method: 'PUT',
 	});
 
-	const isCreateDirty = Boolean(createForm.data.title.trim() || createForm.data.caption.trim() || createForm.data.image !== null);
+	const isCreateDirty = Boolean(createForm.data.caption.trim() || createForm.data.images.length > 0);
 	const isEditDirty = editForm.isDirty;
 
 	const createGuard = useModalGuard({
@@ -92,7 +86,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 		onClose: () => {
 			setCreateModalOpen(false);
 			createForm.reset();
-			setImagePreview(null);
+			setMultiImagePreviews([]);
 		},
 	});
 
@@ -101,7 +95,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 		onClose: () => {
 			setEditModalOpen(false);
 			editForm.reset();
-			setImagePreview(null);
+			setSingleImagePreview(null);
 		},
 	});
 
@@ -131,11 +125,9 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 
 	const openEditModal = (item: GalleryItem) => {
 		setSelectedGallery(item);
-		setImagePreview(item.image);
+		setSingleImagePreview(item.image);
 		editForm.setData({
-			title: item.title,
 			caption: item.caption || '',
-			category: item.category,
 			active: Boolean(item.active),
 			image: null,
 			_method: 'PUT',
@@ -153,16 +145,32 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 		setDeleteModalOpen(true);
 	};
 
-	const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>, isEdit: boolean) => {
+	const handleMultipleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const files = Array.from(e.target.files || []);
+		if (files.length > 0) {
+			createForm.setData('images', files);
+			const previews: string[] = [];
+			let loaded = 0;
+			files.forEach((file) => {
+				const reader = new FileReader();
+				reader.onload = () => {
+					previews.push(reader.result as string);
+					loaded++;
+					if (loaded === files.length) {
+						setMultiImagePreviews([...previews]);
+					}
+				};
+				reader.readAsDataURL(file);
+			});
+		}
+	};
+
+	const handleSingleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (file) {
-			if (isEdit) {
-				editForm.setData('image', file);
-			} else {
-				createForm.setData('image', file);
-			}
+			editForm.setData('image', file);
 			const reader = new FileReader();
-			reader.onload = () => setImagePreview(reader.result as string);
+			reader.onload = () => setSingleImagePreview(reader.result as string);
 			reader.readAsDataURL(file);
 		}
 	};
@@ -173,7 +181,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 			onSuccess: () => {
 				setCreateModalOpen(false);
 				createForm.reset();
-				setImagePreview(null);
+				setMultiImagePreviews([]);
 			},
 		});
 	};
@@ -185,7 +193,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 			onSuccess: () => {
 				setEditModalOpen(false);
 				editForm.reset();
-				setImagePreview(null);
+				setSingleImagePreview(null);
 			},
 		});
 	};
@@ -200,67 +208,32 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 		});
 	};
 
-	const getCategoryBadge = (category: string) => {
-		const styles: Record<string, { bg: string; text: string; ring: string }> = {
-			kaca_film: { bg: 'bg-cyan-500/10', text: 'text-[#5478FF]', ring: 'ring-cyan-500/20' },
-			sandblast: { bg: 'bg-blue-500/10', text: 'text-blue-800', ring: 'ring-blue-500/20' },
-			wallpaper: { bg: 'bg-purple-500/10', text: 'text-purple-800', ring: 'ring-purple-500/20' },
-			signage: { bg: 'bg-amber-500/10', text: 'text-amber-800', ring: 'ring-amber-500/20' },
-			blinds: { bg: 'bg-emerald-500/10', text: 'text-emerald-800', ring: 'ring-emerald-500/20' },
-		};
-
-		const meta = styles[category] || { bg: 'bg-gray-100', text: 'text-gray-800', ring: 'ring-gray-200' };
-		const labels: Record<string, string> = {
-			kaca_film: 'Kaca Film',
-			sandblast: 'Sandblast & Stiker',
-			wallpaper: 'Wallpaper Dinding',
-			signage: 'Signage & Huruf Timbul',
-			blinds: 'Blinds & Gorden',
-		};
-
-		return (
-			<span className={cn('inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-bold ring-1', meta.bg, meta.text, meta.ring)}>
-				{labels[category] || category}
-			</span>
-		);
-	};
-
 	return (
-		<AdminLayout header="Galeri & Portofolio Proyek">
+		<AdminLayout header="Galeri & Dokumentasi Proyek">
 			<Head title="Manajemen Galeri — Panel Admin Tritama Decorindo" />
 
 			<div className="space-y-6">
 				{/* Top Controls Toolbar */}
 				<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white p-5 rounded-3xl border border-border/60 shadow-sm">
-					{/* Search & Category Filter */}
+					{/* Search Filter */}
 					<div className="flex flex-wrap items-center gap-3 flex-1">
-						<form onSubmit={handleSearchSubmit} className="relative flex-1 sm:max-w-xs">
+						<form onSubmit={handleSearchSubmit} className="relative flex-1 sm:max-w-md">
 							<input
 								type="text"
 								value={search}
 								onChange={(e) => setSearch(e.target.value)}
-								placeholder="Cari judul, caption galeri..."
+								placeholder="Cari deskripsi foto galeri..."
 								className="w-full h-10 rounded-xl border border-border bg-[#FDFBF9] pl-9 pr-3 text-xs text-foreground placeholder:text-muted-foreground/60 focus:border-[#5478FF]"
 							/>
 							<Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
 						</form>
 
-						<select
-							value={filters.category || ''}
-							onChange={(e) => handleFilterChange({ category: e.target.value })}
-							className="h-10 rounded-xl border border-border bg-[#FDFBF9] px-3 text-xs font-semibold text-foreground focus:border-[#5478FF]"
-						>
-							<option value="">Semua Kategori</option>
-							{categories.map((c) => (
-								<option key={c.value} value={c.value}>
-									{c.label}
-								</option>
-							))}
-						</select>
-
-						{(filters.search || filters.category) && (
+						{filters.search && (
 							<button
-								onClick={() => router.get(route('admin.galleries.index'))}
+								onClick={() => {
+									setSearch('');
+									router.get(route('admin.galleries.index'));
+								}}
 								className="inline-flex items-center gap-1 text-xs text-[#5478FF] hover:underline"
 							>
 								<RotateCcw className="h-3 w-3" />
@@ -273,7 +246,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 						type="button"
 						onClick={() => {
 							createForm.reset();
-							setImagePreview('/images/products/kaca-film-riben.webp');
+							setMultiImagePreviews([]);
 							setCreateModalOpen(true);
 						}}
 						className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#5478FF] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#4064EB] transition-all shadow-md active:scale-95 whitespace-nowrap"
@@ -289,10 +262,10 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 						<table className="w-full text-left text-xs">
 							<thead className="bg-[#FAF7F5] border-b border-border/60 text-muted-foreground uppercase font-bold tracking-wider text-[10px]">
 								<tr>
-									<th className="px-6 py-4">Foto & Judul Galeri</th>
-									<th className="px-6 py-4">Kategori</th>
-									<th className="px-6 py-4">Caption / Penjelasan</th>
-									<th className="px-6 py-4">Status & Slide Switch</th>
+									<th className="px-6 py-4">Foto Dokumentasi</th>
+									<th className="px-6 py-4">Deskripsi / Keterangan</th>
+									<th className="px-6 py-4">Tanggal Unggah</th>
+									<th className="px-6 py-4">Status Publik</th>
 									<th className="px-6 py-4 text-right">Aksi</th>
 								</tr>
 							</thead>
@@ -305,12 +278,12 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 													<ImageIcon className="h-8 w-8 text-slate-400" />
 												</div>
 												<p className="text-sm font-bold text-foreground">Belum ada foto galeri</p>
-												<p className="text-xs text-muted-foreground max-w-xs">Unggah dokumentasi foto hasil pengerjaan proyek pertama Anda.</p>
+												<p className="text-xs text-muted-foreground max-w-xs">Unggah foto dokumentasi hasil pengerjaan proyek Anda (bisa banyak foto sekaligus).</p>
 												<button
 													type="button"
 													onClick={() => {
 														createForm.reset();
-														setImagePreview('/images/products/kaca-film-riben.webp');
+														setMultiImagePreviews([]);
 														setCreateModalOpen(true);
 													}}
 													className="inline-flex items-center gap-1.5 rounded-xl bg-[#5478FF] px-4 py-2 text-xs font-bold text-white hover:bg-[#4064EB] shadow-sm"
@@ -324,37 +297,31 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 								) : (
 									galleries.data.map((item) => (
 										<tr key={item.id} className="hover:bg-secondary/30 transition-colors">
-											{/* Photo & Title */}
+											{/* Photo */}
 											<td className="px-6 py-4">
-												<div className="flex items-center gap-3.5">
-													<div className="h-14 w-14 overflow-hidden rounded-2xl bg-secondary shrink-0 border border-border/60 shadow-sm">
-														<img
-															src={item.image}
-															alt={item.title}
-															className="h-full w-full object-cover"
-														/>
-													</div>
-													<div>
-														<p className="font-bold text-foreground line-clamp-1 max-w-xs">{item.title}</p>
-														<p className="text-[11px] text-muted-foreground mt-0.5">
-															{new Date(item.created_at).toLocaleDateString('id-ID', {
-																day: 'numeric',
-																month: 'short',
-																year: 'numeric',
-															})}
-														</p>
-													</div>
+												<div className="h-16 w-20 overflow-hidden rounded-xl bg-secondary shrink-0 border border-border/60 shadow-xs">
+													<img
+														src={item.image}
+														alt={item.caption || 'Foto Galeri'}
+														className="h-full w-full object-cover"
+													/>
 												</div>
 											</td>
 
-											{/* Category */}
-											<td className="px-6 py-4">{getCategoryBadge(item.category)}</td>
-
-											{/* Caption */}
-											<td className="px-6 py-4 max-w-sm">
-												<p className="text-[11px] text-muted-foreground line-clamp-2 leading-relaxed font-normal">
-													{item.caption || '-'}
+											{/* Description / Caption */}
+											<td className="px-6 py-4 max-w-md">
+												<p className="text-xs text-slate-800 font-medium line-clamp-2 leading-relaxed">
+													{item.caption || item.title || <span className="text-muted-foreground italic">Tanpa deskripsi</span>}
 												</p>
+											</td>
+
+											{/* Date */}
+											<td className="px-6 py-4 text-muted-foreground text-xs whitespace-nowrap">
+												{new Date(item.created_at).toLocaleDateString('id-ID', {
+													day: 'numeric',
+													month: 'short',
+													year: 'numeric',
+												})}
 											</td>
 
 											{/* Status Slide Switch */}
@@ -394,7 +361,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 														type="button"
 														onClick={() => openViewModal(item)}
 														className="rounded-lg p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
-														title="Lihat Detail & Caption"
+														title="Lihat Detail Foto"
 													>
 														<Eye className="h-4 w-4" />
 													</button>
@@ -402,7 +369,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 														type="button"
 														onClick={() => openEditModal(item)}
 														className="rounded-lg p-1.5 text-blue-600 hover:bg-blue-50 transition-colors"
-														title="Edit Galeri"
+														title="Edit Foto & Deskripsi"
 													>
 														<Pencil className="h-4 w-4" />
 													</button>
@@ -423,7 +390,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 						</table>
 					</div>
 
-					{/* Pagination Footer - Always Visible */}
+					{/* Pagination Footer */}
 					<div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-border/60 px-6 py-4 bg-[#FAF7F5]/50">
 						<p className="text-xs text-muted-foreground">
 							Menampilkan <strong className="text-foreground">{galleries.from || 0}</strong>–<strong className="text-foreground">{galleries.to || 0}</strong> dari <strong className="text-foreground">{galleries.total}</strong> foto galeri
@@ -450,7 +417,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 				</div>
 			</div>
 
-			{/* 1. Modal Tambah Foto Galeri (With Shake Effect on Outside Click) */}
+			{/* 1. Modal Tambah Foto Galeri (Bisa Upload > 1 Foto) */}
 			{createModalOpen && (
 				<div
 					className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto"
@@ -471,87 +438,80 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 						</button>
 
 						<div className="border-b border-border/60 pb-4">
-							<h3 className="text-xl font-bold text-foreground">Tambah Foto Galeri Baru</h3>
-							<p className="text-xs text-muted-foreground mt-0.5">Unggah dokumentasi proyek pemasangan dan hasil dekorasi.</p>
+							<h3 className="text-xl font-bold text-foreground">Tambah Foto Galeri</h3>
+							<p className="text-xs text-muted-foreground mt-0.5">Unggah satu atau beberapa foto dokumentasi proyek sekaligus.</p>
 						</div>
 
-						<form onSubmit={handleCreateSubmit} className="mt-5 space-y-4">
-							{/* Image preview & upload */}
-							<div className="flex flex-col items-center justify-center gap-2.5">
-								<div className="relative h-44 w-full overflow-hidden rounded-2xl bg-secondary border border-border group">
-									{imagePreview ? (
-										<img src={imagePreview} alt="Preview" className="h-full w-full object-cover" />
-									) : (
-										<div className="flex h-full w-full items-center justify-center text-muted-foreground">
-											<ImageIcon className="h-10 w-10" />
+						<form onSubmit={handleCreateSubmit} className="mt-5 space-y-5">
+							{/* Multi Image Upload Box */}
+							<div>
+								<label className="block text-xs font-bold uppercase tracking-wider mb-2">
+									Pilih Foto Proyek <span className="text-red-500">*</span>
+									<span className="ml-1 text-[11px] font-normal text-muted-foreground">(Bisa pilih lebih dari 1 foto)</span>
+								</label>
+
+								<div
+									onClick={() => createFileInputRef.current?.click()}
+									className="border-2 border-dashed border-slate-200 hover:border-[#5478FF] rounded-2xl p-6 text-center cursor-pointer bg-slate-50/60 hover:bg-blue-50/20 transition-all group"
+								>
+									<div className="flex flex-col items-center justify-center gap-2">
+										<div className="h-12 w-12 rounded-2xl bg-blue-50 text-[#5478FF] flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
+											<UploadCloud className="h-6 w-6" />
 										</div>
-									)}
-									<button
-										type="button"
-										onClick={() => fileInputRef.current?.click()}
-										className="absolute bottom-3 right-3 rounded-full bg-[#5478FF] text-white p-2 shadow-lg hover:bg-[#4064EB] flex items-center gap-1.5 text-xs font-semibold px-3"
-									>
-										<Camera className="h-3.5 w-3.5" />
-										<span>Pilih Foto</span>
-									</button>
+										<p className="text-xs font-bold text-slate-800">
+											Klik untuk pilih foto dari perangkat
+										</p>
+										<p className="text-[11px] text-slate-400">
+											Mendukung JPG, PNG, WEBP (Bisa pilih multiple file)
+										</p>
+									</div>
 								</div>
+
 								<input
-									ref={fileInputRef}
+									ref={createFileInputRef}
 									type="file"
+									multiple
 									accept="image/*,.heic,.heif"
-									onChange={(e) => handleImageSelect(e, false)}
+									onChange={handleMultipleImageSelect}
 									className="hidden"
 								/>
-								<span className="text-[10px] text-muted-foreground">Mendukung format JPG, PNG, WEBP, HEIC (Maks. 5MB)</span>
+
+								{/* Selected Images Previews */}
+								{multiImagePreviews.length > 0 && (
+									<div className="mt-3">
+										<p className="text-[11px] font-bold text-[#5478FF] mb-2">
+											{multiImagePreviews.length} foto dipilih:
+										</p>
+										<div className="grid grid-cols-4 gap-2 max-h-36 overflow-y-auto p-1 bg-slate-100/60 rounded-xl">
+											{multiImagePreviews.map((src, i) => (
+												<div key={i} className="relative aspect-square rounded-lg overflow-hidden border border-slate-200 bg-white shadow-xs">
+													<img src={src} alt={`Preview ${i + 1}`} className="h-full w-full object-cover" />
+												</div>
+											))}
+										</div>
+									</div>
+								)}
 							</div>
 
+							{/* Description Field */}
 							<div>
-								<label className="block text-xs font-bold uppercase tracking-wider mb-1">
-									Judul Dokumentasi <span className="text-red-500">*</span>
-								</label>
-								<input
-									type="text"
-									value={createForm.data.title}
-									onChange={(e) => createForm.setData('title', e.target.value)}
-									required
-									placeholder="Contoh: Pemasangan Sandblast Cutting Logo Kantor Jakarta Pusat"
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#5478FF]"
-								/>
-								<p className="mt-1 text-[10px] text-muted-foreground">Tuliskan nama proyek atau lokasi pengerjaan</p>
-								{createForm.errors.title && <p className="mt-0.5 text-xs text-red-600">{createForm.errors.title}</p>}
-							</div>
-
-							<div>
-								<label className="block text-xs font-bold uppercase tracking-wider mb-1">Kategori Galeri</label>
-								<select
-									value={createForm.data.category}
-									onChange={(e) => createForm.setData('category', e.target.value)}
-									className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#5478FF]"
-								>
-									{categories.map((c) => (
-										<option key={c.value} value={c.value}>
-											{c.label}
-										</option>
-									))}
-								</select>
-							</div>
-
-							<div>
-								<div className="flex items-center justify-between mb-1">
-									<label className="block text-xs font-bold uppercase tracking-wider">Caption / Deskripsi Lengkap</label>
+								<div className="flex items-center justify-between mb-1.5">
+									<label className="block text-xs font-bold uppercase tracking-wider">
+										Deskripsi / Keterangan Proyek
+									</label>
 									<span className="text-[10px] text-muted-foreground">
-										{createForm.data.caption.length}/300
+										{createForm.data.caption.length}/500
 									</span>
 								</div>
 								<textarea
 									value={createForm.data.caption}
 									onChange={(e) => createForm.setData('caption', e.target.value)}
 									rows={3}
-									maxLength={300}
-									placeholder="Penjelasan detail hasil pengerjaan pemasangan..."
-									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#5478FF]"
+									maxLength={500}
+									placeholder="Contoh: Pemasangan kaca film riben tolak panas 80% pada ruko 3 lantai di Cikarang."
+									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 								/>
-								<p className="mt-1 text-[10px] text-muted-foreground">Ceritakan detail material yang digunakan, tantangan, atau kepuasan klien</p>
+								<p className="mt-1 text-[10px] text-muted-foreground">Deskripsi ini akan tampil pada foto saat dilihat oleh pengunjung.</p>
 							</div>
 
 							<div>
@@ -562,7 +522,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 										onChange={(e) => createForm.setData('active', e.target.checked)}
 										className="h-4 w-4 rounded text-[#5478FF] focus:ring-[#5478FF]"
 									/>
-									<span className="text-xs font-semibold text-foreground">Tampilkan foto ini di halaman galeri publik</span>
+									<span className="text-xs font-semibold text-foreground">Tampilkan langsung di halaman galeri publik</span>
 								</label>
 							</div>
 
@@ -576,10 +536,10 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 								</button>
 								<button
 									type="submit"
-									disabled={createForm.processing}
-									className="rounded-full bg-[#5478FF] px-6 py-2 text-xs font-bold text-white hover:bg-[#4064EB] disabled:opacity-60 shadow-md"
+									disabled={createForm.processing || createForm.data.images.length === 0}
+									className="rounded-full bg-[#5478FF] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#4064EB] disabled:opacity-50 shadow-md"
 								>
-									{createForm.processing ? 'Menyimpan...' : 'Simpan Galeri'}
+									{createForm.processing ? 'Mengunggah...' : `Simpan ${createForm.data.images.length > 0 ? `(${createForm.data.images.length} Foto)` : ''}`}
 								</button>
 							</div>
 						</form>
@@ -587,7 +547,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 				</div>
 			)}
 
-			{/* 2. Modal Edit Foto Galeri (With Shake Effect on Outside Click) */}
+			{/* 2. Modal Edit Foto Galeri */}
 			{editModalOpen && selectedGallery && (
 				<div
 					className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto"
@@ -609,15 +569,15 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 
 						<div className="border-b border-border/60 pb-4">
 							<h3 className="text-xl font-bold text-foreground">Edit Foto Galeri</h3>
-							<p className="text-xs text-muted-foreground mt-0.5">Perbarui judul, kategori, caption, atau foto dokumentasi.</p>
+							<p className="text-xs text-muted-foreground mt-0.5">Perbarui foto atau deskripsi dokumentasi proyek.</p>
 						</div>
 
 						<form onSubmit={handleEditSubmit} className="mt-5 space-y-4">
 							{/* Image preview & upload */}
 							<div className="flex flex-col items-center justify-center gap-2.5">
-								<div className="relative h-44 w-full overflow-hidden rounded-2xl bg-secondary border border-border group">
-									{imagePreview ? (
-										<img src={imagePreview} alt="Preview" className="h-full w-full object-cover" />
+								<div className="relative h-48 w-full overflow-hidden rounded-2xl bg-secondary border border-border group">
+									{singleImagePreview ? (
+										<img src={singleImagePreview} alt="Preview" className="h-full w-full object-cover" />
 									) : (
 										<div className="flex h-full w-full items-center justify-center text-muted-foreground">
 											<ImageIcon className="h-10 w-10" />
@@ -625,7 +585,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 									)}
 									<button
 										type="button"
-										onClick={() => fileInputRef.current?.click()}
+										onClick={() => editFileInputRef.current?.click()}
 										className="absolute bottom-3 right-3 rounded-full bg-[#5478FF] text-white p-2 shadow-lg hover:bg-[#4064EB] flex items-center gap-1.5 text-xs font-semibold px-3"
 									>
 										<Camera className="h-3.5 w-3.5" />
@@ -633,49 +593,25 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 									</button>
 								</div>
 								<input
-									ref={fileInputRef}
+									ref={editFileInputRef}
 									type="file"
 									accept="image/*,.heic,.heif"
-									onChange={(e) => handleImageSelect(e, true)}
+									onChange={handleSingleImageSelect}
 									className="hidden"
 								/>
-								<span className="text-[10px] text-muted-foreground">Mendukung format JPG, PNG, WEBP, HEIC (Maks. 5MB)</span>
+								<span className="text-[10px] text-muted-foreground">Mendukung format JPG, PNG, WEBP</span>
 							</div>
 
 							<div>
-								<label className="block text-xs font-bold uppercase tracking-wider mb-1">Judul Dokumentasi</label>
-								<input
-									type="text"
-									value={editForm.data.title}
-									onChange={(e) => editForm.setData('title', e.target.value)}
-									required
-									className="w-full h-10 rounded-xl border border-border bg-white px-3.5 text-xs text-foreground focus:border-[#5478FF]"
-								/>
-								{editForm.errors.title && <p className="mt-1 text-xs text-red-600">{editForm.errors.title}</p>}
-							</div>
-
-							<div>
-								<label className="block text-xs font-bold uppercase tracking-wider mb-1">Kategori Galeri</label>
-								<select
-									value={editForm.data.category}
-									onChange={(e) => editForm.setData('category', e.target.value)}
-									className="w-full h-10 rounded-xl border border-border bg-white px-3 text-xs font-semibold focus:border-[#5478FF]"
-								>
-									{categories.map((c) => (
-										<option key={c.value} value={c.value}>
-											{c.label}
-										</option>
-									))}
-								</select>
-							</div>
-
-							<div>
-								<label className="block text-xs font-bold uppercase tracking-wider mb-1">Caption / Deskripsi Lengkap</label>
+								<label className="block text-xs font-bold uppercase tracking-wider mb-1">
+									Deskripsi / Keterangan Proyek
+								</label>
 								<textarea
 									value={editForm.data.caption}
 									onChange={(e) => editForm.setData('caption', e.target.value)}
 									rows={3}
-									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#5478FF]"
+									placeholder="Tuliskan keterangan detail hasil pengerjaan..."
+									className="w-full rounded-xl border border-border bg-white p-3 text-xs text-foreground focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
 								/>
 							</div>
 
@@ -687,7 +623,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 										onChange={(e) => editForm.setData('active', e.target.checked)}
 										className="h-4 w-4 rounded text-[#5478FF] focus:ring-[#5478FF]"
 									/>
-									<span className="text-xs font-semibold text-foreground">Tampilkan foto ini di halaman galeri publik</span>
+									<span className="text-xs font-semibold text-foreground">Tampilkan foto ini di galeri publik</span>
 								</label>
 							</div>
 
@@ -712,7 +648,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 				</div>
 			)}
 
-			{/* 3. Modal Lihat Detail Foto & Caption */}
+			{/* 3. Modal Lihat Detail Foto & Deskripsi */}
 			{viewModalOpen && selectedGallery && (
 				<div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto">
 					<div className="relative max-w-xl w-full rounded-3xl bg-white p-6 sm:p-8 shadow-2xl border border-border animate-scale-up my-8 space-y-5">
@@ -723,18 +659,18 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 							<X className="h-5 w-5" />
 						</button>
 
-						<div className="overflow-hidden rounded-2xl border border-border max-h-72 w-full bg-secondary">
+						<div className="overflow-hidden rounded-2xl border border-border max-h-80 w-full bg-secondary">
 							<img
 								src={selectedGallery.image}
-								alt={selectedGallery.title}
+								alt="Foto Dokumentasi"
 								className="h-full w-full object-cover"
 							/>
 						</div>
 
 						<div className="space-y-3 text-xs">
-							<div className="flex items-center justify-between">
-								{getCategoryBadge(selectedGallery.category)}
-								<span className="text-muted-foreground text-[11px]">
+							<div className="flex items-center justify-between text-muted-foreground text-[11px]">
+								<span>Tanggal Unggah</span>
+								<span>
 									{new Date(selectedGallery.created_at).toLocaleDateString('id-ID', {
 										day: 'numeric',
 										month: 'long',
@@ -743,19 +679,17 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 								</span>
 							</div>
 
-							<h3 className="font-display text-lg font-bold text-foreground leading-snug">
-								{selectedGallery.title}
-							</h3>
-
-							{selectedGallery.caption && (
+							{selectedGallery.caption ? (
 								<div className="bg-secondary/40 p-4 rounded-2xl">
 									<h5 className="font-bold uppercase tracking-wider text-muted-foreground text-[10px] mb-1">
-										Caption & Penjelasan
+										Deskripsi Proyek
 									</h5>
-									<p className="text-foreground leading-relaxed">
+									<p className="text-foreground leading-relaxed text-xs sm:text-sm font-medium">
 										{selectedGallery.caption}
 									</p>
 								</div>
+							) : (
+								<p className="text-muted-foreground italic text-center py-2">Tidak ada keterangan tertulis.</p>
 							)}
 						</div>
 
@@ -785,7 +719,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 								Hapus Foto Galeri
 							</h3>
 							<p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">
-								Apakah Anda yakin ingin menghapus dokumentasi galeri <strong className="text-foreground">{selectedGallery.title}</strong>?
+								Apakah Anda yakin ingin menghapus foto dokumentasi galeri ini? Tindakan ini tidak dapat dibatalkan.
 							</p>
 						</div>
 
@@ -811,3 +745,4 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 		</AdminLayout>
 	);
 }
+

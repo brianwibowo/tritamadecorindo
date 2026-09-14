@@ -44,19 +44,34 @@ class GalleryManagementTest extends TestCase
         $file = UploadedFile::fake()->image('proyek_kaca_film.jpg');
 
         $response = $this->actingAs($this->admin)->post(route('admin.galleries.store'), [
-            'title' => 'Pemasangan Kaca Film Gedung',
             'caption' => 'Pemasangan kaca film riben penolak panas 80%.',
-            'category' => 'kaca_film',
             'active' => true,
             'image' => $file,
         ]);
 
         $response->assertRedirect(route('admin.galleries.index'));
         $this->assertDatabaseHas('galleries', [
-            'title' => 'Pemasangan Kaca Film Gedung',
-            'category' => 'kaca_film',
-            'category_label' => 'Kaca Film',
+            'caption' => 'Pemasangan kaca film riben penolak panas 80%.',
         ]);
+    }
+
+    public function test_admin_can_create_multiple_gallery_items_at_once(): void
+    {
+        Storage::fake('public');
+        $files = [
+            UploadedFile::fake()->image('foto1.jpg'),
+            UploadedFile::fake()->image('foto2.jpg'),
+            UploadedFile::fake()->image('foto3.jpg'),
+        ];
+
+        $response = $this->actingAs($this->admin)->post(route('admin.galleries.store'), [
+            'caption' => 'Pemasangan sandblast cutting logo kantor 3 lantai.',
+            'active' => true,
+            'images' => $files,
+        ]);
+
+        $response->assertRedirect(route('admin.galleries.index'));
+        $this->assertDatabaseCount('galleries', 3);
     }
 
     public function test_admin_can_update_gallery_item(): void

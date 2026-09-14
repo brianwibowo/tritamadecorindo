@@ -21,7 +21,7 @@ class GalleryController extends Controller
             $query->where('category', $category);
         }
 
-        $galleryItems = $query->paginate(6)->withQueryString();
+        $galleryItems = $query->paginate(12)->withQueryString();
 
         return Inertia::render('Gallery', [
             'galleryItems' => $galleryItems,
