@@ -43,8 +43,8 @@ export default function HeroSection() {
 	}, []);
 
 	return (
-		<section className="relative w-full min-h-[90vh] sm:min-h-screen flex flex-col justify-end items-start overflow-hidden bg-slate-950 pb-12 sm:pb-16 lg:pb-20 pt-32 sm:pt-40 px-4 sm:px-8 lg:px-14 border-b border-border">
-			{/* 1. Rotating Tritama Gallery Background Images (100% Clear, Natural & Vibrant - NO Gradient Overlays) */}
+		<section className="relative w-full min-h-[85vh] sm:min-h-[90vh] flex flex-col justify-end items-start overflow-hidden rounded-b-[36px] sm:rounded-b-[50px] bg-slate-950 shadow-2xl pb-12 sm:pb-16 lg:pb-20 pt-16 sm:pt-20 px-4 sm:px-8 lg:px-14 border-b border-[#5478FF]/20">
+			{/* 1. Rotating Tritama Gallery Background Images */}
 			<div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
 				{gallerySlides.map((slide, idx) => (
 					<div
@@ -63,6 +63,19 @@ export default function HeroSection() {
 						/>
 					</div>
 				))}
+
+				{/* 2. Photo-Highlighting Spotlight & Framing Gradients */}
+				{/* Ambient spotlight highlight over the photo subject */}
+				<div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_40%,rgba(255,255,255,0.08)_0%,transparent_60%)]" />
+
+				{/* Radial vignette keeping center 100% crisp & bright while framing the edges */}
+				<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_55%_45%,transparent_45%,rgba(8,14,78,0.5)_100%)]" />
+
+				{/* Subtle bottom gradient to make the H1 copy pop */}
+				<div className="absolute inset-0 bg-gradient-to-t from-[#080E4E]/90 via-[#080E4E]/35 to-transparent" />
+
+				{/* Soft left shade behind text */}
+				<div className="absolute inset-0 bg-gradient-to-r from-[#080E4E]/75 via-transparent to-transparent max-w-3xl" />
 			</div>
 
 			{/* 2. Bottom-Left Hero Copy Block (Following Gambar 2) */}

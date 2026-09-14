@@ -32,6 +32,7 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [showScrollTop, setShowScrollTop] = useState(false);
 	const [isNavigating, setIsNavigating] = useState(false);
+	const [isPastHero, setIsPastHero] = useState(false);
 
 	const isHomePage = url === '/' || url === '';
 
@@ -49,6 +50,7 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 		const handleScroll = () => {
 			setIsScrolled(window.scrollY > 20);
 			setShowScrollTop(window.scrollY > 400);
+			setIsPastHero(window.scrollY > 380);
 		};
 		window.addEventListener('scroll', handleScroll, { passive: true });
 		handleScroll();
@@ -133,20 +135,11 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 				</div>
 			)}
 
-			{/* Top Announcement Bar (Displayed on other pages, hidden on homepage so hero sits at top:0) */}
-			{!isHomePage && <AnnouncementBar />}
+			{/* Top Announcement Bar (Running Text Marquee - Selalu Tampil) */}
+			<AnnouncementBar />
 
-			{/* Smart Header: Completely transparent absolute overlay on top of homepage hero; Sticky background on scroll or other pages */}
-			<header
-				className={cn(
-					'transition-all duration-300 w-full z-50',
-					isHomePage
-						? isScrolled
-							? 'fixed top-0 left-0 right-0 border-b border-border/80 bg-background/95 backdrop-blur-xl shadow-sm text-foreground py-0'
-							: 'absolute top-0 left-0 right-0 bg-transparent border-none text-white py-2 shadow-none'
-						: 'sticky top-0 border-b border-border/80 bg-background/95 backdrop-blur-xl shadow-sm text-foreground py-0'
-				)}
-			>
+			{/* Sticky Header with Signature Tritama Blue Theme */}
+			<header className="sticky top-0 z-50 transition-all duration-300 w-full border-b border-[#5478FF]/20 bg-[#111FA2] text-white py-1 shadow-md">
 				<div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
 					<div className="flex items-center justify-between h-20">
 						{/* Left Side: Logo */}
@@ -155,20 +148,10 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 								<img src="/images/logo.png" alt="Tritama Decorindo Logo" className="h-full w-full object-contain" />
 							</div>
 							<div className="flex flex-col">
-								<span
-									className={cn(
-										'font-display text-xl sm:text-2xl font-bold tracking-tight leading-none transition-colors',
-										isDarkTopHeader ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]' : 'text-[#111FA2]'
-									)}
-								>
+								<span className="font-display text-xl sm:text-2xl font-bold tracking-tight leading-none text-white">
 									Tritama Decorindo
 								</span>
-								<span
-									className={cn(
-										'text-[10px] tracking-[0.2em] font-bold uppercase mt-0.5 transition-colors',
-										isDarkTopHeader ? 'text-[#FFDE42] drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]' : 'text-slate-500'
-									)}
-								>
+								<span className="text-[10px] tracking-[0.2em] font-bold uppercase mt-0.5 text-[#FFDE42]">
 									Stiker & Interior • Sejak 2009
 								</span>
 							</div>
@@ -176,14 +159,7 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 
 						{/* Right Side: Main Navigation Pill Capsule: Beranda, Produk, Galeri, Login Admin */}
 						<div className="flex items-center gap-3">
-							<nav
-								className={cn(
-									'hidden sm:flex items-center gap-1.5 p-1.5 rounded-full shadow-sm transition-all duration-300',
-									isDarkTopHeader
-										? 'bg-black/35 backdrop-blur-md border border-white/25 text-white shadow-xl'
-										: 'bg-secondary/80 border border-border/60 text-foreground'
-								)}
-							>
+							<nav className="hidden sm:flex items-center gap-1.5 p-1.5 rounded-full shadow-sm bg-white/10 backdrop-blur-md border border-white/20 text-white transition-all duration-300">
 								{navLinks.map((link) => {
 									const active = isLinkActive(link.href);
 									return (
@@ -194,9 +170,7 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 												'h-9 px-5 rounded-full flex items-center text-sm font-bold whitespace-nowrap transition-all',
 												active
 													? 'bg-[#5478FF] text-white shadow-md'
-													: isDarkTopHeader
-													? 'text-white/90 hover:text-white hover:bg-white/20'
-													: 'text-[#111FA2] hover:text-[#5478FF] hover:bg-black/5'
+													: 'text-white/90 hover:text-white hover:bg-white/15'
 											)}
 										>
 											{link.label}
@@ -238,10 +212,7 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 									href={route('logout')}
 									method="post"
 									as="button"
-									className={cn(
-										'hidden sm:inline-block text-xs underline pl-1 transition-colors font-medium',
-										isDarkTopHeader ? 'text-white/90 hover:text-white drop-shadow' : 'text-slate-500 hover:text-[#111FA2]'
-									)}
+									className="hidden sm:inline-block text-xs underline pl-1 text-white/80 hover:text-white transition-colors font-medium"
 								>
 									Keluar
 								</Link>
@@ -251,12 +222,7 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 							<button
 								type="button"
 								onClick={() => setMobileMenuOpen(true)}
-								className={cn(
-									'sm:hidden rounded-full p-2.5 border shadow-sm transition-colors cursor-pointer',
-									isDarkTopHeader
-										? 'bg-black/35 border-white/25 text-white hover:bg-black/50'
-										: 'bg-white border-border text-[#111FA2] hover:bg-slate-100'
-								)}
+								className="sm:hidden rounded-full p-2.5 border shadow-sm transition-colors cursor-pointer bg-white/10 border-white/20 text-white hover:bg-white/20"
 								aria-label="Buka Menu Navigasi Samping"
 							>
 								<Menu className="h-6 w-6" />
@@ -431,8 +397,8 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 			{/* 3. Sticky Curtain Reveal Footer (Menempel di dasar layar di belakang main content) */}
 			<Footer />
 
-			{/* Floating WhatsApp Consultation */}
-			<FloatingWhatsApp />
+			{/* Floating WhatsApp Consultation (Muncul setelah scroll keluar dari hero di beranda, selalu tampil di halaman lain) */}
+			<FloatingWhatsApp show={!isHomePage || isPastHero} />
 
 			{/* Scroll To Top Button (Permanently on bottom-left corner) */}
 			<button

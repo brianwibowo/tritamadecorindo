@@ -1,5 +1,6 @@
 import { MessageCircle, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 const WA_URL = 'https://wa.me/6281990909646?text=Halo%20Tritama%20Decorindo%20Stiker,%20saya%20ingin%20konsultasi%20pemasangan%20material%20dekorasi/kaca%20film.';
 
@@ -10,22 +11,27 @@ const peekMessages = [
 	'Tanya harga & jadwal pasang? 📋',
 ];
 
-export default function FloatingWhatsApp() {
+interface FloatingWhatsAppProps {
+	show?: boolean;
+}
+
+export default function FloatingWhatsApp({ show = true }: FloatingWhatsAppProps) {
 	const [showPeek, setShowPeek] = useState(false);
 	const [peekIndex, setPeekIndex] = useState(0);
 	const [dismissed, setDismissed] = useState(false);
 
 	useEffect(() => {
-		// Show first peek after 5 seconds
+		if (!show) return;
+		// Show first peek after 5 seconds when visible
 		const initialTimer = setTimeout(() => {
 			setShowPeek(true);
 		}, 5000);
 
 		return () => clearTimeout(initialTimer);
-	}, []);
+	}, [show]);
 
 	useEffect(() => {
-		if (dismissed) return;
+		if (dismissed || !show) return;
 
 		// Cycle peek messages every 25 seconds
 		const interval = setInterval(() => {
@@ -41,7 +47,7 @@ export default function FloatingWhatsApp() {
 		}, 25000);
 
 		return () => clearInterval(interval);
-	}, [dismissed]);
+	}, [dismissed, show]);
 
 	const handleDismiss = (e: React.MouseEvent) => {
 		e.stopPropagation();
@@ -50,16 +56,22 @@ export default function FloatingWhatsApp() {
 	};
 
 	return (
-		<div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+		<div
+			className={cn(
+				'fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 transition-all duration-500',
+				show
+					? 'translate-y-0 opacity-100 scale-100 pointer-events-auto'
+					: 'translate-y-8 opacity-0 scale-75 pointer-events-none'
+			)}
+		>
 			{/* Peek Bubble */}
 			<div
-				className={`
-					transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]
-					${showPeek && !dismissed
+				className={cn(
+					'transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]',
+					showPeek && !dismissed && show
 						? 'translate-y-0 opacity-100 scale-100'
 						: 'translate-y-4 opacity-0 scale-90 pointer-events-none'
-					}
-				`}
+				)}
 			>
 				<div className="relative max-w-[240px] rounded-2xl rounded-br-md bg-white px-4 py-3 shadow-xl border border-slate-200/80">
 					<button
