@@ -134,6 +134,9 @@ export default function HomeGallerySection({ galleries = [] }: HomeGallerySectio
 										alt={item.title || 'Dokumentasi Galeri'}
 										className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
 									/>
+									<span className="absolute top-3 left-3 rounded-full bg-[#111FA2]/90 backdrop-blur-md px-2.5 py-1 text-[10px] font-bold text-white uppercase tracking-wider shadow-md">
+										{item.category_label || 'KACA FILM'}
+									</span>
 									{photos.length > 1 && (
 										<span className="absolute top-3 right-3 rounded-full bg-black/75 backdrop-blur-md px-2.5 py-1 text-[10px] font-bold text-white flex items-center gap-1 shadow-md">
 											<Images className="h-3 w-3" />
@@ -239,10 +242,15 @@ export default function HomeGallerySection({ galleries = [] }: HomeGallerySectio
 							)}
 
 							{/* Title & WhatsApp CTA */}
-							<div className="p-5 sm:p-6 overflow-y-auto flex-1 space-y-4 bg-white">
-								<h2 className="text-base sm:text-xl font-bold text-slate-900 leading-snug">
-									{previewItem.title}
-								</h2>
+							<div className="p-5 sm:p-6 overflow-y-auto flex-1 space-y-3 bg-white">
+								<div>
+									<span className="inline-flex rounded-full bg-blue-50 px-2.5 py-1 text-[10px] font-bold text-[#111FA2] border border-blue-100 uppercase tracking-wider">
+										{previewItem.category_label || 'Kaca Film'}
+									</span>
+									<h2 className="text-base sm:text-xl font-bold text-slate-900 leading-snug mt-1.5">
+										{previewItem.title}
+									</h2>
+								</div>
 
 								<div className="pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
 									<div className="text-xs text-slate-500 font-medium">

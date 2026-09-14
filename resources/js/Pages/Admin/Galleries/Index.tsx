@@ -60,26 +60,30 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 	const createFileInputRef = useRef<HTMLInputElement>(null);
 	const editFileInputRef = useRef<HTMLInputElement>(null);
 
-	// Create Form (Judul + Multi Photos)
+	// Create Form (Kategori + Judul + Multi Photos)
 	const createForm = useForm<{
 		title: string;
+		category: string;
 		active: boolean;
 		images: File[];
 	}>({
 		title: '',
+		category: 'kaca_film',
 		active: true,
 		images: [],
 	});
 
-	// Edit Form (Judul + Manage Existing Photos + Append New Photos)
+	// Edit Form (Kategori + Judul + Manage Existing Photos + Append New Photos)
 	const editForm = useForm<{
 		title: string;
+		category: string;
 		active: boolean;
 		images: File[];
 		existing_images: string[];
 		_method: string;
 	}>({
 		title: '',
+		category: 'kaca_film',
 		active: true,
 		images: [],
 		existing_images: [],
@@ -139,6 +143,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 		setEditNewImagePreviews([]);
 		editForm.setData({
 			title: item.title,
+			category: item.category || 'kaca_film',
 			active: Boolean(item.active),
 			images: [],
 			existing_images: existing,
@@ -261,20 +266,33 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 			<div className="space-y-6">
 				{/* Top Controls Toolbar */}
 				<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white p-5 rounded-3xl border border-border/60 shadow-sm">
-					{/* Search Filter */}
+					{/* Search & Category Filter */}
 					<div className="flex flex-wrap items-center gap-3 flex-1">
-						<form onSubmit={handleSearchSubmit} className="relative flex-1 sm:max-w-md">
+						<form onSubmit={handleSearchSubmit} className="relative flex-1 sm:max-w-xs">
 							<input
 								type="text"
 								value={search}
 								onChange={(e) => setSearch(e.target.value)}
-								placeholder="Cari judul galeri proyek..."
+								placeholder="Cari judul galeri..."
 								className="w-full h-10 rounded-xl border border-border bg-[#FDFBF9] pl-9 pr-3 text-xs text-foreground placeholder:text-muted-foreground/60 focus:border-[#5478FF]"
 							/>
 							<Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
 						</form>
 
-						{filters.search && (
+						<select
+							value={filters.category || ''}
+							onChange={(e) => handleFilterChange({ category: e.target.value })}
+							className="h-10 rounded-xl border border-border bg-[#FDFBF9] px-3 text-xs text-foreground focus:border-[#5478FF]"
+						>
+							<option value="">Semua Kategori</option>
+							{categories.map((c) => (
+								<option key={c.value} value={c.value}>
+									{c.label}
+								</option>
+							))}
+						</select>
+
+						{(filters.search || filters.category) && (
 							<button
 								onClick={() => {
 									setSearch('');
@@ -309,6 +327,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 							<thead className="bg-[#FAF7F5] border-b border-border/60 text-muted-foreground uppercase font-bold tracking-wider text-[10px]">
 								<tr>
 									<th className="px-6 py-4">Foto Cover & Jumlah</th>
+									<th className="px-6 py-4">Kategori Layanan</th>
 									<th className="px-6 py-4">Judul Galeri Proyek</th>
 									<th className="px-6 py-4">Tanggal Unggah</th>
 									<th className="px-6 py-4">Status Publik</th>
@@ -318,13 +337,13 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 							<tbody className="divide-y divide-border/40">
 								{galleries.data.length === 0 ? (
 									<tr>
-										<td colSpan={5} className="px-6 py-16 text-center">
+										<td colSpan={6} className="px-6 py-16 text-center">
 											<div className="flex flex-col items-center gap-3">
 												<div className="h-16 w-16 rounded-2xl bg-slate-100 flex items-center justify-center">
 													<ImageIcon className="h-8 w-8 text-slate-400" />
 												</div>
 												<p className="text-sm font-bold text-foreground">Belum ada galeri proyek</p>
-												<p className="text-xs text-muted-foreground max-w-xs">Tambahkan judul dan foto-foto dokumentasi proyek pertama Anda.</p>
+												<p className="text-xs text-muted-foreground max-w-xs">Tambahkan judul, pilih kategori, dan unggah foto dokumentasi proyek pertama Anda.</p>
 												<button
 													type="button"
 													onClick={() => {
@@ -360,6 +379,13 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 															</span>
 														)}
 													</div>
+												</td>
+
+												{/* Category Badge */}
+												<td className="px-6 py-4 whitespace-nowrap">
+													<span className="inline-flex rounded-full bg-blue-50 px-2.5 py-1 text-[10px] font-bold text-[#111FA2] border border-blue-100">
+														{item.category_label || 'Kaca Film'}
+													</span>
 												</td>
 
 												{/* Title */}
@@ -472,7 +498,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 				</div>
 			</div>
 
-			{/* 1. Modal Tambah Galeri Baru (Judul + Multi-Foto) */}
+			{/* 1. Modal Tambah Galeri Baru (Kategori + Judul + Multi-Foto) */}
 			{createModalOpen && (
 				<div
 					className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto"
@@ -494,10 +520,28 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 
 						<div className="border-b border-border/60 pb-4">
 							<h3 className="text-xl font-bold text-foreground">Tambah Galeri Proyek</h3>
-							<p className="text-xs text-muted-foreground mt-0.5">Masukkan judul dan unggah satu atau beberapa foto dokumentasi.</p>
+							<p className="text-xs text-muted-foreground mt-0.5">Pilih kategori, masukkan judul, dan unggah foto-foto dokumentasi.</p>
 						</div>
 
 						<form onSubmit={handleCreateSubmit} className="mt-5 space-y-5">
+							{/* Kategori Layanan */}
+							<div>
+								<label className="block text-xs font-bold uppercase tracking-wider mb-1.5">
+									Kategori Layanan <span className="text-red-500">*</span>
+								</label>
+								<select
+									value={createForm.data.category}
+									onChange={(e) => createForm.setData('category', e.target.value)}
+									className="w-full h-11 rounded-xl border border-border bg-white px-3.5 text-xs font-semibold text-foreground focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
+								>
+									{categories.map((c) => (
+										<option key={c.value} value={c.value}>
+											{c.label}
+										</option>
+									))}
+								</select>
+							</div>
+
 							{/* Judul Galeri */}
 							<div>
 								<label className="block text-xs font-bold uppercase tracking-wider mb-1.5">
@@ -611,7 +655,7 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 				</div>
 			)}
 
-			{/* 2. Modal Edit Galeri (Judul + Manage Foto) */}
+			{/* 2. Modal Edit Galeri (Kategori + Judul + Manage Foto) */}
 			{editModalOpen && selectedGallery && (
 				<div
 					className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in overflow-y-auto"
@@ -633,10 +677,28 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 
 						<div className="border-b border-border/60 pb-4">
 							<h3 className="text-xl font-bold text-foreground">Edit Galeri Proyek</h3>
-							<p className="text-xs text-muted-foreground mt-0.5">Perbarui judul atau kelola foto-foto di galeri ini.</p>
+							<p className="text-xs text-muted-foreground mt-0.5">Perbarui kategori, judul, atau kelola foto-foto di galeri ini.</p>
 						</div>
 
 						<form onSubmit={handleEditSubmit} className="mt-5 space-y-5">
+							{/* Kategori Layanan */}
+							<div>
+								<label className="block text-xs font-bold uppercase tracking-wider mb-1.5">
+									Kategori Layanan <span className="text-red-500">*</span>
+								</label>
+								<select
+									value={editForm.data.category}
+									onChange={(e) => editForm.setData('category', e.target.value)}
+									className="w-full h-11 rounded-xl border border-border bg-white px-3.5 text-xs font-semibold text-foreground focus:border-[#5478FF] focus:outline-none focus:ring-1 focus:ring-[#5478FF]"
+								>
+									{categories.map((c) => (
+										<option key={c.value} value={c.value}>
+											{c.label}
+										</option>
+									))}
+								</select>
+							</div>
+
 							{/* Judul Galeri */}
 							<div>
 								<label className="block text-xs font-bold uppercase tracking-wider mb-1.5">
