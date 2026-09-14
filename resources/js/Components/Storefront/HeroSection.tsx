@@ -85,7 +85,7 @@ export default function HeroSection() {
 					<div className="flex items-start gap-2.5 max-w-2xl mb-4 sm:mb-5">
 						<Star className="h-4 w-4 sm:h-5 sm:w-5 text-[#FFDE42] fill-[#FFDE42] shrink-0 mt-0.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]" />
 						<p className="text-xs sm:text-sm lg:text-base text-white font-medium leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
-							Material Berkualitas & Jasa Pemasangan <strong className="text-[#FFDE42] font-bold">Kaca Film Gedung, Sandblast Cutting Logo, Wallpaper, Roller Blinds & Signage</strong> bergaransi sejak 2009 di Jabodetabek.
+							Material Berkualitas & Jasa Pemasangan <strong className="text-[#FFDE42] font-bold">Kaca Film Gedung, Sandblast Cutting Logo, Wallpaper, Roller Blinds & Signage</strong> bergaransi sejak 2009 di <strong className="text-[#53CBF3] underline decoration-[#53CBF3]/40 underline-offset-2 font-bold">Bekasi</strong> & seluruh Jabodetabek.
 						</p>
 					</div>
 				</ScrollReveal>

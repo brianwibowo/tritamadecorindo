@@ -1,14 +1,13 @@
-import { ArrowRight, CheckCircle2, Clock, Download, ExternalLink, Mail, MapPin, MessageCircle, Phone, Shield, Sparkles } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Clock, Download, ExternalLink, Mail, MapPin, MessageCircle, Phone, Shield, Sparkles, Star } from 'lucide-react';
 import { Link } from '@inertiajs/react';
 
 export default function Footer() {
 	return (
 		<footer className="relative sm:sticky sm:bottom-0 sm:z-0 bg-gradient-to-b from-[#0C1678] via-[#0E1B8A] to-[#080E4E] text-white min-h-0 sm:min-h-[calc(100vh-80px)] flex flex-col justify-between overflow-hidden">
-			<div className="relative z-10 max-w-[1400px] w-full mx-auto px-4 sm:px-6 lg:px-10 pt-10 sm:pt-16 pb-28 sm:pb-8 flex-1 flex flex-col justify-between">
-
+			<div className="relative z-10 max-w-[1400px] w-full mx-auto px-4 sm:px-6 lg:px-10 pt-12 sm:pt-16 pb-28 sm:pb-8 flex-1 flex flex-col justify-between">
 				{/* Main Content Grid: 1 Col on Mobile -> 2 Col on Tablet -> 12 Col on Desktop */}
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 py-4 sm:py-6">
-					{/* Col 1: Profil Perusahaan, Workshop, & Jam Buka (lg: 4 cols) */}
+					{/* Col 1: Profil Perusahaan, Workshop Bekasi, & Jam Buka (lg: 4 cols) */}
 					<div className="lg:col-span-4 space-y-4">
 						<Link href="/" className="inline-flex items-center gap-3 group">
 							<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-md p-1 shrink-0 group-hover:scale-105 transition-transform">
@@ -19,24 +18,24 @@ export default function Footer() {
 									Tritama Decorindo
 								</span>
 								<span className="text-[11px] font-semibold text-[#FFDE42] uppercase tracking-wider block">
-									Spesialis Kaca Film & Dekorasi Interior
+									Spesialis Kaca Film, Sandblast & Interior Bekasi
 								</span>
 							</div>
 						</Link>
 
 						<p className="text-xs sm:text-[13px] text-slate-200/90 leading-relaxed">
-							Kontraktor aplikator dan penyedia material Kaca Film Gedung, Sandblast Cutting Logo, Wallpaper Custom 3D, Roller Blinds, dan Huruf Timbul Signage terpercaya di Jabodetabek sejak 2009.
+							Kontraktor aplikator dan penyedia material Kaca Film Gedung, Sandblast Cutting Logo, Wallpaper Custom 3D, Roller Blinds, dan Huruf Timbul terpercaya berbasis di <strong className="text-white font-semibold">Babelan, Bekasi</strong> yang melayani seluruh wilayah Jabodetabek sejak 2009.
 						</p>
 
-						{/* Quick trust badges */}
+						{/* Quick trust badges - Prioritas Bekasi */}
 						<div className="flex flex-wrap items-center gap-2 pt-1 text-[11px] text-slate-200">
-							<span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 border border-white/15">
-								<CheckCircle2 className="h-3.5 w-3.5 text-[#FFDE42]" />
-								<span>Free Survey Lokasi</span>
+							<span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 border border-[#FFDE42]/30 text-white font-medium">
+								<Star className="h-3.5 w-3.5 text-[#FFDE42] fill-[#FFDE42]" />
+								<span>Workshop & Pusat: Bekasi</span>
 							</span>
 							<span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 border border-white/15">
 								<CheckCircle2 className="h-3.5 w-3.5 text-[#53CBF3]" />
-								<span>Garansi Material Asli</span>
+								<span>Free Survey Jabodetabek</span>
 							</span>
 						</div>
 
@@ -45,12 +44,12 @@ export default function Footer() {
 							<div className="flex items-start gap-2.5">
 								<MapPin className="h-4 w-4 text-[#FFDE42] shrink-0 mt-0.5" />
 								<span className="leading-snug">
-									Grand Anandara Residence, Jl. Pertamina Blok E10 No.8, Kedungjaya, Kec. Babelan, Kab. Bekasi, Jawa Barat 17610
+									<strong className="text-white">Workshop & Kantor:</strong> Grand Anandara Residence, Jl. Pertamina Blok E10 No.8, Kedungjaya, Kec. Babelan, Kab. Bekasi, Jawa Barat 17610
 								</span>
 							</div>
 							<div className="flex items-center gap-2.5">
 								<Clock className="h-4 w-4 text-[#53CBF3] shrink-0" />
-								<span>Senin – Sabtu: 08.00 – 18.00 WIB (Online 24 Jam)</span>
+								<span>Senin – Sabtu: 08.00 – 18.00 WIB (Konsultasi Online 24 Jam)</span>
 							</div>
 							<div className="flex items-center gap-2.5">
 								<Mail className="h-4 w-4 text-[#53CBF3] shrink-0" />
@@ -123,7 +122,7 @@ export default function Footer() {
 							</ul>
 						</div>
 
-						{/* Area Layanan (Local SEO) & Tautan Cepat */}
+						{/* Area Layanan (Prioritaskan Bekasi untuk Local SEO) */}
 						<div>
 							<div className="flex items-center gap-2 pb-1 border-b border-white/10">
 								<div className="h-2 w-2 rounded-full bg-[#53CBF3]" />
@@ -132,6 +131,13 @@ export default function Footer() {
 								</h3>
 							</div>
 							<ul className="mt-3 space-y-1.5 text-xs text-slate-300">
+								<li className="flex items-start gap-1.5 text-white font-medium">
+									<Star className="h-3 w-3 text-[#FFDE42] fill-[#FFDE42] shrink-0 mt-0.5" />
+									<span><strong className="text-[#FFDE42]">Bekasi & Cikarang</strong> (Utama)</span>
+								</li>
+								<li className="flex items-center gap-1.5 pl-4 text-[11px] text-slate-300">
+									<span>• Babelan, Tambun, Summarecon</span>
+								</li>
 								<li className="flex items-center gap-1.5">
 									<span className="h-1 w-1 rounded-full bg-slate-400" />
 									<span>Jakarta (Pusat, Selatan, Barat)</span>
@@ -139,10 +145,6 @@ export default function Footer() {
 								<li className="flex items-center gap-1.5">
 									<span className="h-1 w-1 rounded-full bg-slate-400" />
 									<span>Jakarta Timur & Utara</span>
-								</li>
-								<li className="flex items-center gap-1.5">
-									<span className="h-1 w-1 rounded-full bg-slate-400" />
-									<span>Bekasi, Cikarang & Babelan</span>
 								</li>
 								<li className="flex items-center gap-1.5">
 									<span className="h-1 w-1 rounded-full bg-slate-400" />
@@ -196,12 +198,12 @@ export default function Footer() {
 							</div>
 
 							<p className="text-xs text-slate-200 leading-relaxed">
-								Kirimkan ukuran jendela, bidang dinding, atau desain logo kantor Anda untuk estimasi harga transparan & survey lokasi gratis.
+								Kirimkan ukuran jendela kaca, bidang dinding, atau desain logo kantor Anda untuk estimasi harga transparan & survey lokasi gratis di Bekasi & Jabodetabek.
 							</p>
 
 							{/* WhatsApp CTA Button */}
 							<a
-								href="https://wa.me/6281990909646?text=Halo%20Tritama%20Decorindo%20Stiker,%20saya%20ingin%20konsultasi%20pemasangan%20material%20dekorasi/kaca%20film."
+								href="https://wa.me/6281990909646?text=Halo%20Tritama%20Decorindo%20Stiker,%20saya%20ingin%20konsultasi%20pemasangan%20material%20kaca%20film/dekorasi%20di%20Bekasi/Jabodetabek."
 								target="_blank"
 								rel="noopener noreferrer"
 								className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#25D366] to-[#128C7E] hover:from-[#20bd5a] hover:to-[#0f7a6d] text-white px-4 py-2.5 text-xs font-extrabold uppercase tracking-wider transition-all shadow-md active:scale-95 touch-manipulation min-h-[44px]"
@@ -227,22 +229,22 @@ export default function Footer() {
 					</div>
 				</div>
 
-				{/* SEO Keyword Snippets Ribbon (Helps Google index regional long-tail keywords cleanly) */}
+				{/* SEO Keyword Snippets Ribbon - Prioritaskan Kata Kunci Bekasi */}
 				<div className="mt-4 sm:mt-6 pt-3 pb-3 border-t border-white/10 text-[11px] text-slate-400/90 leading-relaxed">
 					<p>
-						<strong className="text-slate-300 font-semibold">Layanan Unggulan Tritama Decorindo: </strong>
-						Jasa Pasang Kaca Film Gedung Jakarta • Stiker Kaca Sandblast Kantor Bekasi • Cutting Sandblast Logo Custom • Wallpaper Dinding 3D • Roller Blinds & Vertical Blinds Tarikan Otomatis • Huruf Timbul Akrilik LED Signage Toko • Gorden Blackout Rumah Sakit • Aplikator Kaca Film Mobil & Gedung Jabodetabek.
+						<strong className="text-[#FFDE42] font-semibold">Layanan Utama Bekasi & Jabodetabek: </strong>
+						Jasa Pasang Kaca Film Gedung Bekasi • Stiker Kaca Sandblast Kantor Bekasi & Cikarang • Cutting Sandblast Logo Summarecon Bekasi • Wallpaper Dinding Custom 3D Bekasi • Huruf Timbul Akrilik LED Signage Toko Bekasi • Roller Blinds & Vertical Blinds Kantor Cikarang & Bekasi • Pasang Kaca Film Tolak Panas Rumah & Gedung Bekasi, Jakarta, Tangerang, Depok, Bogor.
 					</p>
 				</div>
 
 				{/* Bottom Copyright & Security */}
 				<div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-300">
 					<p className="text-center sm:text-left text-[11px] sm:text-xs">
-						© {new Date().getFullYear()} <strong className="text-white font-medium">Tritama Decorindo Stiker</strong>. Hak Cipta Dilindungi.
+						© {new Date().getFullYear()} <strong className="text-white font-medium">Tritama Decorindo Stiker Bekasi</strong>. Hak Cipta Dilindungi.
 					</p>
 					
 					<div className="flex items-center gap-4 text-[11px] text-slate-400">
-						<span className="hidden sm:inline">Jabodetabek & Seluruh Indonesia</span>
+						<span className="hidden sm:inline">Pusat Workshop Babelan - Bekasi • Seluruh Jabodetabek</span>
 						<span className="hidden sm:inline">•</span>
 						<Link
 							href={route('login')}

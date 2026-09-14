@@ -26,7 +26,7 @@ export default function AboutSection() {
 						— Tentang Kami
 					</span>
 					<h2 className="text-2xl sm:text-3xl lg:text-4xl text-foreground font-bold tracking-tight leading-tight">
-						Mitra Terpercaya Dekorasi, Branding Visual & Interior Sejak 2009
+						Mitra Terpercaya Dekorasi, Branding Visual & Interior di Bekasi & Jabodetabek
 					</h2>
 				</ScrollReveal>
 			</div>
@@ -36,7 +36,7 @@ export default function AboutSection() {
 				<div className="lg:col-span-6 space-y-4 text-slate-600 text-sm sm:text-base leading-relaxed order-1">
 					<ScrollReveal effect="fade-right">
 						<p>
-							<strong className="text-[#111FA2] font-bold">Tritama Decorindo Stiker</strong> adalah perusahaan yang bergerak di bidang penjualan material dan jasa pemasangan untuk berbagai kebutuhan dekorasi, branding visual, interior, dan eksterior. Berdiri sejak tahun 2009, kami telah melayani berbagai kebutuhan pelanggan untuk rumah tinggal, kantor, toko, ruko, gedung, sekolah, hingga berbagai ruang usaha dan instansi.
+							<strong className="text-[#111FA2] font-bold">Tritama Decorindo Stiker</strong> adalah perusahaan spesialis penjualan material dan jasa pemasangan dekorasi kaca, interior, dan signage yang berbasis di <strong className="text-foreground font-semibold">Babelan, Bekasi</strong>. Berdiri sejak tahun 2009, kami telah melayani ribuan kebutuhan pelanggan untuk rumah tinggal, kantor, ruko, gedung perkantoran, dan instansi di seluruh wilayah Bekasi, Cikarang, Jakarta, dan sekitarnya.
 						</p>
 						<p>
 							Kami menyediakan berbagai pilihan produk dan layanan, seperti <em>Kaca Film, Sandblast Cutting, Wallpaper, Roller Blind, Vertical Blind, Cutting Sticker, Digital Printing, Huruf Timbul, Gorden</em>, serta berbagai kebutuhan Signage dan dekorasi visual lainnya.
