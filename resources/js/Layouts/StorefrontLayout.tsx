@@ -149,8 +149,8 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 					<div className="flex items-center justify-between h-20">
 						{/* Left Side: Logo */}
 						<Link href="/" className="flex items-center gap-3 group">
-							<div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#5478FF] text-white shadow-md transition-transform group-hover:scale-105 ring-1 ring-white/20">
-								<Layers className="h-6 w-6" />
+							<div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white shadow-md transition-transform group-hover:scale-105 p-1 ring-1 ring-slate-200 shrink-0">
+								<img src="/images/logo.png" alt="Tritama Decorindo Logo" className="h-full w-full object-contain" />
 							</div>
 							<div className="flex flex-col">
 								<span
@@ -281,8 +281,8 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 						<div className="space-y-6">
 							<div className="flex items-center justify-between border-b border-slate-100 pb-4">
 								<div className="flex items-center gap-2.5">
-									<div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#111FA2] text-white shadow-sm">
-										<Layers className="h-5 w-5 text-[#FFDE42]" />
+									<div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white shadow-sm border border-slate-200 p-0.5 shrink-0">
+										<img src="/images/logo.png" alt="Tritama Decorindo" className="h-full w-full object-contain" />
 									</div>
 									<div>
 										<h4 className="font-bold text-sm text-[#111FA2] leading-tight">Tritama Decorindo</h4>

@@ -196,8 +196,8 @@ export default function AdminLayout({ header, children }: PropsWithChildren<Admi
 						)}
 					>
 						<Link href="/admin" className="flex items-center gap-3 group">
-							<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#5478FF] text-white shadow-md ring-1 ring-white/20 transition-transform group-hover:scale-105">
-								<Layers className="h-5 w-5" />
+							<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white shadow-md p-0.5 transition-transform group-hover:scale-105 border border-white/20">
+								<img src="/images/logo.png" alt="Tritama Decorindo Logo" className="h-full w-full object-contain" />
 							</div>
 							{!isCollapsed && (
 								<div className="flex flex-col overflow-hidden">

@@ -17,8 +17,8 @@ export default function Footer() {
 					{/* Col 1 & 2: Profil Singkat & Kontak */}
 					<div className="lg:col-span-2 sm:max-w-sm">
 						<Link href="/" className="flex items-center gap-2.5">
-							<div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#5478FF] text-white shadow-md">
-								<Layers className="h-5 w-5" />
+							<div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white shadow-md p-0.5 shrink-0">
+								<img src="/images/logo.png" alt="Tritama Decorindo" className="h-full w-full object-contain" />
 							</div>
 							<span className="font-display text-xl text-white font-bold">
 								Tritama Decorindo Stiker

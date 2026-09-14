@@ -7,6 +7,12 @@
 
         <title inertia>{{ config('app.name', 'Tritama Decorindo Stiker — Ahli Kaca Film, Sandblast, Wallpaper & Interior Bekasi & Jabodetabek Sejak 2009') }}</title>
         
+        <!-- Favicon and Web Icons -->
+        <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('favicon.png') }}">
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+
         <!-- Primary SEO Meta Tags -->
         <meta name="title" content="Tritama Decorindo Stiker — Ahli Kaca Film, Sandblast, Wallpaper & Interior Bekasi & Jabodetabek Sejak 2009">
         <meta name="description" content="Tritama Decorindo Stiker melayani penjualan material & jasa pasang Kaca Film Gedung/Rumah, Sandblast Cutting Logo, Wallpaper 3D, Roller Blinds, Huruf Timbul LED, dan Gorden di Bekasi, Cikarang, Tambun, Jakarta & seluruh Jabodetabek. Pengerjaan rapi, presisi & bergaransi sejak 2009.">
@@ -24,7 +30,7 @@
         <meta property="og:site_name" content="Tritama Decorindo Stiker">
         <meta property="og:title" content="Tritama Decorindo Stiker — Ahli Kaca Film, Sandblast & Interior Bekasi Sejak 2009">
         <meta property="og:description" content="Solusi lengkap material & jasa pasang Kaca Film Tolak Panas, Sandblast Cutting Logo, Wallpaper 3D, Blinds, Huruf Timbul & Gorden di Bekasi dan Jabodetabek.">
-        <meta property="og:image" content="{{ asset('images/products/kaca-film-sparta.webp') }}">
+        <meta property="og:image" content="{{ asset('images/logo.png') }}">
         <meta property="og:image:width" content="1200">
         <meta property="og:image:height" content="630">
         <meta property="og:image:alt" content="Tritama Decorindo Stiker Kaca Film Bekasi">
@@ -34,7 +40,7 @@
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="Tritama Decorindo Stiker — Ahli Kaca Film & Interior Bekasi">
         <meta name="twitter:description" content="Penyedia material & jasa pasang Kaca Film, Sandblast, Wallpaper, Blinds, dan Signage di Bekasi & Jabodetabek.">
-        <meta name="twitter:image" content="{{ asset('images/products/kaca-film-sparta.webp') }}">
+        <meta name="twitter:image" content="{{ asset('images/logo.png') }}">
 
         <!-- Fonts: Inter & Outfit -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -51,8 +57,8 @@
                     '@id' => url('/') . '/#organization',
                     'name' => 'Tritama Decorindo Stiker - Ahli Kaca Film, Sandblast & Interior Bekasi',
                     'url' => url('/'),
-                    'logo' => asset('images/products/kaca-film-sparta.webp'),
-                    'image' => asset('images/products/kaca-film-sparta.webp'),
+                    'logo' => asset('images/logo.png'),
+                    'image' => asset('images/logo.png'),
                     'description' => 'Penyedia material dan jasa pasang Kaca Film Tolak Panas (Riben, Sparta, One Way), Sandblast Cutting Logo, Wallpaper 3D, Roller Blinds, Vertical Blinds, Huruf Timbul LED, dan Gorden di Bekasi, Jakarta, dan seluruh Jabodetabek sejak 2009.',
                     'telephone' => '+6281990909646',
                     'email' => 'tritamadecorindostiker@gmail.com',

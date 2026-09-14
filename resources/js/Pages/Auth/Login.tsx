@@ -45,8 +45,8 @@ export default function Login({
 				{/* Top Branding */}
 				<div className="relative z-10 flex items-center justify-between">
 					<Link href="/" className="flex items-center gap-3 group">
-						<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0284C7] text-white shadow-sm">
-							<Layers className="h-6 w-6" />
+						<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm p-0.5 shrink-0">
+							<img src="/images/logo.png" alt="Tritama Decorindo" className="h-full w-full object-contain" />
 						</div>
 						<div className="flex flex-col">
 							<span className="text-xl font-bold tracking-tight text-white leading-none">
@@ -95,8 +95,8 @@ export default function Login({
 				{/* Top Mobile Back Link */}
 				<div className="flex lg:hidden items-center justify-between mb-8">
 					<Link href="/" className="flex items-center gap-2.5">
-						<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0284C7] text-white">
-							<Layers className="h-5 w-5" />
+						<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white border border-slate-200 p-0.5 shrink-0">
+							<img src="/images/logo.png" alt="Tritama Decorindo" className="h-full w-full object-contain" />
 						</div>
 						<span className="text-lg font-bold text-slate-900">Tritama Decorindo</span>
 					</Link>
