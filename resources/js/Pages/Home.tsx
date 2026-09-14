@@ -51,7 +51,7 @@ export default function Home({ categories, featuredProducts, featuredGalleries =
 				<meta name="twitter:image" content="/images/products/kaca-film-sparta.webp" />
 			</Head>
 
-			<div className="pb-8">
+			<div className="pb-12 sm:pb-20">
 				{/* Hero Banner */}
 				<HeroSection />
 

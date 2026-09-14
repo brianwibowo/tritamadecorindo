@@ -424,7 +424,7 @@ export default function StorefrontLayout({ children }: PropsWithChildren) {
 			)}
 
 			{/* 2. Main Content Curtain (Tirai yang menutupi footer dan terangkat saat di-scroll ke bawah) */}
-			<main className="relative z-10 flex-1 bg-background shadow-[0_35px_70px_-15px_rgba(0,0,0,0.5)]">
+			<main className="relative z-10 flex-1 bg-background rounded-b-[32px] sm:rounded-b-[48px] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)]">
 				{children}
 			</main>
 

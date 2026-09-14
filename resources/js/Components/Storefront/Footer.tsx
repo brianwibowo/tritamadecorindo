@@ -3,19 +3,8 @@ import { Link } from '@inertiajs/react';
 
 export default function Footer() {
 	return (
-		<footer className="relative sm:sticky sm:bottom-0 sm:z-0 bg-gradient-to-b from-[#0C1678] via-[#0E1B8A] to-[#080E4E] text-white min-h-0 sm:min-h-[calc(100vh-80px)] flex flex-col justify-between overflow-hidden border-t border-[#5478FF]/30">
-			{/* Ambient background glow */}
-			<div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-32 bg-gradient-to-b from-[#5478FF]/15 to-transparent pointer-events-none" />
-
-			<div className="relative z-10 max-w-[1400px] w-full mx-auto px-4 sm:px-6 lg:px-10 pt-8 sm:pt-12 pb-28 sm:pb-8 flex-1 flex flex-col justify-between">
-				{/* Top Branding & Subtle Watermark (Desktop only for watermark to avoid cluttering mobile) */}
-				<div className="hidden lg:block select-none opacity-15 hover:opacity-25 transition-opacity pb-2">
-					<p className="font-display text-white leading-[0.85] tracking-[-0.03em] text-[7vw] font-extrabold">
-						<span className="bg-gradient-to-b from-white to-white/10 bg-clip-text text-transparent">
-							TRITAMA DECORINDO
-						</span>
-					</p>
-				</div>
+		<footer className="relative sm:sticky sm:bottom-0 sm:z-0 bg-gradient-to-b from-[#0C1678] via-[#0E1B8A] to-[#080E4E] text-white min-h-0 sm:min-h-[calc(100vh-80px)] flex flex-col justify-between overflow-hidden">
+			<div className="relative z-10 max-w-[1400px] w-full mx-auto px-4 sm:px-6 lg:px-10 pt-10 sm:pt-16 pb-28 sm:pb-8 flex-1 flex flex-col justify-between">
 
 				{/* Main Content Grid: 1 Col on Mobile -> 2 Col on Tablet -> 12 Col on Desktop */}
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 py-4 sm:py-6">
