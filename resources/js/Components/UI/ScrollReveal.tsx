@@ -15,17 +15,17 @@ export default function ScrollReveal({
 	className,
 	effect = 'fade-up',
 	delay = 0,
-	duration = 750,
-	threshold = 0.1,
+	duration = 500,
+	threshold = 0.05,
 }: ScrollRevealProps) {
 	const { ref, isRevealed } = useScrollReveal<HTMLDivElement>({ threshold });
 
 	const effectStyles: Record<string, string> = {
-		'fade-up': 'translate-y-8 opacity-0',
-		'fade-down': '-translate-y-8 opacity-0',
-		'fade-left': '-translate-x-8 opacity-0',
-		'fade-right': 'translate-x-8 opacity-0',
-		'scale-up': 'scale-95 opacity-0',
+		'fade-up': 'translate-y-4 opacity-0',
+		'fade-down': '-translate-y-4 opacity-0',
+		'fade-left': '-translate-x-4 opacity-0',
+		'fade-right': 'translate-x-4 opacity-0',
+		'scale-up': 'scale-98 opacity-0',
 		fade: 'opacity-0',
 	};
 
@@ -34,7 +34,7 @@ export default function ScrollReveal({
 	const dynamicStyle: React.CSSProperties = {
 		transitionDuration: `${duration}ms`,
 		transitionDelay: `${delay}ms`,
-		transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+		transitionTimingFunction: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
 	};
 
 	return (
