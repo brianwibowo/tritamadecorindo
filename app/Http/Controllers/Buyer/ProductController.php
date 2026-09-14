@@ -46,7 +46,15 @@ class ProductController extends Controller
         }
 
         if ($priceRange = request('price_range')) {
-            if ($priceRange === 'under_100k') {
+            if ($priceRange === 'under_50k') {
+                $query->whereHas('variants', fn ($q) => $q->where('price', '<=', 50000));
+            } elseif ($priceRange === '50k_100k') {
+                $query->whereHas('variants', fn ($q) => $q->whereBetween('price', [50000, 100000]));
+            } elseif ($priceRange === '100k_200k') {
+                $query->whereHas('variants', fn ($q) => $q->whereBetween('price', [100000, 200000]));
+            } elseif ($priceRange === 'above_200k') {
+                $query->whereHas('variants', fn ($q) => $q->where('price', '>', 200000));
+            } elseif ($priceRange === 'under_100k') {
                 $query->whereHas('variants', fn ($q) => $q->where('price', '<=', 100000));
             } elseif ($priceRange === '100k_500k') {
                 $query->whereHas('variants', fn ($q) => $q->whereBetween('price', [100000, 500000]));
@@ -64,7 +72,7 @@ class ProductController extends Controller
             default => $query->latest(),
         };
 
-        $products = $query->paginate(9)->withQueryString();
+        $products = $query->paginate(6)->withQueryString();
 
         $products->getCollection()->transform(fn (Product $product) => [
             ...$product->toArray(),
