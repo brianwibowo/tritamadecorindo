@@ -67,8 +67,8 @@ export default function Login({
 					</Link>
 				</div>
 
-				{/* Center Message */}
-				<div className="relative z-10 max-w-lg space-y-5 my-auto py-12">
+				{/* Bottom Hero Message */}
+				<div className="relative z-10 max-w-lg space-y-5 mt-auto pb-10">
 					<div className="inline-flex items-center gap-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 px-3.5 py-1 text-xs font-semibold text-[#38BDF8] uppercase tracking-wider">
 						<span>🔐 Portal Manajemen Tritama Decorindo</span>
 					</div>
