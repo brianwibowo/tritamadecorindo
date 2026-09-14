@@ -27,7 +27,7 @@ export function ProductCard({
 
 	return (
 		<Link href={`/product/${product.slug}`} className="group block">
-			<div className="relative aspect-[4/5] bg-secondary/50 rounded-2xl overflow-hidden border border-border/50 shadow-sm">
+			<div className="relative aspect-[4/5] bg-secondary/50 rounded-2xl overflow-hidden border-2 border-slate-200/90 group-hover:border-[#111FA2] shadow-sm group-hover:shadow-md transition-all">
 				<img
 					src={primaryImage}
 					alt={product.name}

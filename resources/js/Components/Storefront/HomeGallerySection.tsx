@@ -103,14 +103,16 @@ export default function HomeGallerySection({ galleries = [] }: HomeGallerySectio
 			<ScrollReveal effect="fade-up">
 				<div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
 					<div>
-						<p className="text-xs font-bold tracking-[0.2em] uppercase text-[#5478FF] mb-2">— Portofolio & Dokumentasi Nyata</p>
+						<span className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#111FA2]/15 bg-[#111FA2]/5 px-3.5 py-1 text-[11px] sm:text-xs font-extrabold tracking-[0.15em] uppercase text-[#111FA2] mb-3 shadow-xs">
+							— Portofolio & Dokumentasi Nyata
+						</span>
 						<h2 className="text-3xl sm:text-4xl text-foreground font-bold tracking-tight">
 							Galeri Hasil Pengerjaan
 						</h2>
 					</div>
 					<Link
 						href={route('gallery.index')}
-						className="inline-flex items-center gap-1.5 text-sm font-bold text-[#5478FF] hover:text-[#4064EB] hover:underline"
+						className="inline-flex items-center gap-1.5 text-sm font-bold text-[#111FA2] hover:text-[#5478FF] hover:underline"
 					>
 						<span>Lihat Semua Galeri Proyek</span>
 						<ArrowUpRight className="h-4 w-4" />
@@ -126,7 +128,7 @@ export default function HomeGallerySection({ galleries = [] }: HomeGallerySectio
 						<ScrollReveal key={item.id} effect="fade-up" delay={idx * 60}>
 							<div
 								onClick={() => setPreviewItem(item)}
-								className="group cursor-pointer rounded-3xl bg-white border border-slate-200/80 p-3 sm:p-3.5 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between h-full overflow-hidden"
+								className="group cursor-pointer rounded-3xl bg-white border-2 border-slate-200/90 hover:border-[#111FA2] p-3 sm:p-3.5 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-1.5 flex flex-col justify-between h-full overflow-hidden"
 							>
 								<div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-950">
 									<img

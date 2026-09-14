@@ -1,11 +1,9 @@
 import AboutSection from '@/Components/Storefront/AboutSection';
 import CategoryCards from '@/Components/Storefront/CategoryCards';
-import FeaturedCollection from '@/Components/Storefront/FeaturedCollection';
 import HeroSection from '@/Components/Storefront/HeroSection';
 import HomeGallerySection from '@/Components/Storefront/HomeGallerySection';
 import NewsletterSection from '@/Components/Storefront/NewsletterSection';
 import ProductGrid from '@/Components/Storefront/ProductGrid';
-import SustainableBanner from '@/Components/Storefront/SustainableBanner';
 import StorefrontLayout from '@/Layouts/StorefrontLayout';
 import { Head } from '@inertiajs/react';
 import type { Category, Product } from '@/types';
@@ -54,28 +52,22 @@ export default function Home({ categories, featuredProducts, featuredGalleries =
 			</Head>
 
 			<div className="pb-8">
-				{/* 1. Hero */}
+				{/* Hero Banner */}
 				<HeroSection />
 
-				{/* 2. Kategori Produk */}
+				{/* 1. Solusi Interior, Eksterior & Branding (Kategori Material & Jasa) */}
 				<CategoryCards categories={categories} />
 
-				{/* 3. Featured Showcase */}
-				<FeaturedCollection products={featuredProducts} />
-
-				{/* 4. Product & Price Grid */}
-				<ProductGrid products={featuredProducts} limit={8} />
-
-				{/* 5. 7 Keunggulan Layanan */}
-				<SustainableBanner />
-
-				{/* 6. Profil Perusahaan & Sektor Layanan */}
+				{/* 2. — TENTANG KAMI */}
 				<AboutSection />
 
-				{/* 7. Area Layanan & Dokumentasi Galeri Proyek */}
+				{/* 3. Daftar Produk & Biaya */}
+				<ProductGrid products={featuredProducts} limit={8} />
+
+				{/* 4. — PORTOFOLIO & DOKUMENTASI NYATA (Area Layanan & Galeri Proyek) */}
 				<HomeGallerySection galleries={featuredGalleries} />
 
-				{/* 8. Form Konsultasi & Survey Lokasi Gratis */}
+				{/* 5. — KONSULTASI & SURVEY LOKASI */}
 				<NewsletterSection />
 			</div>
 		</StorefrontLayout>

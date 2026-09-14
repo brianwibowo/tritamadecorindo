@@ -22,7 +22,9 @@ export default function AboutSection() {
 			<div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
 				<div className="lg:col-span-6 order-2 lg:order-1">
 					<ScrollReveal effect="fade-right">
-						<p className="text-xs font-bold tracking-[0.2em] uppercase text-[#FFDE42] mb-2">— Tentang Kami</p>
+						<span className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#111FA2]/15 bg-[#111FA2]/5 px-3.5 py-1 text-[11px] sm:text-xs font-extrabold tracking-[0.15em] uppercase text-[#111FA2] mb-3 shadow-xs">
+							— Tentang Kami
+						</span>
 						<h2 className="text-3xl sm:text-4xl text-foreground font-bold tracking-tight leading-tight">
 							Mitra Terpercaya Dekorasi, Branding Visual & Interior Sejak 2009
 						</h2>

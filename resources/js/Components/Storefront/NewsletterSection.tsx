@@ -25,7 +25,9 @@ export default function NewsletterSection() {
 
 					<div className="relative grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
 						<div>
-							<p className="text-xs font-bold tracking-[0.2em] uppercase text-[#FFDE42] mb-2">— Konsultasi & Survey Lokasi</p>
+							<span className="inline-flex items-center gap-1.5 rounded-full border-2 border-[#FFDE42]/40 bg-[#FFDE42]/10 px-3.5 py-1 text-[11px] sm:text-xs font-extrabold tracking-[0.15em] uppercase text-[#FFDE42] mb-3 shadow-xs">
+								— Konsultasi & Survey Lokasi
+							</span>
 							{submitted ? (
 								<>
 									<div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#5478FF] mb-4 text-white shadow-md">
