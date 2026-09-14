@@ -865,25 +865,6 @@ export default function GalleriesIndex({ galleries, filters, categories }: Props
 								)}
 							</div>
 
-							{/* Thumbnail Strip */}
-							{photos.length > 1 && (
-								<div className="flex items-center gap-2 overflow-x-auto p-1.5 bg-slate-50 rounded-xl">
-									{photos.map((img, idx) => (
-										<button
-											key={idx}
-											type="button"
-											onClick={() => setCurrentViewImageIdx(idx)}
-											className={cn(
-												'relative h-14 w-18 shrink-0 overflow-hidden rounded-lg border-2 transition-all',
-												idx === currentViewImageIdx ? 'border-[#5478FF] ring-2 ring-[#5478FF]/30' : 'border-transparent opacity-60 hover:opacity-100'
-											)}
-										>
-											<img src={img} alt="Thumb" className="h-full w-full object-cover" />
-										</button>
-									))}
-								</div>
-							)}
-
 							<div className="flex justify-end pt-2 border-t border-border/60">
 								<button
 									type="button"

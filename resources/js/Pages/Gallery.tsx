@@ -253,25 +253,6 @@ export default function Gallery({ galleryItems, currentCategory = 'all' }: Galle
 									)}
 								</div>
 
-								{/* Thumbnail strip if >1 photo */}
-								{previewPhotos.length > 1 && (
-									<div className="flex items-center gap-2 overflow-x-auto p-2 bg-slate-100/80 border-t border-slate-200 no-scrollbar">
-										{previewPhotos.map((src, i) => (
-											<button
-												key={i}
-												type="button"
-												onClick={() => setCurrentImageIdx(i)}
-												className={cn(
-													'relative h-12 w-16 shrink-0 overflow-hidden rounded-lg border-2 transition-all',
-													i === currentImageIdx ? 'border-[#5478FF] ring-2 ring-[#5478FF]/30' : 'border-transparent opacity-60 hover:opacity-100'
-												)}
-											>
-												<img src={src} alt={`Thumb ${i + 1}`} className="h-full w-full object-cover" />
-											</button>
-										))}
-									</div>
-								)}
-
 								{/* Kategori & Judul & WhatsApp CTA */}
 								<div className="p-5 sm:p-6 overflow-y-auto flex-1 space-y-3 bg-white">
 									<div>
