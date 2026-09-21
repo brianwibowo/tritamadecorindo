@@ -1,4 +1,4 @@
-import { ArrowRight, CheckCircle2, Clock, Download, ExternalLink, Mail, MapPin, MessageCircle, Phone, Shield, Sparkles, Star } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Clock, ExternalLink, Mail, MapPin, MessageCircle, Phone, Shield, Sparkles, Star } from 'lucide-react';
 import { Link } from '@inertiajs/react';
 
 export default function Footer() {
@@ -61,16 +61,16 @@ export default function Footer() {
 					</div>
 
 					{/* Middle Section on Mobile: 2 Columns side-by-side for compact readability & SEO (lg: 5 cols) */}
-					<div className="lg:col-span-5 grid grid-cols-2 gap-5 sm:gap-8">
+					<div className="lg:col-span-5 grid grid-cols-2 gap-4 sm:gap-8">
 						{/* Kategori Produk (SEO Keywords) */}
 						<div>
 							<div className="flex items-center gap-2 pb-1 border-b border-white/10">
-								<div className="h-2 w-2 rounded-full bg-[#FFDE42]" />
+								<div className="h-2 w-2 rounded-full bg-[#FFDE42] shrink-0" />
 								<h3 className="text-xs font-bold uppercase tracking-wider text-[#FFDE42]">
 									Kategori Produk
 								</h3>
 							</div>
-							<ul className="mt-3 space-y-2 text-xs text-slate-200">
+							<ul className="mt-3 space-y-1.5 sm:space-y-2 text-[11px] sm:text-xs text-slate-200">
 								<li>
 									<Link
 										href={route('products.index', { category: 'cat-kaca-film' })}
@@ -119,62 +119,69 @@ export default function Footer() {
 										Gorden Blackout & Rel
 									</Link>
 								</li>
+								<li className="pt-2 border-t border-white/10">
+									<Link
+										href={route('gallery.index')}
+										className="text-slate-200 hover:text-[#FFDE42] transition-colors flex items-center gap-1.5 py-0.5 font-medium"
+									>
+										<ArrowRight className="h-3 w-3 text-[#FFDE42] shrink-0" />
+										<span>Galeri & Portofolio</span>
+									</Link>
+								</li>
 							</ul>
 						</div>
 
 						{/* Area Layanan (Prioritaskan Bekasi untuk Local SEO) */}
 						<div>
 							<div className="flex items-center gap-2 pb-1 border-b border-white/10">
-								<div className="h-2 w-2 rounded-full bg-[#53CBF3]" />
+								<div className="h-2 w-2 rounded-full bg-[#53CBF3] shrink-0" />
 								<h3 className="text-xs font-bold uppercase tracking-wider text-[#53CBF3]">
 									Area Layanan
 								</h3>
 							</div>
-							<ul className="mt-3 space-y-1.5 text-xs text-slate-300">
-								<li className="flex items-start gap-1.5 text-white font-medium">
-									<Star className="h-3 w-3 text-[#FFDE42] fill-[#FFDE42] shrink-0 mt-0.5" />
-									<span><strong className="text-[#FFDE42]">Bekasi & Cikarang</strong> (Utama)</span>
+							<ul className="mt-3 space-y-2 text-[11px] sm:text-xs text-slate-300">
+								<li className="flex items-start gap-1.5 sm:gap-2">
+									<MapPin className="h-3.5 w-3.5 text-[#FFDE42] shrink-0 mt-0.5" />
+									<div className="leading-snug">
+										<span className="text-white font-semibold">
+											<strong className="text-[#FFDE42] font-bold">Bekasi & Cikarang</strong>
+											<span className="text-[10px] text-slate-300 ml-1">(Utama)</span>
+										</span>
+										<span className="block text-[10px] sm:text-[11px] text-slate-300/80 mt-0.5">
+											Babelan, Tambun, Summarecon
+										</span>
+									</div>
 								</li>
-								<li className="flex items-center gap-1.5 pl-4 text-[11px] text-slate-300">
-									<span>• Babelan, Tambun, Summarecon</span>
+								<li className="flex items-start gap-1.5 sm:gap-2">
+									<MapPin className="h-3.5 w-3.5 text-[#53CBF3] shrink-0 mt-0.5" />
+									<div className="leading-snug text-slate-200">
+										<span>Jakarta (Pusat, Selatan, Barat)</span>
+									</div>
 								</li>
-								<li className="flex items-center gap-1.5">
-									<span className="h-1 w-1 rounded-full bg-slate-400" />
-									<span>Jakarta (Pusat, Selatan, Barat)</span>
+								<li className="flex items-start gap-1.5 sm:gap-2">
+									<MapPin className="h-3.5 w-3.5 text-[#53CBF3] shrink-0 mt-0.5" />
+									<div className="leading-snug text-slate-200">
+										<span>Jakarta Timur & Utara</span>
+									</div>
 								</li>
-								<li className="flex items-center gap-1.5">
-									<span className="h-1 w-1 rounded-full bg-slate-400" />
-									<span>Jakarta Timur & Utara</span>
+								<li className="flex items-start gap-1.5 sm:gap-2">
+									<MapPin className="h-3.5 w-3.5 text-[#53CBF3] shrink-0 mt-0.5" />
+									<div className="leading-snug text-slate-200">
+										<span>Tangerang & BSD City</span>
+									</div>
 								</li>
-								<li className="flex items-center gap-1.5">
-									<span className="h-1 w-1 rounded-full bg-slate-400" />
-									<span>Tangerang & BSD City</span>
-								</li>
-								<li className="flex items-center gap-1.5">
-									<span className="h-1 w-1 rounded-full bg-slate-400" />
-									<span>Depok, Cibubur & Bogor</span>
+								<li className="flex items-start gap-1.5 sm:gap-2">
+									<MapPin className="h-3.5 w-3.5 text-[#53CBF3] shrink-0 mt-0.5" />
+									<div className="leading-snug text-slate-200">
+										<span>Depok, Cibubur & Bogor</span>
+									</div>
 								</li>
 							</ul>
 
-							{/* Quick Links */}
-							<div className="mt-4 pt-3 border-t border-white/10 space-y-1.5">
-								<p className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
-									Navigasi Cepat
-								</p>
-								<div className="flex flex-col gap-1 text-xs">
-									<Link href={route('gallery.index')} className="text-slate-200 hover:text-white transition-colors">
-										• Portofolio & Galeri Proyek
-									</Link>
-									<a
-										href="/docs/Panduan_Penggunaan_Web_dan_Admin_Tritama_Decorindo.pdf"
-										target="_blank"
-										rel="noopener noreferrer"
-										className="text-[#FFDE42] hover:underline inline-flex items-center gap-1"
-									>
-										<Download className="h-3 w-3" />
-										<span>Unduh Katalog PDF</span>
-									</a>
-								</div>
+							{/* Free Survey badge */}
+							<div className="mt-3.5 pt-2 border-t border-white/10 flex items-center gap-1.5 text-[10px] sm:text-[11px] text-[#53CBF3] font-medium">
+								<CheckCircle2 className="h-3.5 w-3.5 text-[#53CBF3] shrink-0" />
+								<span>Free Survey Jabodetabek</span>
 							</div>
 						</div>
 					</div>

@@ -8,7 +8,9 @@
 
         <title inertia>{{ config('app.name', 'Tritama Decorindo Stiker — Ahli Kaca Film, Sandblast, Wallpaper & Interior Bekasi & Jabodetabek Sejak 2009') }}</title>
         
-        <!-- Favicon and Web Icons -->
+        <!-- Favicon and Web Icons (Sesuai Standar Google Search kelipatan 48px & multi-platform) -->
+        <link rel="icon" type="image/png" sizes="48x48" href="{{ asset('favicon-48x48.png') }}">
+        <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('favicon-96x96.png') }}">
         <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('favicon.png') }}">
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}">

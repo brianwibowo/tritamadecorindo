@@ -11,4 +11,4 @@ Disallow: /forgot-password
 Disallow: /reset-password
 Disallow: /dashboard
 
-Sitemap: /sitemap.xml
+Sitemap: https://tritamadecorindostiker.com/sitemap.xml
