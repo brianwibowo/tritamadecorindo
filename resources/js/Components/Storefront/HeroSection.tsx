@@ -5,18 +5,18 @@ import { useEffect, useState } from 'react';
 
 const gallerySlides = [
 	{
-		image: '/images/products/kaca-film-sparta.webp',
-		title: 'Pemasangan Kaca Film Sparta Facade Kantor',
+		image: '/images/products/hero-banner.webp',
+		title: 'Pemasangan Kaca Film Balkon & Hunian Tinggal',
 		tag: 'Kaca Film Tolak Panas 99%',
 	},
 	{
 		image: '/images/products/sandblast-cutting-logo.webp',
-		title: 'Sandblast Cutting Logo Partisi Kaca Kantor',
+		title: 'Sandblast Cutting Logo ADR Pintu Kaca Kantor',
 		tag: 'Branding & Privasi Ruang Kerja',
 	},
 	{
-		image: '/images/products/huruf-timbul-akrilik.webp',
-		title: 'Huruf Timbul Laser Akrilik LED Backlight Lobby',
+		image: '/images/products/branding-signage-gowork.webp',
+		title: 'Signage Huruf Timbul Backlit LED GoWork Modern',
 		tag: 'Signage & Facade Modern',
 	},
 	{
@@ -26,7 +26,7 @@ const gallerySlides = [
 	},
 	{
 		image: '/images/products/wallpaper-custom-3d.webp',
-		title: 'Instalasi Wallpaper Dinding Custom 3D',
+		title: 'Instalasi Wallpaper Dinding Custom 3D Kamar Anak',
 		tag: 'Dekorasi Interior Modern',
 	},
 ];

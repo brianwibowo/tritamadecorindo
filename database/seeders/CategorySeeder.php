@@ -18,7 +18,7 @@ class CategorySeeder extends Seeder
                 'name' => 'Kaca Film',
                 'slug' => 'kaca-film',
                 'description' => 'Kaca film tolak panas matahari, anti-UV, privasi riben, sparta reflektif, dan one way untuk gedung, kantor, ruko, serta rumah tinggal.',
-                'image' => '/images/products/kaca-film-riben.webp',
+                'image' => '/images/products/kaca-film-utama.webp',
                 'active' => true,
             ],
             [
@@ -42,7 +42,7 @@ class CategorySeeder extends Seeder
                 'name' => 'Branding Visual & Signage',
                 'slug' => 'branding-visual-signage',
                 'description' => 'Huruf timbul laser cutting akrilik LED, neon box, signage resepsionis, dan digital printing stiker branding toko & kendaraan.',
-                'image' => '/images/products/huruf-timbul-akrilik.webp',
+                'image' => '/images/products/branding-signage-gowork.webp',
                 'active' => true,
             ],
             [
@@ -58,7 +58,7 @@ class CategorySeeder extends Seeder
                 'name' => 'Gorden Premium',
                 'slug' => 'gorden-premium',
                 'description' => 'Gorden blackout penahan sinar matahari dan gorden standar berbagai corak motif mewah untuk hunian dan komersial.',
-                'image' => '/images/products/gorden-blackout.webp',
+                'image' => '/images/products/vertical-blinds.webp',
                 'active' => true,
             ],
         ];

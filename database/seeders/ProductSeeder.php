@@ -24,8 +24,8 @@ class ProductSeeder extends Seeder
                 'description' => "Spesifikasi & Keunggulan Produk:\n- Material: Solar Control Polyester Film dengan proteksi UV 99%\n- Dimensi Material: Lebar 152 cm x Panjang 50 cm\n- Pilihan Kegelapan: 40%, 60%, 80%\n- Fungsi: Mengurangi panas matahari, mereduksi silau, menghemat energi AC, dan melindungi interior dari kepudaran sinar UV.\n- Aplikasi: Kaca jendela gedung perkantoran, ruko, perumahan, toko, dan partisi kaca ruangan.\n- Melayani penjualan material & jasa pemasangan teknisi berpengalaman wilayah Jabodetabek.",
                 'images' => [
                     '/images/products/kaca-film-riben.webp',
-                    '/images/products/kaca-film-sparta.webp',
-                    '/images/products/kaca-film-oneway.webp',
+                    '/images/products/kaca-film-solar-screen.webp',
+                    '/images/products/kaca-film-utama.webp',
                 ],
                 'active' => true,
                 'show_price' => true,
@@ -46,7 +46,7 @@ class ProductSeeder extends Seeder
                 'images' => [
                     '/images/products/kaca-film-sparta.webp',
                     '/images/products/kaca-film-oneway.webp',
-                    '/images/products/kaca-film-riben.webp',
+                    '/images/products/kaca-film-utama.webp',
                 ],
                 'active' => true,
                 'show_price' => true,
@@ -66,6 +66,7 @@ class ProductSeeder extends Seeder
                 'description' => "Spesifikasi & Keunggulan Produk:\n- Material: Micro-perforated / Dual-Reflective Solar Film\n- Dimensi Material: Lebar 152 cm x Panjang 30 cm\n- Memberikan privasi maksimal dari luar ruangan tanpa menghalangi pencahayaan alami di dalam.\n- Ideal untuk area komersial, perbankan, ruang direksi, dan facade kaca bangunan.",
                 'images' => [
                     '/images/products/kaca-film-oneway.webp',
+                    '/images/products/kaca-film-rainbow.webp',
                     '/images/products/kaca-film-sparta.webp',
                 ],
                 'active' => true,
@@ -84,6 +85,7 @@ class ProductSeeder extends Seeder
                 'description' => "Spesifikasi & Keunggulan Produk:\n- Tingkat Kegelapan: 100% Opaque Total Blackout (Kedap Cahaya Penuh)\n- Fungsi: Privasi mutlak, menutup pandangan total 2 arah, cocok untuk ruang server, laboratorium, studio, kamar tidur, atau sekat kaca gudang.\n- Daya rekat kuat, tahan panas, dan tidak tembus bayangan siluet.\n- Melayani penjualan bahan per meter maupun paket pemasangan rapi.",
                 'images' => [
                     '/images/products/sticker-kaca-blackout.webp',
+                    '/images/products/kaca-film-safety.webp',
                     '/images/products/kaca-film-riben.webp',
                 ],
                 'active' => true,
@@ -121,7 +123,7 @@ class ProductSeeder extends Seeder
                 'description' => "Spesifikasi & Keunggulan Produk:\n- Material: Sandblast Film Berkualitas Tinggi dipotong Mesin CNC Cutting Plotter Presisi\n- Ukuran Modul Dasar: 100 cm x 50 cm (Bisa custom ukuran berapapun)\n- Bisa memuat logo perusahaan, tulisan nama divisi, garis motif modern, maupun pola arsitektur.\n- Meningkatkan citra profesional kantor dan tempat usaha Anda.",
                 'images' => [
                     '/images/products/sandblast-cutting-logo.webp',
-                    '/images/products/cutting-sticker-kaligrafi.webp',
+                    '/images/products/sticker-gradasi-frosted.webp',
                     '/images/products/sandblast-polos.webp',
                 ],
                 'active' => true,
@@ -141,6 +143,7 @@ class ProductSeeder extends Seeder
                 'images' => [
                     '/images/products/sticker-gradasi-frosted.webp',
                     '/images/products/sandblast-polos.webp',
+                    '/images/products/sandblast-cutting-logo.webp',
                 ],
                 'active' => true,
                 'show_price' => true,
@@ -175,6 +178,7 @@ class ProductSeeder extends Seeder
                 'description' => "Spesifikasi & Keunggulan Produk:\n- Kemasan: 1 Roll (Ukuran Standar 0.53 m x 10 m / Coverage ± 5 m²)\n- Material: Vinyl Bertekstur Timbul (Embossed), Anti-Lembap, dan Mudah Dilap\n- Ribuan pilihan motif: Klasik, Modern Minimalis, Marmer, Kayu, Garis Elegan, Floral.\n- Sangat cocok untuk dinding kamar tidur, ruang keluarga, lobby hotel, dan restoran.",
                 'images' => [
                     '/images/products/wallpaper-pabrikan.webp',
+                    '/images/products/wallpaper-3d-roll.webp',
                     '/images/products/wallpaper-custom-3d.webp',
                 ],
                 'active' => true,
@@ -193,6 +197,7 @@ class ProductSeeder extends Seeder
                 'description' => "Spesifikasi & Keunggulan Produk:\n- Bahan: Korean Wallpaper Fabric / Canvas Texture Seamless\n- Hasil cetak foto tajam, tidak berbau, dan aman untuk kamar tidur anak.\n- Ukuran dibuat presisi mengikuti luas dinding Anda (Custom Size).",
                 'images' => [
                     '/images/products/wallpaper-custom-3d.webp',
+                    '/images/products/wallpaper-3d-roll.webp',
                     '/images/products/wallpaper-pabrikan.webp',
                 ],
                 'active' => true,
@@ -210,8 +215,9 @@ class ProductSeeder extends Seeder
                 'summary' => 'Pembuatan dan pemasangan huruf timbul akrilik, stainless, galvanis, dan LED untuk kantor, toko, gedung, serta area komersial.',
                 'description' => "Spesifikasi & Keunggulan Produk:\n- Pilihan Bahan: Akrilik Solid, Stainless Steel Mirror / Hairline, Galvanis, Kuningan.\n- Lampu: Modul LED Samsung Waterproof Hemat Listrik.\n- Memberikan citra profesional dan prestisius pada fasad gedung atau lobi kantor.",
                 'images' => [
+                    '/images/products/branding-signage-gowork.webp',
                     '/images/products/huruf-timbul-akrilik.webp',
-                    '/images/products/sticker-printing.webp',
+                    '/images/products/acrylic-signage.webp',
                 ],
                 'active' => true,
                 'show_price' => true,
@@ -230,8 +236,8 @@ class ProductSeeder extends Seeder
                 'description' => "Spesifikasi & Keunggulan Produk:\n- Mesin: Eco-Solvent / UV High-Resolution Printing\n- Bahan: Stiker Vinyl Berkualitas Tinggi + Finishing Laminasi Doff / Glossy\n- Tahan air, tahan gores, dan tidak mudah luntur terkena sinar matahari luar ruang.\n- Melayani stiker branding etalase toko, partisi kantor, neon box, dan signage visual.",
                 'images' => [
                     '/images/products/sticker-printing.webp',
-                    '/images/products/huruf-timbul-akrilik.webp',
-                    '/images/products/kaca-film-oneway.webp',
+                    '/images/products/sticker-reflektif-3m.webp',
+                    '/images/products/branding-signage-gowork.webp',
                 ],
                 'active' => true,
                 'show_price' => true,
@@ -284,8 +290,8 @@ class ProductSeeder extends Seeder
                 'summary' => 'Menyediakan berbagai pilihan gorden yang fungsional dan elegan untuk rumah, kantor, maupun ruang usaha.',
                 'description' => "Spesifikasi & Keunggulan Produk:\n- Material: Kain Blackout Tebal Peredam Panas & Cahaya / Kain Standar Semi-Blackout Bertekstur Mewah\n- Jahitan rapi, lipatan jatuh anggun (smokering / hook minimalis)\n- Melayani pengukuran langsung dan pembuatan custom sesuai ukuran jendela hunian, villa, atau kantor Anda.",
                 'images' => [
-                    '/images/products/gorden-blackout.webp',
-                    '/images/products/gorden-standar.webp',
+                    '/images/products/vertical-blinds.webp',
+                    '/images/products/roller-blinds-standar.webp',
                 ],
                 'active' => true,
                 'show_price' => true,

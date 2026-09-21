@@ -35,7 +35,7 @@ export default function Login({
 				{/* Background image */}
 				<div className="absolute inset-0 z-0">
 					<img
-						src="/images/products/kaca-film-sparta.webp"
+						src="/images/products/kaca-film-utama.webp"
 						alt="Tritama Decorindo Stiker"
 						className="h-full w-full object-cover opacity-30"
 					/>

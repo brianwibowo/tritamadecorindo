@@ -63,7 +63,7 @@ export default function AboutSection() {
 								<div className="flex flex-col gap-3">
 									<div className="relative aspect-square rounded-2xl overflow-hidden shadow-md border border-slate-200 group">
 										<img
-											src="/images/products/huruf-timbul-akrilik.webp"
+											src="/images/products/branding-signage-gowork.webp"
 											alt="Signage Huruf Timbul LED"
 											className="h-full w-full object-cover"
 										/>
@@ -129,7 +129,7 @@ export default function AboutSection() {
 							<div className="flex flex-col gap-4">
 								<div className="relative aspect-square rounded-3xl overflow-hidden shadow-lg border border-slate-200 group">
 									<img
-										src="/images/products/huruf-timbul-akrilik.webp"
+										src="/images/products/branding-signage-gowork.webp"
 										alt="Signage Huruf Timbul LED"
 										className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700"
 									/>
