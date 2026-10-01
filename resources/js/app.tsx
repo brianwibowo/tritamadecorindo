@@ -5,10 +5,16 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName =
+    import.meta.env.VITE_APP_NAME && import.meta.env.VITE_APP_NAME !== 'Laravel'
+        ? import.meta.env.VITE_APP_NAME
+        : 'Tritama Decorindo Stiker';
 
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
+    title: (title) =>
+        title
+            ? `${title} — ${appName}`
+            : `${appName} — Ahli Kaca Film, Sandblast & Interior Bekasi`,
     resolve: (name) =>
         resolvePageComponent(
             `./Pages/${name}.tsx`,

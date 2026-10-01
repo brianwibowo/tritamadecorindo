@@ -6,7 +6,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title inertia>{{ config('app.name', 'Tritama Decorindo Stiker — Ahli Kaca Film, Sandblast, Wallpaper & Interior Bekasi & Jabodetabek Sejak 2009') }}</title>
+        <title inertia>{{ config('app.name') && config('app.name') !== 'Laravel' ? config('app.name') : 'Tritama Decorindo Stiker — Ahli Kaca Film, Sandblast, Wallpaper & Interior Bekasi & Jabodetabek Sejak 2009' }}</title>
+        <link rel="canonical" href="{{ url()->current() }}">
         
         <!-- Favicon and Web Icons (Sesuai Standar Google Search kelipatan 48px & multi-platform) -->
         <link rel="icon" type="image/png" sizes="48x48" href="{{ asset('favicon-48x48.png') }}">
