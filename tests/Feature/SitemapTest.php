@@ -38,6 +38,7 @@ class SitemapTest extends TestCase
         $this->assertStringContainsString('<loc>', $content);
         $this->assertStringContainsString('/products</loc>', $content);
         $this->assertStringContainsString('/galeri</loc>', $content);
+        $this->assertStringContainsString('/layanan/kaca-film-bekasi</loc>', $content);
         $this->assertStringContainsString('/product/cengkeh-maluku-super</loc>', $content);
         $this->assertStringContainsString('xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"', $content);
     }

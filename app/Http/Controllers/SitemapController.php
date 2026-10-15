@@ -12,7 +12,8 @@ class SitemapController extends Controller
      */
     public function index(): Response
     {
-        $baseUrl = config('app.url', url('/'));
+        $baseUrl = rtrim((string) config('app.url', url('/')), '/');
+        $escape = static fn (string $value): string => htmlspecialchars($value, ENT_XML1 | ENT_QUOTES, 'UTF-8');
         $products = Product::where('active', true)->latest()->get(['slug', 'updated_at', 'images', 'name']);
 
         $xml = '<?xml version="1.0" encoding="UTF-8"?>';
@@ -20,7 +21,7 @@ class SitemapController extends Controller
 
         // 1. Home
         $xml .= '<url>';
-        $xml .= '<loc>'.$baseUrl.'</loc>';
+        $xml .= '<loc>'.$escape($baseUrl.'/').'</loc>';
         $xml .= '<lastmod>'.now()->toAtomString().'</lastmod>';
         $xml .= '<changefreq>daily</changefreq>';
         $xml .= '<priority>1.0</priority>';
@@ -28,7 +29,7 @@ class SitemapController extends Controller
 
         // 2. Products Catalog
         $xml .= '<url>';
-        $xml .= '<loc>'.$baseUrl.'/products</loc>';
+        $xml .= '<loc>'.$escape($baseUrl.'/products').'</loc>';
         $xml .= '<lastmod>'.now()->toAtomString().'</lastmod>';
         $xml .= '<changefreq>daily</changefreq>';
         $xml .= '<priority>0.9</priority>';
@@ -36,7 +37,7 @@ class SitemapController extends Controller
 
         // 3. Gallery
         $xml .= '<url>';
-        $xml .= '<loc>'.$baseUrl.'/galeri</loc>';
+        $xml .= '<loc>'.$escape($baseUrl.'/galeri').'</loc>';
         $xml .= '<lastmod>'.now()->toAtomString().'</lastmod>';
         $xml .= '<changefreq>weekly</changefreq>';
         $xml .= '<priority>0.8</priority>';
@@ -50,14 +51,23 @@ class SitemapController extends Controller
                 : $baseUrl.'/images/products/kaca-film-riben.webp';
 
             $xml .= '<url>';
-            $xml .= '<loc>'.$productUrl.'</loc>';
-            $xml .= '<lastmod>'.$product->updated_at->toAtomString().'</lastmod>';
+            $xml .= '<loc>'.$escape($productUrl).'</loc>';
+            $xml .= '<lastmod>'.($product->updated_at?->toAtomString() ?? now()->toAtomString()).'</lastmod>';
             $xml .= '<changefreq>weekly</changefreq>';
             $xml .= '<priority>0.85</priority>';
             $xml .= '<image:image>';
-            $xml .= '<image:loc>'.htmlspecialchars($imageUrl).'</image:loc>';
-            $xml .= '<image:title>'.htmlspecialchars($product->name).' - Tritama Decorindo Stiker</image:title>';
+            $xml .= '<image:loc>'.$escape($imageUrl).'</image:loc>';
+            $xml .= '<image:title>'.$escape($product->name.' - Tritama Decorindo Stiker').'</image:title>';
             $xml .= '</image:image>';
+            $xml .= '</url>';
+        }
+
+        foreach (['kaca-film-bekasi', 'sandblast-bekasi', 'roller-blinds-bekasi', 'vertical-blinds-bekasi', 'wallpaper-bekasi', 'huruf-timbul-bekasi', 'gorden-bekasi'] as $serviceSlug) {
+            $xml .= '<url>';
+            $xml .= '<loc>'.$escape($baseUrl.'/layanan/'.$serviceSlug).'</loc>';
+            $xml .= '<lastmod>'.now()->toAtomString().'</lastmod>';
+            $xml .= '<changefreq>weekly</changefreq>';
+            $xml .= '<priority>0.8</priority>';
             $xml .= '</url>';
         }
 

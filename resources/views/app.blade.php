@@ -6,8 +6,20 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title inertia>{{ config('app.name') && config('app.name') !== 'Laravel' ? config('app.name') : 'Tritama Decorindo Stiker — Ahli Kaca Film, Sandblast, Wallpaper & Interior Bekasi & Jabodetabek Sejak 2009' }}</title>
-        <link rel="canonical" href="{{ url()->current() }}">
+        @php
+            $defaultSeo = [
+                'title' => 'Tritama Decorindo Stiker — Ahli Kaca Film, Sandblast, Wallpaper & Interior Bekasi & Jabodetabek Sejak 2009',
+                'description' => 'Tritama Decorindo Stiker melayani penjualan material & jasa pasang Kaca Film Gedung/Rumah, Sandblast Cutting Logo, Wallpaper 3D, Roller Blinds, Huruf Timbul LED, dan Gorden di Bekasi, Cikarang, Tambun, Jakarta & seluruh Jabodetabek. Pengerjaan rapi, presisi & bergaransi sejak 2009.',
+                'keywords' => 'kaca film bekasi, pasang kaca film bekasi, kaca film gedung bekasi, kaca film rumah bekasi, sandblast bekasi, sandblast cutting logo bekasi, wallpaper dinding bekasi, pasang wallpaper bekasi, roller blind bekasi, vertical blinds bekasi, huruf timbul bekasi, huruf timbul akrilik led bekasi, gorden bekasi, kaca film cikarang, kaca film tambun, kaca film cibubur, kaca film jakarta, kaca film jabodetabek, tritama decorindo stiker',
+                'canonical' => url()->current(),
+                'image' => asset('images/logo.png'),
+                'type' => 'website',
+            ];
+            $seo = array_replace($defaultSeo, $page['props']['seo'] ?? []);
+        @endphp
+
+        <title inertia>{{ $seo['title'] }}</title>
+        <link rel="canonical" href="{{ $seo['canonical'] }}">
         
         <!-- Favicon and Web Icons (Sesuai Standar Google Search kelipatan 48px & multi-platform) -->
         <link rel="icon" type="image/png" sizes="48x48" href="{{ asset('favicon-48x48.png') }}">
@@ -18,9 +30,9 @@
         <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
 
         <!-- Primary SEO Meta Tags -->
-        <meta name="title" content="Tritama Decorindo Stiker — Ahli Kaca Film, Sandblast, Wallpaper & Interior Bekasi & Jabodetabek Sejak 2009">
-        <meta name="description" content="Tritama Decorindo Stiker melayani penjualan material & jasa pasang Kaca Film Gedung/Rumah, Sandblast Cutting Logo, Wallpaper 3D, Roller Blinds, Huruf Timbul LED, dan Gorden di Bekasi, Cikarang, Tambun, Jakarta & seluruh Jabodetabek. Pengerjaan rapi, presisi & bergaransi sejak 2009.">
-        <meta name="keywords" content="kaca film bekasi, pasang kaca film bekasi, kaca film gedung bekasi, kaca film rumah bekasi, sandblast bekasi, sandblast cutting logo bekasi, wallpaper dinding bekasi, pasang wallpaper bekasi, roller blind bekasi, vertical blinds bekasi, huruf timbul bekasi, huruf timbul akrilik led bekasi, gorden bekasi, kaca film cikarang, kaca film tambun, kaca film cibubur, kaca film jakarta, kaca film jabodetabek, tritama decorindo stiker">
+        <meta name="title" content="{{ $seo['title'] }}">
+        <meta name="description" content="{{ $seo['description'] }}">
+        <meta name="keywords" content="{{ $seo['keywords'] }}">
         <meta name="author" content="Tritama Decorindo Stiker">
         <meta name="google-site-verification" content="google0acf7b7782458daf">
         <meta name="geo.region" content="ID-JB">
@@ -29,12 +41,12 @@
         <meta name="theme-color" content="#111FA2">
 
         <!-- Open Graph / Facebook / WhatsApp -->
-        <meta property="og:type" content="website">
-        <meta property="og:url" content="{{ url()->current() }}">
+        <meta property="og:type" content="{{ $seo['type'] }}">
+        <meta property="og:url" content="{{ $seo['canonical'] }}">
         <meta property="og:site_name" content="Tritama Decorindo Stiker">
-        <meta property="og:title" content="Tritama Decorindo Stiker — Ahli Kaca Film, Sandblast & Interior Bekasi Sejak 2009">
-        <meta property="og:description" content="Solusi lengkap material & jasa pasang Kaca Film Tolak Panas, Sandblast Cutting Logo, Wallpaper 3D, Blinds, Huruf Timbul & Gorden di Bekasi dan Jabodetabek.">
-        <meta property="og:image" content="{{ asset('images/logo.png') }}">
+        <meta property="og:title" content="{{ $seo['title'] }}">
+        <meta property="og:description" content="{{ $seo['description'] }}">
+        <meta property="og:image" content="{{ $seo['image'] }}">
         <meta property="og:image:width" content="1200">
         <meta property="og:image:height" content="630">
         <meta property="og:image:alt" content="Tritama Decorindo Stiker Kaca Film Bekasi">
@@ -42,9 +54,9 @@
 
         <!-- Twitter Meta -->
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="Tritama Decorindo Stiker — Ahli Kaca Film & Interior Bekasi">
-        <meta name="twitter:description" content="Penyedia material & jasa pasang Kaca Film, Sandblast, Wallpaper, Blinds, dan Signage di Bekasi & Jabodetabek.">
-        <meta name="twitter:image" content="{{ asset('images/logo.png') }}">
+        <meta name="twitter:title" content="{{ $seo['title'] }}">
+        <meta name="twitter:description" content="{{ $seo['description'] }}">
+        <meta name="twitter:image" content="{{ $seo['image'] }}">
 
         <!-- Fonts: Inter & Outfit -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -127,6 +139,10 @@
             ],
         ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
         </script>
+
+        @if (! empty($seo['schema']))
+            <script type="application/ld+json">{!! json_encode($seo['schema'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+        @endif
 
         <!-- Scripts -->
         @routes

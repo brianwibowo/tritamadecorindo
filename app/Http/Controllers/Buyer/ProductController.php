@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use App\Services\MoneyService;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -86,6 +87,19 @@ class ProductController extends Controller
             ->withCount('products')
             ->get();
 
+        $catalogTitle = 'Katalog Produk & Estimasi Harga Kaca Film, Sandblast, Wallpaper & Blinds Bekasi — Tritama Decorindo';
+        $catalogDescription = 'Daftar material dan jasa pemasangan Kaca Film, Sandblast, Wallpaper, Roller Blinds, Huruf Timbul, dan Gorden di Bekasi, Cikarang, Tambun, serta Jabodetabek.';
+        $catalogItems = [];
+
+        foreach ($products->items() as $index => $catalogProduct) {
+            $catalogItems[] = [
+                '@type' => 'ListItem',
+                'position' => $index + 1,
+                'name' => $catalogProduct['name'],
+                'url' => route('products.show', $catalogProduct['slug']),
+            ];
+        }
+
         return Inertia::render('Products/Index', [
             'products' => $products,
             'categories' => $categories,
@@ -95,6 +109,27 @@ class ProductController extends Controller
                 'sort' => $sort,
                 'tag' => request('tag', 'all'),
                 'price_range' => request('price_range', ''),
+            ],
+            'seo' => [
+                'title' => $catalogTitle,
+                'description' => $catalogDescription,
+                'keywords' => 'harga kaca film bekasi, harga sandblast bekasi, harga wallpaper bekasi, harga roller blinds bekasi, huruf timbul bekasi, gorden bekasi',
+                'canonical' => route('products.index'),
+                'image' => asset('images/products/kaca-film-sparta.webp'),
+                'type' => 'website',
+                'schema' => [
+                    '@context' => 'https://schema.org',
+                    '@type' => 'CollectionPage',
+                    'name' => $catalogTitle,
+                    'description' => $catalogDescription,
+                    'url' => route('products.index'),
+                    'isPartOf' => ['@id' => url('/').'/#website'],
+                    'mainEntity' => [
+                        '@type' => 'ItemList',
+                        'numberOfItems' => $products->total(),
+                        'itemListElement' => $catalogItems,
+                    ],
+                ],
             ],
         ]);
     }
@@ -133,6 +168,94 @@ class ProductController extends Controller
                 'variants' => $variants,
             ],
             'relatedProducts' => $relatedProducts,
+            'seo' => $this->productSeo($product),
         ]);
+    }
+
+    /**
+     * Build metadata and structured data for the initial product document.
+     *
+     * @return array<string, mixed>
+     */
+    private function productSeo(Product $product): array
+    {
+        $canonical = route('products.show', $product->slug);
+        $images = collect([
+            ...($product->images ?? []),
+            ...$product->variants->flatMap(fn ($variant): array => $variant->images ?? [])->all(),
+        ])->filter()->map(fn (string $image): string => Str::startsWith($image, ['http://', 'https://'])
+            ? $image
+            : asset(ltrim($image, '/')))->unique()->values()->all();
+
+        if ($images === []) {
+            $images[] = asset('images/products/kaca-film-riben.webp');
+        }
+
+        $description = Str::of(strip_tags((string) ($product->summary ?: $product->description ?: '')))
+            ->squish()
+            ->whenEmpty(fn ($value) => $value->append("Produk {$product->name} dari Tritama Decorindo Stiker."))
+            ->limit(155, '...')
+            ->toString();
+        $prices = $product->variants
+            ->pluck('price')
+            ->map(fn ($price): int => (int) $price)
+            ->filter(fn (int $price): bool => $price > 0)
+            ->values();
+        $hasStock = $product->variants->contains(fn ($variant): bool => (int) $variant->stock > 0);
+
+        $productSchema = [
+            '@type' => 'Product',
+            '@id' => $canonical.'#product',
+            'name' => $product->name,
+            'url' => $canonical,
+            'image' => $images,
+            'description' => $description,
+            'sku' => $product->id ?: $product->slug,
+            'category' => $product->category?->name ?: 'Dekorasi dan Kaca Film',
+            'brand' => [
+                '@type' => 'Brand',
+                'name' => 'Tritama Decorindo Stiker',
+            ],
+        ];
+
+        if ($prices->isNotEmpty()) {
+            $productSchema['offers'] = [
+                '@type' => 'AggregateOffer',
+                'priceCurrency' => 'IDR',
+                'lowPrice' => $prices->min(),
+                'highPrice' => $prices->max(),
+                'offerCount' => $product->variants->count(),
+                'itemCondition' => 'https://schema.org/NewCondition',
+                'availability' => $hasStock ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
+                'seller' => [
+                    '@type' => 'Organization',
+                    'name' => 'Tritama Decorindo Stiker',
+                    'url' => url('/'),
+                ],
+            ];
+        }
+
+        return [
+            'title' => "{$product->name} — Harga & Jasa Pasang di Bekasi & Jabodetabek | Tritama Decorindo",
+            'description' => $description,
+            'keywords' => "{$product->name} bekasi, harga {$product->name} bekasi, jasa pasang {$product->name} bekasi, {$product->category?->name} bekasi, tritama decorindo stiker",
+            'canonical' => $canonical,
+            'image' => $images[0],
+            'type' => 'product',
+            'schema' => [
+                '@context' => 'https://schema.org',
+                '@graph' => [
+                    $productSchema,
+                    [
+                        '@type' => 'BreadcrumbList',
+                        'itemListElement' => [
+                            ['@type' => 'ListItem', 'position' => 1, 'name' => 'Beranda', 'item' => url('/')],
+                            ['@type' => 'ListItem', 'position' => 2, 'name' => 'Katalog Produk', 'item' => route('products.index')],
+                            ['@type' => 'ListItem', 'position' => 3, 'name' => $product->name, 'item' => $canonical],
+                        ],
+                    ],
+                ],
+            ],
+        ];
     }
 }

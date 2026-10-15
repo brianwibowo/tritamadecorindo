@@ -19,6 +19,7 @@ Route::get('/', [Buyer\HomeController::class, 'index'])->name('home');
 Route::get('/products', [Buyer\ProductController::class, 'index'])->name('products.index');
 Route::get('/product/{slug}', [Buyer\ProductController::class, 'show'])->name('products.show');
 Route::get('/galeri', [Buyer\GalleryController::class, 'index'])->name('gallery.index');
+Route::get('/layanan/{slug}', [Buyer\ServiceLandingController::class, 'show'])->name('services.show');
 
 // Auth Dashboard / Profile
 Route::get('/dashboard', function () {

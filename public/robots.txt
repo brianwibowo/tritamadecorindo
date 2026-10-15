@@ -3,6 +3,7 @@ Allow: /
 Allow: /products
 Allow: /product/
 Allow: /galeri
+Allow: /layanan/
 Disallow: /admin/
 Disallow: /admin/*
 Disallow: /login

@@ -23,9 +23,17 @@ import type { Product, Variant } from '@/types';
 interface ProductShowProps {
 	product: Product & { variants: (Variant & { price_formatted?: string })[] };
 	relatedProducts: (Product & { lowest_price_formatted?: string })[];
+	seo?: {
+		title: string;
+		description: string;
+		keywords: string;
+		canonical: string;
+		image: string;
+		schema: Record<string, unknown>;
+	};
 }
 
-export default function ProductShow({ product, relatedProducts }: ProductShowProps) {
+export default function ProductShow({ product, relatedProducts, seo }: ProductShowProps) {
 	const [mounted, setMounted] = useState(false);
 	const [selectedVariant, setSelectedVariant] = useState<Variant | null>(
 		product.variants && product.variants.length > 0 ? product.variants[0] : null
@@ -66,7 +74,6 @@ export default function ProductShow({ product, relatedProducts }: ProductShowPro
 	const currentPriceNumber = selectedVariant?.price || product.lowest_price || 0;
 	const currentPrice = formatMoney(currentPriceNumber);
 	const totalPrice = formatMoney(currentPriceNumber * quantity);
-	const currentStock = selectedVariant ? selectedVariant.stock : 0;
 
 	// Keyboard navigation for carousel and lightbox
 	useEffect(() => {
@@ -91,85 +98,31 @@ export default function ProductShow({ product, relatedProducts }: ProductShowPro
 		return `https://wa.me/6281990909646?text=${encodeURIComponent(message)}`;
 	};
 
-	// Schema.org Product Structured Data (Google Rich Snippets Compliant)
-	const variantPrices = product.variants?.map((v) => Number(v.price)).filter((p) => !isNaN(p) && p > 0) || [];
-	const lowPrice = variantPrices.length > 0 ? Math.min(...variantPrices) : (Number(product.lowest_price) || 45000);
-	const highPrice = variantPrices.length > 0 ? Math.max(...variantPrices) : lowPrice;
-
-	const productSchema = {
-		'@context': 'https://schema.org',
-		'@type': 'Product',
-		name: product.name,
-		image: allImages,
-		description: product.summary || product.description || `Produk ${product.name} berkualitas dari Tritama Decorindo Stiker.`,
-		sku: product.id || product.slug,
-		category: product.category?.name || 'Dekorasi & Kaca Film',
-		brand: {
-			'@type': 'Brand',
-			name: 'Tritama Decorindo Stiker',
-		},
-		offers: {
-			'@type': 'AggregateOffer',
-			priceCurrency: 'IDR',
-			lowPrice: lowPrice,
-			highPrice: highPrice,
-			offerCount: product.variants?.length || 1,
-			priceValidUntil: '2026-12-31',
-			itemCondition: 'https://schema.org/NewCondition',
-			availability: currentStock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
-			seller: {
-				'@type': 'Organization',
-				name: 'Tritama Decorindo Stiker',
-			},
-		},
-		aggregateRating: {
-			'@type': 'AggregateRating',
-			ratingValue: '4.9',
-			ratingCount: '48',
-			reviewCount: '48',
-			bestRating: '5',
-			worstRating: '1',
-		},
-		review: [
-			{
-				'@type': 'Review',
-				author: {
-					'@type': 'Person',
-					name: 'Konsumen Terverifikasi',
-				},
-				datePublished: '2026-02-15',
-				reviewBody: `Pemasangan material ${product.name} sangat memuaskan, rapi dan presisi di lokasi kami. Pelayanan survey dan pengerjaan tepat waktu.`,
-				reviewRating: {
-					'@type': 'Rating',
-					ratingValue: '5',
-					bestRating: '5',
-					worstRating: '1',
-				},
-			},
-		],
-	};
-
 	const seoDescription =
+		seo?.description ||
 		product.summary ||
 		(product.description ? product.description.slice(0, 155) + '...' : `Beli material & jasa pasang ${product.name} rapi, presisi & bergaransi di Bekasi dan Jabodetabek dari Tritama Decorindo Stiker.`);
+	const productSchema = seo?.schema || {};
 
 	return (
 		<StorefrontLayout>
 			<Head>
-				<title>{`${product.name} — Harga & Jasa Pasang di Bekasi & Jabodetabek | Tritama Decorindo`}</title>
+				<title>{seo?.title || `${product.name} — Harga & Jasa Pasang di Bekasi & Jabodetabek | Tritama Decorindo`}</title>
+				<link rel="canonical" href={seo?.canonical || route('products.show', product.slug)} />
 				<meta name="description" content={seoDescription} />
-				<meta name="keywords" content={`${product.name} bekasi, harga ${product.name} bekasi, jasa pasang ${product.name} bekasi, ${product.name} jakarta, ${product.category?.name || 'kaca film'} bekasi, toko kaca film bekasi, tritama decorindo stiker`} />
+				<meta name="keywords" content={seo?.keywords || `${product.name} bekasi, harga ${product.name} bekasi, jasa pasang ${product.name} bekasi, ${product.name} jakarta, ${product.category?.name || 'kaca film'} bekasi, toko kaca film bekasi, tritama decorindo stiker`} />
 				
 				{/* OpenGraph */}
 				<meta property="og:title" content={`${product.name} — Tritama Decorindo Stiker Bekasi`} />
 				<meta property="og:description" content={seoDescription} />
-				<meta property="og:image" content={activeImage} />
+				<meta property="og:url" content={seo?.canonical || route('products.show', product.slug)} />
+				<meta property="og:image" content={seo?.image || activeImage} />
 				<meta property="og:type" content="product" />
 
 				{/* Twitter */}
 				<meta name="twitter:title" content={`${product.name} — Tritama Decorindo Stiker Bekasi`} />
 				<meta name="twitter:description" content={seoDescription} />
-				<meta name="twitter:image" content={activeImage} />
+				<meta name="twitter:image" content={seo?.image || activeImage} />
 
 				{/* Structured Data (JSON-LD) */}
 				<script type="application/ld+json">

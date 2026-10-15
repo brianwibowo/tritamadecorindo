@@ -32,9 +32,17 @@ interface ProductsIndexProps {
 		tag?: string;
 		price_range?: string;
 	};
+	seo?: {
+		title: string;
+		description: string;
+		keywords: string;
+		canonical: string;
+		image: string;
+		schema: Record<string, unknown>;
+	};
 }
 
-export default function ProductsIndex({ products, categories, filters }: ProductsIndexProps) {
+export default function ProductsIndex({ products, categories, filters, seo }: ProductsIndexProps) {
 	const [search, setSearch] = useState(filters.search || '');
 	const [categoriesOpen, setCategoriesOpen] = useState(true);
 	const [priceOpen, setPriceOpen] = useState(true);
@@ -96,21 +104,25 @@ export default function ProductsIndex({ products, categories, filters }: Product
 	return (
 		<StorefrontLayout>
 			<Head>
-				<title>Katalog Produk & Estimasi Harga Kaca Film, Sandblast, Wallpaper & Blinds Bekasi — Tritama Decorindo</title>
+				<title>{seo?.title || 'Katalog Produk & Estimasi Harga Kaca Film, Sandblast, Wallpaper & Blinds Bekasi — Tritama Decorindo'}</title>
+				<link rel="canonical" href={seo?.canonical || route('products.index')} />
 				<meta
 					name="description"
-					content="Daftar produk material & estimasi biaya pemasangan Kaca Film Riben, Sparta, One Way, Sandblast Polos & Cutting Logo, Wallpaper 3D, Roller Blinds, Huruf Timbul LED, dan Gorden di Bekasi, Cikarang, Tambun & Jabodetabek oleh Tritama Decorindo Stiker."
+					content={seo?.description || 'Daftar produk material & estimasi biaya pemasangan Kaca Film Riben, Sparta, One Way, Sandblast Polos & Cutting Logo, Wallpaper 3D, Roller Blinds, Huruf Timbul LED, dan Gorden di Bekasi, Cikarang, Tambun & Jabodetabek oleh Tritama Decorindo Stiker.'}
 				/>
 				<meta
 					name="keywords"
-					content="harga kaca film bekasi, harga kaca film per meter, biaya pasang sandblast bekasi, harga sandblast cutting logo kantor, wallpaper 3d dinding bekasi, harga roller blinds bekasi, biaya huruf timbul led bekasi, pasang gorden kantor bekasi, kaca film jabodetabek"
+					content={seo?.keywords || 'harga kaca film bekasi, harga kaca film per meter, biaya pasang sandblast bekasi, harga sandblast cutting logo kantor, wallpaper 3d dinding bekasi, harga roller blinds bekasi, biaya huruf timbul led bekasi, pasang gorden kantor bekasi, kaca film jabodetabek'}
 				/>
-				<meta property="og:title" content="Katalog Produk & Harga Kaca Film & Interior Bekasi — Tritama Decorindo" />
+				<meta property="og:title" content={seo?.title || 'Katalog Produk & Harga Kaca Film & Interior Bekasi — Tritama Decorindo'} />
 				<meta
 					property="og:description"
-					content="Pilihan material berkualitas tinggi dan estimasi biaya transparan untuk kebutuhan rumah, ruko, gedung, dan kantor di area Bekasi & Jabodetabek."
+					content={seo?.description || 'Pilihan material berkualitas tinggi dan estimasi biaya transparan untuk kebutuhan rumah, ruko, gedung, dan kantor di area Bekasi & Jabodetabek.'}
 				/>
-				<meta name="twitter:image" content="/images/products/kaca-film-sparta.webp" />
+				<meta property="og:url" content={seo?.canonical || route('products.index')} />
+				<meta property="og:image" content={seo?.image || '/images/products/kaca-film-sparta.webp'} />
+				<meta name="twitter:image" content={seo?.image || '/images/products/kaca-film-sparta.webp'} />
+				<script type="application/ld+json">{JSON.stringify(seo?.schema || {})}</script>
 			</Head>
 
 			<div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6 lg:px-10">

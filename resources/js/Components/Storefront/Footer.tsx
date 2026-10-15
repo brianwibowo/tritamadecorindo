@@ -120,6 +120,62 @@ export default function Footer() {
 									</Link>
 								</li>
 								<li className="pt-2 border-t border-white/10">
+									<a
+										href={route('services.show', 'kaca-film-bekasi')}
+										className="text-[#FFDE42] hover:text-white transition-colors block py-0.5 font-semibold"
+									>
+										Jasa Kaca Film Bekasi
+									</a>
+								</li>
+								<li>
+									<a
+										href={route('services.show', 'sandblast-bekasi')}
+										className="hover:text-[#FFDE42] transition-colors block py-0.5"
+									>
+										Jasa Sandblast Bekasi
+									</a>
+								</li>
+								<li>
+									<a
+										href={route('services.show', 'roller-blinds-bekasi')}
+										className="hover:text-[#FFDE42] transition-colors block py-0.5"
+									>
+										Roller Blinds Bekasi
+									</a>
+								</li>
+								<li>
+									<a
+										href={route('services.show', 'vertical-blinds-bekasi')}
+										className="hover:text-[#FFDE42] transition-colors block py-0.5"
+									>
+										Vertical Blinds Bekasi
+									</a>
+								</li>
+								<li>
+									<a
+										href={route('services.show', 'wallpaper-bekasi')}
+										className="hover:text-[#FFDE42] transition-colors block py-0.5"
+									>
+										Wallpaper Bekasi
+									</a>
+								</li>
+								<li>
+									<a
+										href={route('services.show', 'huruf-timbul-bekasi')}
+										className="hover:text-[#FFDE42] transition-colors block py-0.5"
+									>
+										Huruf Timbul Bekasi
+									</a>
+								</li>
+								<li>
+									<a
+										href={route('services.show', 'gorden-bekasi')}
+										className="hover:text-[#FFDE42] transition-colors block py-0.5"
+									>
+										Gorden Bekasi
+									</a>
+								</li>
+								<li className="pt-2 border-t border-white/10">
 									<Link
 										href={route('gallery.index')}
 										className="text-slate-200 hover:text-[#FFDE42] transition-colors flex items-center gap-1.5 py-0.5 font-medium"
