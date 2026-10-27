@@ -94,9 +94,9 @@ export default function HeroSection() {
 				<ScrollReveal effect="fade-up" delay={200}>
 					<div className="max-w-4xl">
 						<h1 className="font-display text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight text-white leading-[1.06] drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
-							Solusi Dekorasi, Kaca Film &{' '}
+							Kaca Film Bekasi |{' '}
 							<span className="text-[#FFDE42] drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
-								Stiker Interior.
+								Tritama Decorindo
 							</span>
 						</h1>
 					</div>

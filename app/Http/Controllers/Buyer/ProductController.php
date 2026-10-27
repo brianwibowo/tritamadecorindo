@@ -210,7 +210,7 @@ class ProductController extends Controller
             'url' => $canonical,
             'image' => $images,
             'description' => $description,
-            'sku' => $product->id ?: $product->slug,
+            'sku' => $product->slug ?: $product->id,
             'category' => $product->category?->name ?: 'Dekorasi dan Kaca Film',
             'brand' => [
                 '@type' => 'Brand',
@@ -218,15 +218,36 @@ class ProductController extends Controller
             ],
         ];
 
-        if ($prices->isNotEmpty()) {
+        $minPrice = $prices->isNotEmpty() ? $prices->min() : 25000;
+        $maxPrice = $prices->isNotEmpty() ? $prices->max() : $minPrice;
+        $offerCount = max($product->variants->count(), 1);
+
+        if ($prices->count() > 1) {
             $productSchema['offers'] = [
                 '@type' => 'AggregateOffer',
                 'priceCurrency' => 'IDR',
-                'lowPrice' => $prices->min(),
-                'highPrice' => $prices->max(),
-                'offerCount' => $product->variants->count(),
+                'lowPrice' => $minPrice,
+                'highPrice' => $maxPrice,
+                'offerCount' => $offerCount,
+                'priceValidUntil' => now()->addYear()->format('Y-12-31'),
                 'itemCondition' => 'https://schema.org/NewCondition',
                 'availability' => $hasStock ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
+                'url' => $canonical,
+                'seller' => [
+                    '@type' => 'Organization',
+                    'name' => 'Tritama Decorindo Stiker',
+                    'url' => url('/'),
+                ],
+            ];
+        } else {
+            $productSchema['offers'] = [
+                '@type' => 'Offer',
+                'priceCurrency' => 'IDR',
+                'price' => $minPrice,
+                'priceValidUntil' => now()->addYear()->format('Y-12-31'),
+                'itemCondition' => 'https://schema.org/NewCondition',
+                'availability' => $hasStock ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
+                'url' => $canonical,
                 'seller' => [
                     '@type' => 'Organization',
                     'name' => 'Tritama Decorindo Stiker',
